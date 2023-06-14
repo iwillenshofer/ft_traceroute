@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:17:18 by iwillens          #+#    #+#             */
-/*   Updated: 2023/06/12 16:08:53 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/06/14 09:47:23 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,7 @@
 
 int	main(void)
 {	
-	int	fd;
 
-	fd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
-	printf("protocol: %d\n", fd);
+	printf("platform %d \n", THISISAMAC);
 	return (0);
 }
