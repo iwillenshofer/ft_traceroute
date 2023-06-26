@@ -6,7 +6,11 @@
 /*   By: igorwillenshofer <igorwillenshofer@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:17:18 by iwillens          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2023/06/26 17:24:52 by igorwillens      ###   ########.fr       */
+=======
+/*   Updated: 2023/06/14 09:47:23 by iwillens         ###   ########.fr       */
+>>>>>>> 9cbf17f137ce183b7bb9b37a862f2ebe26e36598
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +110,8 @@ struct addrinfo *get_address(void)
 
 int	opensocket(void)
 {	
-	int	fd;
 
+<<<<<<< HEAD
 	fd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
 	printf("socket: %d\n", fd);
 	return (fd);
@@ -206,5 +210,8 @@ int	main(void)
 	send_ping(fd, res);
 	close(fd);
 	freeaddrinfo(res); 
+=======
+	printf("platform %d \n", THISISAMAC);
+>>>>>>> 9cbf17f137ce183b7bb9b37a862f2ebe26e36598
 	return (0);
 }

@@ -6,7 +6,11 @@
 #    By: igorwillenshofer <igorwillenshofer@stud    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 15:22:29 by iwillens          #+#    #+#              #
+<<<<<<< HEAD
 #    Updated: 2023/06/26 14:36:09 by igorwillens      ###   ########.fr        #
+=======
+#    Updated: 2023/06/14 10:04:34 by iwillens         ###   ########.fr        #
+>>>>>>> 9cbf17f137ce183b7bb9b37a862f2ebe26e36598
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,6 +34,11 @@ OBJS = $(patsubst ${SRC_DIR}/%.c, ${OBJ_DIR}/%.o, ${SRCS})
 
 DEPENDS = $(patsubst %.o, %.d, ${OBJS})
 
+ifeq ($(HOSTTYPE),)
+	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
+endif
+HOST_FILE = ${OBJ_DIR}/.${HOSTTYPE}
+
 # **************************************************************************** #
 # *** Libft Definitions                                                        #
 # **************************************************************************** #
@@ -42,14 +51,18 @@ LIBFT = ${LIBFT_DIR}/libft.a
 
 all: ${NAME}
 
-${NAME}: ${LIBFT} ${OBJS} ${INCLUDES} Makefile
+${NAME}: ${LIBFT} ${OBJS} ${INCLUDES} Makefile ${HOST_FILE}
 	@gcc ${CCFLAGS} ${OBJS}  -L./srcs/libft -lft -o ${NAME}
 	@rm -f ${SYMLINK}
 	@echo "\033[96m${NAME} is built. \033[0m"
 	
-${OBJ_DIR}/%.o: $(SRC_DIR)/%.c ${INC_DIR} ${INCLUDES} Makefile
+${OBJ_DIR}/%.o: $(SRC_DIR)/%.c ${INC_DIR} ${INCLUDES} Makefile ${HOST_FILE}
 	@mkdir -p ${OBJ_DIR}
 	@${CC} ${CCFLAGS} -MMD -c $< -I. -I ${INC_DIR} -I${LIBFT_DIR} -o $@
+
+${HOST_FILE}:
+	@mkdir -p ${OBJ_DIR}
+	@touch .${HOSTTYPE}
 
 run: all
 	./${NAME}
