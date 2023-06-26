@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+         #
+#    By: igorwillenshofer <igorwillenshofer@stud    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 15:22:29 by iwillens          #+#    #+#              #
-#    Updated: 2023/06/12 15:58:06 by iwillens         ###   ########.fr        #
+#    Updated: 2023/06/26 14:36:09 by igorwillens      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@
 NAME = ft_ping
 
 CC = gcc
-CCFLAGS = -Wall -Werror -Wextra -std=c89
+CCFLAGS = -Wall -Werror -Wextra
 
 SRC_DIR = ./srcs
 OBJ_DIR = ./build
@@ -49,7 +49,7 @@ ${NAME}: ${LIBFT} ${OBJS} ${INCLUDES} Makefile
 	
 ${OBJ_DIR}/%.o: $(SRC_DIR)/%.c ${INC_DIR} ${INCLUDES} Makefile
 	@mkdir -p ${OBJ_DIR}
-	@${CC} ${CCFLAGS} -MMD -c $< -I. -I ${INC_DIR} -o $@
+	@${CC} ${CCFLAGS} -MMD -c $< -I. -I ${INC_DIR} -I${LIBFT_DIR} -o $@
 
 run: all
 	./${NAME}
