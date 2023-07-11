@@ -1,41 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_puthex_byte.c                                   :+:      :+:    :+:   */
+/*   ft_putbytes.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/21 18:30:03 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/11 09:49:02 by iwillens         ###   ########.fr       */
+/*   Created: 2023/07/11 09:34:11 by iwillens          #+#    #+#             */
+/*   Updated: 2023/07/11 09:46:47 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	_print_hex_byte(unsigned char c)
+void	ft_putbits(unsigned char byte)
 {
-	if (c < 10)
-		c += '0';
-	else
-		c += 'a' - 10;
-	ft_putchar(c);
-}
+	size_t i;
+	size_t size;
 
-void	ft_puthexbyte(unsigned char c)
-{
-	unsigned char	n1;
-	unsigned char	n2;
-
-	n1 = c / 16;
-	n2 = c % 16;
-	_print_hex_byte(n1);
-	_print_hex_byte(n2);
+	i = 0;
+	size = 8;
+	while (i < size)
+	{
+		if ((byte & (0b10000000 >> i)))	
+			write(1, "1", 1);
+		else
+			write(1, "0", 1);
+		i++;
+	}
 }
 
 /*
 ** size in bytes. use with sizeof()
 */
-void	ft_puthex_bytes(void *bytes, size_t size)
+void	ft_putbytes(void *bytes, size_t size)
 {
 	char *s;
 	size_t i;
@@ -44,10 +41,10 @@ void	ft_puthex_bytes(void *bytes, size_t size)
 	s = bytes;
 	while (i < size)
 	{
-		ft_puthexbyte(s[i]);
-		write(1, " ", 1);
+		ft_putbits(s[i]);
 		i++;
-		if (!(i % 32))
+		write(1, " ", 1);
+		if (i && !(i % 32))
 			write(1, "\n", 1);
 		else if (!(i % 4))
 			write(1, " ", 1);

@@ -1,33 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_puthex.c                                        :+:      :+:    :+:   */
+/*   ft_ping_endianess.h                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/01 11:09:02 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/11 09:44:11 by iwillens         ###   ########.fr       */
+/*   Created: 2023/07/10 10:46:44 by iwillens          #+#    #+#             */
+/*   Updated: 2023/07/11 10:59:51 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#ifndef FT_PING_ENDIANESS_H
+# define FT_PING_ENDIANESS_H
 
-void	ft_puthex_loop(size_t nb)
-{
-	char	c;
+# include "ft_ping_types.h"
 
-	if ((nb / 16))
-		ft_puthex_loop(nb / 16);
-	c = (nb % 16);
-	if (c < 10)
-		c += '0';
-	else
-		c = (c - 10) + 'a';
-	ft_putchar(c);
-}
+t_bool		host_is_littleendian(void);
+void		hostbyteorder(void *value, size_t datasize);
+void		networkbyteorder(void *value, size_t datasize);
+t_u8bits	invert_bitfield8(t_u8bits hostshort);
+t_u16bits	invert_bytes16(t_u16bits hostshort);
+t_u32bits	invert_bytes32(t_u32bits hostlong);
 
-void	ft_puthex(size_t nb)
-{
-	ft_putstr("0x");
-	ft_puthex_loop(nb);
-}
+#endif

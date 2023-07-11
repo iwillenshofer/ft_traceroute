@@ -6,7 +6,7 @@
 #    By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/01 10:55:01 by iwillens          #+#    #+#              #
-#    Updated: 2023/06/14 10:02:30 by iwillens         ###   ########.fr        #
+#    Updated: 2023/07/11 09:38:23 by iwillens         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,25 +24,24 @@ SRCS =  ft_putchar.c \
 		ft_bzero.c \
 		ft_memcpy.c \
 		ft_puthex_byte.c \
+		ft_putbytes.c \
 		ft_isprint.c \
 		ft_strcpy.c \
-		ft_memset.c
+		ft_memset.c \
+		ft_strjoin.c \
+		ft_strdup.c \
+		ft_arglen.c \
+		ft_split.c
 
 OBJS = $(patsubst %.c, %.o, ${SRCS})
 
-
-ifeq ($(HOSTTYPE),)
-	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
-endif
-HOST_FILE = .${HOSTTYPE}
-
 all : $(NAME)
 
-${NAME} : ${OBJS} ${HOST_FILE}
+${NAME} : ${OBJS}
 		@ar -r ${NAME} ${OBJS}
 		@echo "\033[95m${NAME} is built. \033[0m"
 
-%.o: %.c ${HOST_FILE}
+%.o: %.c
 		@gcc -c -Wall -Wextra -Werror -fvisibility=hidden $< -o $@ 
 
 clean: 

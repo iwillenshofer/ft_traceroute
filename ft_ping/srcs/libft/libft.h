@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/01 10:54:12 by iwillens          #+#    #+#             */
-/*   Updated: 2023/05/26 12:04:43 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/11 09:45:54 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,5 +30,12 @@ void	ft_puthexbyte(unsigned char c);
 char	ft_isprint(char c);
 char	*ft_strcpy(char *dst, char *src);
 void	*ft_memset(void *b, int c, size_t len);
+char 	*ft_strjoin(char *s1, char *s2);
+char 	*ft_strdup(char *src);
+char 	**ft_split(char *src);
+size_t	ft_arglen(char **arg);
+void	ft_putbits(unsigned char byte);
+void	ft_putbytes(void *bytes, size_t size);
+void	ft_puthex_bytes(void *bytes, size_t size);
 
 #endif

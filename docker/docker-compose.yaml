@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+    ft_ping:
+        build: ./debian
+        container_name: ft_ping
+        #restart: never
+        volumes:
+            - "../ft_ping:/ft_ping" #project
+            - "~/.ssh:/root/.ssh" #project
+        network_mode: "host"

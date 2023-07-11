@@ -1,33 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_puthex.c                                        :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/01 11:09:02 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/11 09:44:11 by iwillens         ###   ########.fr       */
+/*   Created: 2023/06/30 15:42:43 by iwillens          #+#    #+#             */
+/*   Updated: 2023/06/30 16:46:29 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-
-void	ft_puthex_loop(size_t nb)
+#include <stdlib.h>
+/*
+** this version of ft_strjoin frees s1.
+*/
+char *ft_strjoin(char *s1, char *s2)
 {
-	char	c;
+	char *s;
+	int i;
 
-	if ((nb / 16))
-		ft_puthex_loop(nb / 16);
-	c = (nb % 16);
-	if (c < 10)
-		c += '0';
-	else
-		c = (c - 10) + 'a';
-	ft_putchar(c);
-}
-
-void	ft_puthex(size_t nb)
-{
-	ft_putstr("0x");
-	ft_puthex_loop(nb);
+	i = 0;
+	s = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	while (s1[i])
+	{
+		s[i] = s1[i];
+		i++;
+	}
+	while (*s2)
+	{
+		s[i] = *s2;
+		i++;
+		s2++;
+	}
+	s[i] = 0;
+	free(s1);
+	return (s);
 }

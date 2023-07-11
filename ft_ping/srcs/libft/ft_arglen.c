@@ -1,33 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_puthex.c                                        :+:      :+:    :+:   */
+/*   ft_arglen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/01 11:09:02 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/11 09:44:11 by iwillens         ###   ########.fr       */
+/*   Created: 2023/07/04 09:12:54 by iwillens          #+#    #+#             */
+/*   Updated: 2023/07/04 09:15:01 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_puthex_loop(size_t nb)
+size_t	ft_arglen(char **arg)
 {
-	char	c;
+	size_t	i;
 
-	if ((nb / 16))
-		ft_puthex_loop(nb / 16);
-	c = (nb % 16);
-	if (c < 10)
-		c += '0';
-	else
-		c = (c - 10) + 'a';
-	ft_putchar(c);
-}
-
-void	ft_puthex(size_t nb)
-{
-	ft_putstr("0x");
-	ft_puthex_loop(nb);
+	i = 0;
+	while ((arg[i]))
+		i++;
+	return (i);
 }

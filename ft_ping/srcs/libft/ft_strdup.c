@@ -1,33 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_puthex.c                                        :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/01 11:09:02 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/11 09:44:11 by iwillens         ###   ########.fr       */
+/*   Created: 2023/06/30 15:45:39 by iwillens          #+#    #+#             */
+/*   Updated: 2023/06/30 16:46:38 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdlib.h>
 
-void	ft_puthex_loop(size_t nb)
+char *ft_strdup(char *src)
 {
-	char	c;
+	char *s;
+	int i;
 
-	if ((nb / 16))
-		ft_puthex_loop(nb / 16);
-	c = (nb % 16);
-	if (c < 10)
-		c += '0';
-	else
-		c = (c - 10) + 'a';
-	ft_putchar(c);
-}
-
-void	ft_puthex(size_t nb)
-{
-	ft_putstr("0x");
-	ft_puthex_loop(nb);
+	i = 0;
+	s = malloc(ft_strlen(src) + 1);
+	if (!s)
+		return (NULL);
+	while (src[i])
+	{
+		s[i] = src[i];
+		i++;
+	}
+	s[i] = 0;
+	return (s);
 }

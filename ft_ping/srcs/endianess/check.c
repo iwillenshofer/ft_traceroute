@@ -1,33 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_puthex.c                                        :+:      :+:    :+:   */
+/*   check.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/01 11:09:02 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/11 09:44:11 by iwillens         ###   ########.fr       */
+/*   Created: 2023/07/10 10:47:17 by iwillens          #+#    #+#             */
+/*   Updated: 2023/07/10 17:49:02 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "ft_ping.h"
 
-void	ft_puthex_loop(size_t nb)
+t_bool host_is_littleendian(void)
 {
-	char	c;
+	short i;
 
-	if ((nb / 16))
-		ft_puthex_loop(nb / 16);
-	c = (nb % 16);
-	if (c < 10)
-		c += '0';
-	else
-		c = (c - 10) + 'a';
-	ft_putchar(c);
-}
-
-void	ft_puthex(size_t nb)
-{
-	ft_putstr("0x");
-	ft_puthex_loop(nb);
+	i = 1;
+	if (*(char*)(&i))
+		return (true);
+	return (false);
 }
