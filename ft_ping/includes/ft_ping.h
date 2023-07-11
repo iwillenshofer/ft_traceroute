@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:41:35 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/11 18:32:46 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/11 18:56:56 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 # include "libft.h"
 # include "ft_ping_types.h"
 # include "ft_ping_errors.h"
-# include "ft_ping_endianess.h"
 
 # ifdef BONUS
 #  define IS_BONUS 1
@@ -57,5 +56,14 @@ void	print_usage(t_ping *ft_ping);
 char	*qualified_address(t_ping *ft_ping, struct in_addr *in);
 void	ping(t_ping *ft_ping);
 void	fatal(t_ping *ft_ping,char *msg, t_bool usage);
+
+
+/*
+** Endianess
+*/
+t_u16bits	bytes16_le(t_u16bits hostshort);
+t_u32bits	bytes32_le(t_u32bits hostlong);
+t_u8bits	bitfield8_le(t_u8bits hostshort);
+
 
 #endif

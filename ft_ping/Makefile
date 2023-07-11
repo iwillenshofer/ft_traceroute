@@ -6,7 +6,7 @@
 #    By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 15:22:29 by iwillens          #+#    #+#              #
-#    Updated: 2023/07/10 17:53:39 by iwillens         ###   ########.fr        #
+#    Updated: 2023/07/11 18:56:35 by iwillens         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,9 +25,7 @@ INC_DIR = ./includes
 INCLUDES = ${INC_DIR}/ft_ping.h
 
 SRCS = ${SRC_DIR}/main.c \
-		${SRC_DIR}/endianess/check.c \
-		${SRC_DIR}/endianess/invert.c \
-		${SRC_DIR}/endianess/convert.c \
+		${SRC_DIR}/endianess.c \
 		${SRC_DIR}/socket.c \
 		${SRC_DIR}/address.c \
 		${SRC_DIR}/setup.c \

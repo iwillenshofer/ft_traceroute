@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 08:52:05 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/11 18:32:03 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/11 18:58:51 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,11 +124,11 @@ void print_icmpheader(t_icmpheader *head)
 	printf("__u8		type = %d: ", head->type);
 	print_icmptype(head->type);
 	printf("__u8		code = %d;\n", head->code);
-	printf("__sum16	checksum = %d;\n", invert_bytes16(head->checksum));
+	printf("__sum16	checksum = %d;\n", bytes16_le(head->checksum));
 	printf("union {\n");
 	printf("	struct {\n");
-	printf("		__be16	id = %d;\n", invert_bytes16(head->un.echo.id));
-	printf("		__be16	sequence = %d;\n", invert_bytes16(head->un.echo.sequence));
+	printf("		__be16	id = %d;\n", bytes16_le(head->un.echo.id));
+	printf("		__be16	sequence = %d;\n", bytes16_le(head->un.echo.sequence));
 	printf("	} echo;\n");
 	printf("	__be32	gateway = %d;\n", head->un.gateway);
 	printf("	struct {\n");
