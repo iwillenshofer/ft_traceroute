@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 13:02:27 by iwillens          #+#    #+#             */
-/*   Updated: 2023/06/27 13:51:19 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/13 16:57:40 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,19 +46,18 @@ void get_options(void)
 	close(sock);
 }
 
-int	opensocket(void)
+void	opensocket(t_ping *ft_ping)
 {	
-	get_options();
-	int ttl_val = 62;
+	int ttl_val = ft_ping->options.all.ttl;
     struct timeval tv_out;
     tv_out.tv_sec = 1;
-    tv_out.tv_usec = 0;
+    tv_out.tv_usec = 0; (void)tv_out;
 	int fd;
 	fd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
 	printf("socket: %d\n", fd);
 	if (setsockopt(fd, SOL_IP, IP_TTL, &ttl_val, sizeof(ttl_val)))
 		printf("error setting sock option 1.\n");
-    if (setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv_out, sizeof(struct timeval)))
-		printf("error setting sock option 2.\n");
-	return (fd);
+//    if (setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv_out, sizeof(struct timeval)))
+//		printf("error setting sock option 2.\n");
+	ft_ping->sock = fd;
 }

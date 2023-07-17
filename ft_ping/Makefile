@@ -6,7 +6,7 @@
 #    By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 15:22:29 by iwillens          #+#    #+#              #
-#    Updated: 2023/07/11 18:56:35 by iwillens         ###   ########.fr        #
+#    Updated: 2023/07/17 08:45:26 by iwillens         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@
 NAME = ft_ping
 
 CC = gcc
-CCFLAGS = -Wall -Werror -Wextra#
+CCFLAGS = -Wall -Werror -Wextra -fsanitize=address -g
 
 SRC_DIR = ./srcs
 OBJ_DIR = ./build
@@ -26,12 +26,16 @@ INCLUDES = ${INC_DIR}/ft_ping.h
 
 SRCS = ${SRC_DIR}/main.c \
 		${SRC_DIR}/endianess.c \
+		${SRC_DIR}/checksum.c \
 		${SRC_DIR}/socket.c \
 		${SRC_DIR}/address.c \
 		${SRC_DIR}/setup.c \
 		${SRC_DIR}/print.c \
+		${SRC_DIR}/error.c \
 		${SRC_DIR}/ping.c \
-		${SRC_DIR}/error.c
+		${SRC_DIR}/ping_in.c \
+		${SRC_DIR}/ping_out.c \
+		${SRC_DIR}/time.c
 
 BONUS_SRCS = ${SRC_DIR}/bonus/bonus.c \
 				${SRC_DIR}/bonus/address.c

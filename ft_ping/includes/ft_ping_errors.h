@@ -6,12 +6,12 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 13:39:25 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/04 15:15:17 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/12 10:42:03 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PING_ERRORS_HPP
-# define FT_PING_ERRORS_HPP
+#ifndef FT_PING_ERRORS_H
+# define FT_PING_ERRORS_H
 
 # include "ft_ping_types.h"
 

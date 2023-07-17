@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 13:05:18 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/11 18:29:37 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/12 10:15:49 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <limits.h>
 void	ft_putchar(char c)
 {
 	write(1, &c, 1);
@@ -237,6 +238,39 @@ void printbytes(unsigned int *v, size_t size_in_4bytes)
 	}
 }
 
+
+/*
+** calculates the checksum.
+** best source ever: https://www.ietf.org/rfc/rfc1071.txt
+*/
+unsigned short	calculate_checksum(void *buffer, size_t size)
+{
+	size_t		i;
+	char	*data;
+	unsigned int	sum;
+	unsigned short	last_elem;
+
+	i = 0;
+	sum = 0;
+	last_elem = 0;
+	data = buffer;
+	if (size % 2)
+	{
+		size--;
+		last_elem = (data[size]) << 8;
+	}
+	while (i < size)
+	{
+		sum += *(unsigned short *)(&data[i]);
+		i += 2;
+	}
+	if (last_elem)
+		sum += (last_elem << 8);
+	while (sum >> 16)
+		sum = (sum & 0xffff) + (sum >> 16);
+	return (~sum);
+}
+
 int main(int argc, char **argv) 
 {
 	static int count = 0;
@@ -249,7 +283,7 @@ int main(int argc, char **argv)
 	int sock = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
 //	int sock = socket(AF_PACKET, SOCK_RAW, htons(ETH_P_ALL));
 	int bytes_received;
-	unsigned char buf[1024];
+	unsigned char buf[SHRT_MAX];
 	struct sockaddr_in peerAddr;
 	unsigned int len = sizeof(peerAddr);
 	bzero(&buf, sizeof(buf));
@@ -268,9 +302,10 @@ int main(int argc, char **argv)
 		unsigned int headers_len = (ihl * 4) + sizeof(struct icmphdr);
 		struct icmphdr* icmp = (struct icmphdr *)(buf + (ihl * 4));
 		char *info = (char*)(buf + headers_len);
-		printf("\n\n\n\n tot_len: %d, header len: %d, icmp->type: %u, icmp->code: %u, icmp->checksum: %u, icmp->id: %u, icmp->seq: %u\n", tot_len, headers_len, (icmp->type),htons(icmp->code),htons(icmp->checksum), htons(icmp->un.echo.id), htons(icmp->un.echo.sequence));
+		unsigned short checksum = calculate_checksum(icmp, tot_len - sizeof(struct iphdr) );
+		printf("\n\n\n\n tot_len: %d, header len: %d, icmp->type: %u, icmp->code: %u, icmp->checksum: %u, icmp->id: %u, icmp->seq: %u, icmp->checksum: %u\n", tot_len, headers_len, (icmp->type),htons(icmp->code),htons(icmp->checksum), htons(icmp->un.echo.id), htons(icmp->un.echo.sequence), checksum);
 		print_hex(info, tot_len - headers_len);
-		print_bytes(info, tot_len - headers_len);
+	//	print_bytes(info, tot_len - headers_len);
 		write(1, "\n", 1);
 		//is this a timestamp????
 		struct timeval timestamp;
@@ -282,6 +317,7 @@ int main(int argc, char **argv)
 		format_timeval(&timestamp, buf, sizeof(buf));
 		printf("timestamp has %lu bytes\n", sizeof(timestamp));
 		printf("%s \n", buf);
+
 
 //
 //		write(1, info, tot_len - headers_len);

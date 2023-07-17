@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 08:52:05 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/11 18:58:51 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/16 13:09:11 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,57 +86,43 @@ struct icmphdr {
 
 */
 
-void	print_icmptype(int type)
+void	print_icmptype(int type, char *buf)
 {
 	if (type == ICMP_ECHOREPLY)
-		printf("ICMP_ECHOREPLY\n");
+		sprintf(buf, "ICMP_ECHOREPLY");
 	else if (type == ICMP_DEST_UNREACH)
-		printf("ICMP_DEST_UNREACH\n");
+		sprintf(buf, "ICMP_DEST_UNREACH");
 	else if (type == ICMP_SOURCE_QUENCH)
-		printf("ICMP_SOURCE_QUENCH\n");
+		sprintf(buf, "ICMP_SOURCE_QUENCH");
 	else if (type == ICMP_REDIRECT)
-		printf("ICMP_REDIRECT\n");
+		sprintf(buf, "ICMP_REDIRECT");
 	else if (type == ICMP_ECHO)
-		printf("ICMP_ECHO\n");
+		sprintf(buf, "ICMP_ECHO");
 	else if (type == ICMP_TIME_EXCEEDED)
-		printf("ICMP_TIME_EXCEEDED\n");
+		sprintf(buf, "ICMP_TIME_EXCEEDED");
 	else if (type == ICMP_PARAMETERPROB)
-		printf("ICMP_PARAMETERPROB\n");
+		sprintf(buf, "ICMP_PARAMETERPROB");
 	else if (type == ICMP_TIMESTAMP)
-		printf("ICMP_TIMESTAMP\n");
+		sprintf(buf, "ICMP_TIMESTAMP");
 	else if (type == ICMP_TIMESTAMPREPLY)
-		printf("ICMP_TIMESTAMPREPLY\n");
+		sprintf(buf, "ICMP_TIMESTAMPREPLY");
 	else if (type == ICMP_INFO_REQUEST)
-		printf("ICMP_INFO_REQUEST\n");
+		sprintf(buf, "ICMP_INFO_REQUEST");
 	else if (type == ICMP_INFO_REPLY)
-		printf("ICMP_INFO_REPLY\n");
+		sprintf(buf, "ICMP_INFO_REPLY");
 	else if (type == ICMP_ADDRESS)
-		printf("ICMP_ADDRESS\n");
+		sprintf(buf, "ICMP_ADDRESS");
 	else if (type == ICMP_ADDRESSREPLY)
-		printf("ICMP_ADDRESSREPLY\n");
+		sprintf(buf, "ICMP_ADDRESSREPLY");
 	else
-		printf("unknown type: %d\n", type);
+		sprintf(buf, "unknown type: %d", type);
 }
 
 void print_icmpheader(t_icmpheader *head)
 {
-	printf("struct icmphdr {\n");
-	printf("__u8		type = %d: ", head->type);
-	print_icmptype(head->type);
-	printf("__u8		code = %d;\n", head->code);
-	printf("__sum16	checksum = %d;\n", bytes16_le(head->checksum));
-	printf("union {\n");
-	printf("	struct {\n");
-	printf("		__be16	id = %d;\n", bytes16_le(head->un.echo.id));
-	printf("		__be16	sequence = %d;\n", bytes16_le(head->un.echo.sequence));
-	printf("	} echo;\n");
-	printf("	__be32	gateway = %d;\n", head->un.gateway);
-	printf("	struct {\n");
-	printf("		__be16	__unused = %d;\n", 0);
-	printf("		__be16	mtu = %d;\n", head->un.frag.mtu);
-	printf("	} frag;\n");
-	printf("} un;\n");
-	printf("};\n");
+	char buf[40];
+	print_icmptype(head->type, buf);
+	printf("t_icmpheader-> type: [%d]%s, code: %d, cksum: %d, id: %d, seq/mtu: %d, gateway: %d.\n", head->type, buf, head->code, bytes16_le(head->checksum),  bytes16_le(head->un.echo.id), bytes16_le(head->un.echo.sequence), head->un.gateway);
 	(void)head;
 }
 
@@ -151,7 +137,7 @@ void print_ipheader(t_ipheader *head)
     printf("    __be16  frag_off = %d\n", head->frag_off);
     printf("    __u8    ttl = %d\n", head->ttl);
     printf("    __u8    protocol = %d\n", head->protocol);
-    printf("    __sum16 check = %d\n", head->checksum);  
+    printf("    __sum16 check = %d\n", head->check);  
 	printf("    __be32  saddr = %d\n", head->saddr);
     printf("    __be32  saddr = %d.%d.%d.%d\n", (0xff & head->saddr), (0xff00 & head->saddr) >> 8 , (0xff0000 & head->saddr) >> 16, (0xff000000 & head->saddr) >> 24);
 	printf("    __be32  daddr = %d\n", head->daddr);
@@ -199,7 +185,7 @@ void	get_address(t_ping *ft_ping)
 		fatal(ft_ping,
 			get_errorstr(ft_ping, ERROR_UNKNOWN_HOST, ft_ping->program, ft_ping->raw_host), true);
 	if (ft_ping->addr_send->ai_canonname)
-		ft_ping->raw_host = ft_ping->addr_send->ai_canonname;
+		ft_strcpy(ft_ping->raw_host, ft_ping->addr_send->ai_canonname);
 	print_addrinfo(ft_ping->addr_send);
 }
 
@@ -217,14 +203,26 @@ int reverse_lookup(void)
 }
 */
 
-#if !BONUS
+char *inetname(struct in_addr *in)
+{
+	static char line[50];
+	struct hostent *hostentity;
+
+	hostentity = gethostbyaddr((char *)in, sizeof (*in), AF_INET);
+	if (hostentity && hostentity->h_name) {
+		(void) strcpy(line,  hostentity->h_name); 
+	}
+	return (line);
+}
 
 char *qualified_address(t_ping *ft_ping, struct in_addr *in)
 {
-	(void)in;
+	char *ret;
+
+	ret = inetname(in);
+	if (!(*ret))
+		ret = ft_ping->raw_host;
 	ft_bzero(ft_ping->qualified_address, sizeof(ft_ping->qualified_address));
-	sprintf(ft_ping->qualified_address, "(%s) %s", ft_ping->raw_host , inet_ntoa(*in));
+	sprintf(ft_ping->qualified_address, "(%s) %s", ret, inet_ntoa(*in));
 	return (ft_ping->qualified_address);
 }
-
-#endif

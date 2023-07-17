@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:17:18 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/11 11:03:38 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/12 14:45:20 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	main(int argc, char **argv)
 	setup(&ft_ping, argv);
 	
 	get_address(&ft_ping);
-	ft_ping.sock = opensocket();
+	opensocket(&ft_ping);
 	ping(&ft_ping);
 	close(ft_ping.sock);
 	freeaddrinfo((ft_ping.addr_send));

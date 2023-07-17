@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:29:15 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/11 18:06:37 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/17 09:07:13 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,13 @@
 # define FT_PING_TYPES_H
 
 # define ERROR_BUFFER_SIZE 64
-# define DFL_PACKET_SIZE 65
+# define DFL_PACKET_SIZE 56
+# define DFL_CUSTOM_PATTERN_SIZE 16
+# define DFL_TTL 64
+# define MAX_PACKET_SIZE 65535
 
 typedef enum e_bool {false, true}	t_bool;
+typedef struct timeval	t_time;
 
 /*
 ** define unsigned 8, 16 and 32 bits variables. Those are
@@ -66,55 +70,11 @@ typedef unsigned long		t_u32bits;
 **  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 **	Source: RFC 791
 **
+** These variables are defined in the iphdr structure, typedef'd
+** below.
 */
 
-typedef struct s_ipheader
-{
-	t_u8bits		ihl: 4;
-	t_u8bits		version: 4;
-	t_u8bits		tos;
-	t_u16bits		tot_len;
-	t_u16bits		id;
-	t_u16bits		frag_off;
-	t_u8bits		ttl;
-	t_u8bits		protocol;
-	t_u16bits		checksum;
-	unsigned int	saddr;
-	unsigned int	daddr;
-}	t_ipheader;
-
-/*
-** since we will only be using the IP header on the way in (I suppose,
-** maybe I'm brave enough to implement it on the way OUT too, instead of
-** letting the socket do it for me, but we'll cross that bridge later),
-** options must be implemented, even though they will *probably* not be
-** be read by our program.
-** The options structure may be implemented right after the ipheader
-** and right before the icmp header. That means that the ihl (Internet
-** Header Length) must be checked to determine the position of icmp
-** header in the buffer.
-** If, the options are found to be irrelevant to this project, I'll
-** just ignore them, removing this structure and calculate the start of
-** icmp header using ihl, ignoring what is "in between".
-*/
-
-typedef	struct s_options
-{
-	unsigned int	faddr;
-	t_u8bits	optlen;
-	t_u8bits	srr;
-	t_u8bits	rr;
-	t_u8bits	ts;
-	t_u8bits	is_setbyuser:1;
-	t_u8bits	is_data:1;
-	t_u8bits	is_strictroute:1;
-	t_u8bits	srr_is_hit:1;
-	t_u8bits	is_changed:1;
-	t_u8bits	rr_needaddr:1;
-	t_u8bits	ts_needtime:1;
-	t_u8bits	ts_needaddr:1;
-	t_u8bits	padding[4];
-}	t_ipoptions;
+typedef struct iphdr	t_ipheader;
 
 /*
 ** Echo or Echo Reply Message
@@ -129,73 +89,117 @@ typedef	struct s_options
 **   |     Data ...
 **   +-+-+-+-+-
 **
-** The below implementation considers all kinds of icmp messages.
-** If, by the end of this project, just ECHO and ECHO REPLY are needed
-** and the rest of the messages are not used for checking for errors,
-** this header will be simplified and the union removed.
 */
 
-typedef struct s_icmpheader
+typedef struct icmphdr	t_icmpheader;
+
+/*
+** simple struct to parse buffer into, and make it easier to access
+** ip and icmp headers, as well as data, without having to do multiple
+** casting
+*/
+typedef struct s_headers {
+	t_ipheader		*ip;
+	t_icmpheader	*icmp;
+	char			*data;
+}	t_headers;
+
+/*
+** message structure defined in socket.h to pass as argument to
+** recvmsg(), and contains pointers to buffer and address structures
+** as well as information about said buf/struct sizes.
+** system's implementation is:
+**struct msghdr {
+**  void *msg_name;			: address of a sockaddr struct
+**  socklen_t msg_namelen;	: its len
+**  struct iovec *msg_iov;	: pointer to iovec [data* / datalen]
+**  size_t msg_iovlen;		: iovec struct len
+**  ... };					: other fields are unused in our implementation.
+*/
+typedef struct msghdr t_msghdr;
+
+/*
+** options for all kinds of requests
+*/
+typedef struct s_options_all
 {
-	t_u8bits			type;
-	t_u8bits			code;
-	t_u16bits			checksum;
-	union	u_un
-	{
-		struct	s_echo
-		{
-			t_u16bits	id;
-			t_u16bits	sequence;
-		}	echo;
-		unsigned int		gateway;
-		struct	s_frag
-		{
-			t_u16bits	reserved;
-			t_u16bits	mtu;
-		}	frag;
-	} un;	
-}	t_icmpheader;
+	t_u8bits	count;
+	t_bool		debug;
+	t_u8bits	interval;
+	t_bool		numeric;
+	t_bool		ignore_routing;
+	t_u8bits	ttl;
+	t_u16bits	tos;
+	t_bool		verbose;
+	t_u8bits	timeout;
+	t_u8bits	linger;	
+}	t_options_all;
 
-//we may need to change it into a pointer for variable info
-typedef struct s_packet {
-	t_icmpheader	hdr;
-	char			data[DFL_PACKET_SIZE - sizeof(t_icmpheader)];
-}	t_packet;
-
-typedef char	t_flag;
-
-typedef struct s_flag_opt
+typedef struct s_options_pattern
 {
-	char	enabled;
-	char	ttl;
-}	t_flag_opt;
+	t_u8bits	pattern[DFL_CUSTOM_PATTERN_SIZE];
+	t_u8bits	size;
+}	t_options_pattern;
 
-typedef struct s_flags
+/*
+** options specific for echo replies
+*/
+typedef struct s_options_echo
 {
-	t_flag	verbose;
-	t_flag	help;
-}	t_flags;
+	t_bool				flood;
+	t_u8bits			ip_timestamp;
+	t_u8bits			preload;
+	t_options_pattern	pattern;
+	t_bool				quiet;
+	t_bool				route;
+	t_u16bits			size;	
+}	t_options_echo;
+
+typedef struct s_options
+{
+	t_u8bits		request_type;
+	t_options_all	all;
+	t_options_echo	echo;
+}	t_options;
+
+
+/*
+** structures for receive and sending, to store buffers, addresses, counters...
+*/
+typedef struct s_receive
+{
+	int count;
+	t_msghdr			msg;
+	struct sockaddr_in	peer_addr;
+	struct iovec		iobuf;
+	char				buf[MAX_PACKET_SIZE];
+	int					received;
+}	t_receive;
+
+typedef struct s_send
+{
+	int count;
+	
+}	t_send;
 
 /*
 ** here we will create a main structure to be passed throughout the program
 ** keeping sockets and addresses in one single place. Maybe also unions
 ** to avoid casting... let's see how it goes...
 */
-
 typedef struct s_ping
 {
 	int				sock;
 	pid_t			pid;
-	char			qualified_address[HOST_NAME_MAX];
+	t_receive		in;
+	t_icmpheader	*packet; //OK
+	t_options		options; //OK
 	char			*program; // stores the first line of argv
-	char			error[ERROR_BUFFER_SIZE];
-	char			*raw_host; // the original hostname that we are trying to ping
-	char			*inet_ntop; //The buffer dst must be at least INET_ADDRSTRLEN bytes long. lets do this on STACK, shall we?
-	char			*inet_name;
 	struct addrinfo	*addr_send;
 	struct addrinfo	addr_recv;
-	t_icmpheader	*packet;
-	t_flags		flags; // maybe a pointer? maybe a linkedlist?
+	char			error[ERROR_BUFFER_SIZE];
+	char			raw_host[HOST_NAME_MAX]; // the original hostname that we are trying to ping
+	char			qualified_address[(HOST_NAME_MAX * 2) + 4];
 }	t_ping;
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:41:35 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/11 18:56:56 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/17 09:12:14 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,12 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <time.h>
+# include <sys/time.h>
 # include <arpa/inet.h>
 # include <netinet/ip_icmp.h>
 # include <stdlib.h>
 # include <limits.h>
+#include <sys/types.h>
 # include "libft.h"
 # include "ft_ping_types.h"
 # include "ft_ping_errors.h"
@@ -45,7 +47,8 @@
 # define FALSE 0
 # define TRUE 1
 
-int		opensocket(void);
+
+void	opensocket(t_ping *ft_ping);
 void	get_address(t_ping *ft_ping);
 void	print_addrinfo(struct addrinfo *head);
 void	print_icmpheader(t_icmpheader *head);
@@ -65,5 +68,22 @@ t_u16bits	bytes16_le(t_u16bits hostshort);
 t_u32bits	bytes32_le(t_u32bits hostlong);
 t_u8bits	bitfield8_le(t_u8bits hostshort);
 
+/*
+** checksum
+*/
+t_u16bits	calculate_checksum(void *buffer, size_t size);
+
+/*
+** time
+*/
+t_time elapsed_time(t_time begin, t_time end);
+ssize_t elapsed_time_ms(t_time begin, t_time end);
+t_bool timed_out(t_time begin, t_time timeout);
+
+/*
+** ping in/out
+*/
+t_bool	ping_in(t_ping *ft_ping);
+void	ping_out(t_ping *ft_ping);
 
 #endif
