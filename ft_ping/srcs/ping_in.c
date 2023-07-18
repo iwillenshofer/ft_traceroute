@@ -6,41 +6,61 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 07:12:28 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/17 09:08:23 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/18 15:08:35 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
 
-
-int check_icmp_size(t_ping *ft_ping, t_msghdr *msg, size_t size)
+/*
+** validates the size of the icmp packet and sets the headers shortcuts for use
+** in other functions
+*/
+static t_bool	check_icmp_size(t_ping *ft_ping, t_headers *headers)
 {
-	t_ipheader *ip;
+	size_t		cksum;
+	t_msghdr	*msg;
+	size_t		size;
 
-	ip = msg->msg_iov->iov_base;
-	printf("we are parsing %zu. ipheader: %zu. tot_len: %d. tot_headers: %zu\n", size, sizeof(t_ipheader), htons(ip->tot_len), (ip->ihl * 4) + sizeof(t_icmpheader));
-	if (size < sizeof(t_ipheader) || size < htons(ip->tot_len)
-		|| size < (ip->ihl * 4) + sizeof(t_icmpheader))
-		return (false);
-	if (calculate_checksum(ip, htons(ip->tot_len)))
+	msg = &(ft_ping->in.recv.msg);
+	size = ft_ping->in.recv.received;
+	headers->ip = msg->msg_iov->iov_base;
+	if (size < sizeof(t_ipheader) || size < htons(headers->ip->tot_len)
+		|| size < (headers->ip->ihl * 4) + sizeof(t_icmpheader))
 	{
-		printf("checksum does not match\n");
+		printf("packet too short\n");
 		return (false);
 	}
-	else
+	headers->icmp = (t_icmpheader *)((char *)(headers->ip)
+			+ (headers->ip->ihl * 4));
+	headers->data = (char *)(headers->icmp) + sizeof(t_icmpheader);
+	cksum = headers->ip->check;
+	headers->ip->check = 0;
+	if (checksum(headers->ip, htons(headers->ip->tot_len))
+		!= cksum)
 	{
-		printf("checksum matches\n");
+		printf("ip checksum does not match\n");
+		return (false);
 	}
-	(void)ft_ping;
 	return (true);
 }
 
-t_bool parse_icmp(t_ping *ft_ping, t_msghdr *msg, size_t size, t_headers *headers)
+/*
+** parses the icmp message to check for failures on size or data.
+** assumes a packet of any size has been received and stored in ft_ping->msg,
+** as well as ft_ping->received has been set with the number of bytes that were
+** received.
+*/
+static t_bool	parse_icmp(t_ping *ft_ping, t_headers *headers)
 {
-	if (!check_icmp_size(ft_ping, msg, size))
+	if (!check_icmp_size(ft_ping, headers))
 		return (false);
-	headers->ip = msg->msg_iov->iov_base;
-	headers->icmp = (t_icmpheader *)((char*)(headers->ip) + headers->ip->ihl * 4);
+	if (check_duptrack(ft_ping, ntohs(headers->icmp->un.echo.sequence)))
+	{
+		return (false);
+		printf("DUPLICATED!!!!!\n");
+	}
+	set_duptrack(ft_ping, ntohs(headers->icmp->un.echo.sequence));
 	return (true);
 }
 
@@ -48,46 +68,69 @@ t_bool parse_icmp(t_ping *ft_ping, t_msghdr *msg, size_t size, t_headers *header
 ** initializes the structure ft_ping->in, which will receive the ICMP data
 ** from recvmsg();
 */
-void init_receive(t_ping *ft_ping)
+static void		init_receive(t_ping *ft_ping)
 {
-	ft_bzero(&(ft_ping->in), sizeof(t_receive));
-	ft_ping->in.msg.msg_name = &(ft_ping->in.peer_addr);
-	ft_ping->in.msg.msg_namelen = sizeof(struct sockaddr_in);
-	ft_ping->in.msg.msg_iov = &(ft_ping->in.iobuf);
-	ft_ping->in.msg.msg_iovlen = 1;
-	ft_ping->in.msg.msg_iov->iov_base = ft_ping->in.buf;
-	ft_ping->in.msg.msg_iov->iov_len = sizeof(ft_ping->in.buf);
+	ft_bzero(&(ft_ping->in.recv), sizeof(t_receive));
+	ft_ping->in.recv.msg.msg_name = &(ft_ping->in.recv.peer_addr);
+	ft_ping->in.recv.msg.msg_namelen = sizeof(struct sockaddr_in);
+	ft_ping->in.recv.msg.msg_iov = &(ft_ping->in.recv.iobuf);
+	ft_ping->in.recv.msg.msg_iovlen = 1;
+	ft_ping->in.recv.msg.msg_iov->iov_base = ft_ping->in.recv.buf;
+	ft_ping->in.recv.msg.msg_iov->iov_len = sizeof(ft_ping->in.recv.buf);
 }
 
-t_bool ping_in(t_ping *ft_ping)
+/*
+** Let's print all the pings!!!!
+*/
+static void	ping_print(t_ping *ft_ping, t_headers *headers)
 {
-	//bytes_ind = recvfrom(ft_ping->sock, &buf, sizeof(buf), MSG_DONTWAIT, (struct sockaddr*)&peerAddr, &len);
-	init_receive(ft_ping);
-	ft_ping->in.received = recvmsg(ft_ping->sock, &(ft_ping->in.msg), MSG_DONTWAIT);
-	if (ft_ping->in.received > 0)
+	t_time	now;
+	t_time	timestamp;
+
+	dprintf(STDOUT_FILENO, "%d bytes from %d.%d.%d.%d: icmp_seq=%d ttl=%d",
+		ntohs(headers->ip->tot_len) - (headers->ip->ihl * 4),
+		(ft_ping->in.recv.peer_addr.sin_addr.s_addr) >> 24 & 0xff,
+		(ft_ping->in.recv.peer_addr.sin_addr.s_addr) >> 16 & 0xff,
+		(ft_ping->in.recv.peer_addr.sin_addr.s_addr) >> 8 & 0xff,
+		(ft_ping->in.recv.peer_addr.sin_addr.s_addr) & 0xff,
+		ntohs(headers->icmp->un.echo.sequence),
+		headers->ip->ttl);
+	if (headers->ip->tot_len - (headers->ip->ihl * 8) - sizeof(t_icmpheader) > sizeof(t_time))
 	{
-		/* now we gotta learn how to interpret this header*/
-		/* what do we in back form it? just the data? a icmp header?*/
-		/* so, as always, let's print it */
-		printf("ICMP packet ind from %s\n", qualified_address(ft_ping, &(ft_ping->in.peer_addr.sin_addr)));
-	//	ft_puthex_bytes(msg.msg_name, msg.msg_namelen);
-	//	ft_puthex_bytes(msg.msg_iov->iov_base, msg.msg_iov->iov_len);
+		/* there's time in the data. let's print it. */
+		gettimeofday(&now, NULL);
+		ft_memcpy(&timestamp, headers->data, sizeof(t_time));
+		timestamp = elapsed_time(timestamp, now);
+		if (!(timestamp.tv_sec))
+			dprintf(STDOUT_FILENO, " time=%.3f ms", (double)(timestamp.tv_sec) * 1000 + (double)(timestamp.tv_usec) / 1000);
+	}
+	dprintf(STDOUT_FILENO, "\n");
+}
 
-		/* cool. we in IP + ICMP + DATA header in our buffer*/
-		/* we will just check if those headers are valid*/
-		t_headers headers;
-		if (parse_icmp(ft_ping, &(ft_ping->in.msg), (size_t)ft_ping->in.received, &headers))
+/*
+** receives a message on a nonblocking operation recvmsg(... MSG_DONTWAIT)
+** if something came in, we parse it to check if it is our expected ECHO_REPLY
+** if it is not what we expected, just drop it, unless it is an error (small packet,
+**  duplicated...)
+*/
+t_bool	ping_in(t_ping *ft_ping)
+{
+	t_headers	headers;
+
+	init_receive(ft_ping);
+	ft_ping->in.recv.received = recvmsg(ft_ping->sock, &(ft_ping->in.recv.msg), MSG_DONTWAIT);
+	if (ft_ping->in.recv.received > 0)
+	{
+		if (parse_icmp(ft_ping, &headers))
 		{
-			printf("parsing successfull\n");
-			ft_puthex_bytes(headers.ip, sizeof(t_ipheader));
-			ft_puthex_bytes(headers.icmp, sizeof(t_icmpheader));
-			ft_puthex_bytes((char *)(headers.icmp) + sizeof(t_icmpheader) , htons(headers.ip->tot_len) -  sizeof(t_icmpheader));
+			if (headers.icmp && (headers.icmp->type == ICMP_ECHOREPLY || headers.icmp->type == ICMP_TIMESTAMPREPLY || headers.icmp->type == ICMP_ADDRESSREPLY))
+			{
+				ping_print(ft_ping, &headers);
+				ft_ping->in.count++;
+			}
 		}
-
-//		int ihl = ((t_ipheader *)buf)->ihl;
-		return (1);
+		return (true);
 	}
 	else
-		return (0);
-
+		return (false);
 }

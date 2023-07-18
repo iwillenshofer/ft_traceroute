@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:29:15 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/17 09:07:13 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/18 15:16:00 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # define DFL_CUSTOM_PATTERN_SIZE 16
 # define DFL_TTL 64
 # define MAX_PACKET_SIZE 65535
+# define MAX_SEQ_TRACK 4
+
 
 typedef enum e_bool {false, true}	t_bool;
 typedef struct timeval	t_time;
@@ -164,7 +166,8 @@ typedef struct s_options
 
 
 /*
-** structures for receive and sending, to store buffers, addresses, counters...
+** structure to handle information of a single received packet...
+** It is 'reseted' on every single loop.
 */
 typedef struct s_receive
 {
@@ -176,22 +179,55 @@ typedef struct s_receive
 	int					received;
 }	t_receive;
 
-typedef struct s_send
+/*
+** time statistics. t_bool record is set to define
+** wether these stats are recorded or not, depending on the
+** size of the data received (wether we have a timestamp or not).
+*/
+typedef struct s_timestats
 {
-	int count;
-	
-}	t_send;
+	t_bool	record;
+	double	min;
+	double	max;
+	double	avg;
+	double	stddev;
+}	t_timestats;
+
+
+/*
+** structure for loop statistics. Holds information of the group of
+** packets sent to a specific IP.
+** It is 'reseted' for each new host
+*/
+typedef struct s_inloop
+{
+	size_t		count;
+	t_receive	recv;
+	t_timestats	time;
+	char		track[MAX_SEQ_TRACK];
+}	t_inloop;
+
+typedef struct s_outloop
+{
+	size_t count;
+
+}	t_outloop;
 
 /*
 ** here we will create a main structure to be passed throughout the program
 ** keeping sockets and addresses in one single place. Maybe also unions
 ** to avoid casting... let's see how it goes...
+** sock: the socket fd;
+** pid: the program pid, used as identity;
 */
 typedef struct s_ping
 {
 	int				sock;
 	pid_t			pid;
-	t_receive		in;
+	t_inloop		in;
+	t_outloop		out;
+
+
 	t_icmpheader	*packet; //OK
 	t_options		options; //OK
 	char			*program; // stores the first line of argv

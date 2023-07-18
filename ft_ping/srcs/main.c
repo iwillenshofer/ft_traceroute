@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:17:18 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/12 14:45:20 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/18 13:38:17 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,18 +36,39 @@ PING USES ICMP: RFC 792
 https://datatracker.ietf.org/doc/html/rfc792
 */
 
-#include <stdio.h>
+
+t_bool g_signal = false;
+
+void	shandler(int signal)
+{
+	if (signal == SIGINT)
+		g_signal = true;
+}
+
+void	leave_graciously(t_ping *ft_ping)
+{
+	if (ft_ping->packet)
+		free(ft_ping->packet);
+}
 
 int	main(int argc, char **argv)
 {
 	t_ping ft_ping;
-	setup(&ft_ping, argv);
 	
-	get_address(&ft_ping);
+	setup(&ft_ping, argv);
+	signal(SIGINT, shandler);
 	opensocket(&ft_ping);
-	ping(&ft_ping);
+	
+	while (*(++argv))
+	{
+		ft_strcpy(ft_ping.raw_host, *argv);
+		get_address(&ft_ping);
+		ping(&ft_ping);
+		freeaddrinfo((ft_ping.addr_send));
+	}
+	
 	close(ft_ping.sock);
-	freeaddrinfo((ft_ping.addr_send));
+	leave_graciously(&ft_ping);
 	(void)argc;
 	return (0);
 }

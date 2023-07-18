@@ -6,7 +6,7 @@
 #    By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 15:22:29 by iwillens          #+#    #+#              #
-#    Updated: 2023/07/17 08:45:26 by iwillens         ###   ########.fr        #
+#    Updated: 2023/07/18 13:22:38 by iwillens         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,15 +35,17 @@ SRCS = ${SRC_DIR}/main.c \
 		${SRC_DIR}/ping.c \
 		${SRC_DIR}/ping_in.c \
 		${SRC_DIR}/ping_out.c \
+		${SRC_DIR}/duplicate.c \
 		${SRC_DIR}/time.c
 
-BONUS_SRCS = ${SRC_DIR}/bonus/bonus.c \
-				${SRC_DIR}/bonus/address.c
+BONUS_SRCS = ${SRC_DIR}/bonus/new.c
 
 ifeq ($(HOSTTYPE),)
 	HOSTTYPE := $(shell uname -m)_$(shell uname -s)_$(shell uname -n)
 endif
 HOST_FILE = ${OBJ_DIR}/.host_${HOSTTYPE}
+
+
 
 COMPILE_BONUS = false
 BUILD_FILE = ${OBJ_DIR}/.build_release
@@ -53,6 +55,7 @@ ifneq (,$(filter bonus,$(MAKECMDGOALS)))
 	SRCS += $(BONUS_SRCS)
 	CCFLAGS += -DBONUS
 endif
+
 
 OBJS = $(patsubst ${SRC_DIR}/%.c, ${OBJ_DIR}/%.o, ${SRCS})
 

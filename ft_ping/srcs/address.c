@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 08:52:05 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/16 13:09:11 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/18 14:08:00 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,7 @@ void	get_address(t_ping *ft_ping)
 			get_errorstr(ft_ping, ERROR_UNKNOWN_HOST, ft_ping->program, ft_ping->raw_host), true);
 	if (ft_ping->addr_send->ai_canonname)
 		ft_strcpy(ft_ping->raw_host, ft_ping->addr_send->ai_canonname);
-	print_addrinfo(ft_ping->addr_send);
+//	print_addrinfo(ft_ping->addr_send);
 }
 
 /*

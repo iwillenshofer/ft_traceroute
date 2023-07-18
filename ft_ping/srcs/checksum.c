@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/12 14:25:33 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/12 14:26:54 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/18 09:52:52 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 ** best source ever: https://www.ietf.org/rfc/rfc1071.txt
 */
 
-t_u16bits	calculate_checksum(void *buffer, size_t size)
+t_u16bits	checksum(void *buffer, size_t size)
 {
 	size_t		i;
 	t_u8bits	*data;

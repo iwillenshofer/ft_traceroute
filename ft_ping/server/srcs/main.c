@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 13:05:18 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/12 10:15:49 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/18 09:52:52 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,7 +243,7 @@ void printbytes(unsigned int *v, size_t size_in_4bytes)
 ** calculates the checksum.
 ** best source ever: https://www.ietf.org/rfc/rfc1071.txt
 */
-unsigned short	calculate_checksum(void *buffer, size_t size)
+unsigned short	checksum(void *buffer, size_t size)
 {
 	size_t		i;
 	char	*data;
@@ -302,7 +302,7 @@ int main(int argc, char **argv)
 		unsigned int headers_len = (ihl * 4) + sizeof(struct icmphdr);
 		struct icmphdr* icmp = (struct icmphdr *)(buf + (ihl * 4));
 		char *info = (char*)(buf + headers_len);
-		unsigned short checksum = calculate_checksum(icmp, tot_len - sizeof(struct iphdr) );
+		unsigned short checksum = checksum(icmp, tot_len - sizeof(struct iphdr) );
 		printf("\n\n\n\n tot_len: %d, header len: %d, icmp->type: %u, icmp->code: %u, icmp->checksum: %u, icmp->id: %u, icmp->seq: %u, icmp->checksum: %u\n", tot_len, headers_len, (icmp->type),htons(icmp->code),htons(icmp->checksum), htons(icmp->un.echo.id), htons(icmp->un.echo.sequence), checksum);
 		print_hex(info, tot_len - headers_len);
 	//	print_bytes(info, tot_len - headers_len);

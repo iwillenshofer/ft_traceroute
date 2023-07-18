@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 14:42:53 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/12 15:15:09 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/18 13:34:38 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 char	**parse_options(t_ping *ft_ping, char **argv)
 {
 	char *s;
-
+	
 	(void)ft_ping;
 	s = ++(*argv);
 	while (*s)
@@ -47,10 +47,17 @@ char	**parse_options(t_ping *ft_ping, char **argv)
 	return (argv);
 }
 
+/*
+** after parsing, sets hosts to argv[] starting at position 1.
+*/
 void	parse(t_ping *ft_ping, char **argv)
 {
-	char *host;
-	host = NULL;
+	char **orig_args;
+
+
+	size_t hosts;
+	orig_args = argv;
+	hosts = 1;
 	ft_ping->program = *argv;
 	if (ft_arglen(argv) == 1)
 		fatal(ft_ping, NULL, true);
@@ -61,16 +68,15 @@ void	parse(t_ping *ft_ping, char **argv)
 			argv = parse_options(ft_ping, argv);
 		else
 		{
-			if (host)
-				fatal(ft_ping, get_errorstr(ft_ping, ERROR_INVALID_ARGUMENTS, ft_ping->program, *argv), true);
-			host = *argv;
+			orig_args[hosts] = *argv;
+			hosts++;
 		}
 		if (argv)
 			argv++;
 	}
-	if (!host)
+	if (hosts == 1)
 		fatal(ft_ping, get_errorstr(ft_ping, ERROR_INVALID_ARGUMENTS, ft_ping->program, NULL), true);
-	ft_strcpy(ft_ping->raw_host, host);
+	orig_args[hosts] = NULL;
 }
 
 void	set_default_pattern(t_ping *ft_ping)

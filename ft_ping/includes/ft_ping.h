@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:41:35 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/17 09:12:14 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/18 11:15:21 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@
 # include <netinet/ip_icmp.h>
 # include <stdlib.h>
 # include <limits.h>
-#include <sys/types.h>
+# include <sys/types.h>
+# include <signal.h>
 # include "libft.h"
 # include "ft_ping_types.h"
 # include "ft_ping_errors.h"
@@ -46,6 +47,8 @@
 
 # define FALSE 0
 # define TRUE 1
+
+extern t_bool g_signal;
 
 
 void	opensocket(t_ping *ft_ping);
@@ -71,7 +74,7 @@ t_u8bits	bitfield8_le(t_u8bits hostshort);
 /*
 ** checksum
 */
-t_u16bits	calculate_checksum(void *buffer, size_t size);
+t_u16bits	checksum(void *buffer, size_t size);
 
 /*
 ** time
@@ -86,4 +89,9 @@ t_bool timed_out(t_time begin, t_time timeout);
 t_bool	ping_in(t_ping *ft_ping);
 void	ping_out(t_ping *ft_ping);
 
+/*
+** duplicate checker
+*/
+t_bool	check_duptrack(t_ping *ft_ping, size_t seq);
+void	set_duptrack(t_ping *ft_ping, size_t seq);
 #endif

@@ -6,13 +6,13 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 07:12:16 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/17 09:12:01 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/18 14:49:57 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
 
-void	build_data(t_ping *ft_ping, char *data)
+static void	build_data(t_ping *ft_ping, char *data)
 {
 	size_t i;
 	struct timeval tv;
@@ -43,7 +43,7 @@ void	build_data(t_ping *ft_ping, char *data)
 ** Packet consists of icmp header + data (data size to be defined, defaults to 56)
 ** ICMP header + default size = 64.
 */
-void build_packet(t_ping *ft_ping)
+static void build_packet(t_ping *ft_ping)
 {
 	static t_u16bits sequence = 0;
 	t_icmpheader *header;
@@ -63,14 +63,16 @@ void build_packet(t_ping *ft_ping)
 	header->type = ICMP_ECHO;
 	header->code = 0;
 	build_data(ft_ping, data);
-	header->checksum = calculate_checksum(header, package_size);
+	header->checksum = checksum(header, package_size);
 	sequence++;
 }
 
 void	ping_out(t_ping *ft_ping)
 {
 	build_packet(ft_ping);
-	print_icmpheader((t_icmpheader *)ft_ping->packet);
+//	print_icmpheader((t_icmpheader *)ft_ping->packet);
 	if ( sendto(ft_ping->sock, ft_ping->packet, sizeof(t_icmpheader) + ft_ping->options.echo.size, 0, ft_ping->addr_send->ai_addr, sizeof(struct sockaddr)) <= 0)
 		printf("\nPacket Sending Failed!\n");
+	else
+		ft_ping->out.count++;
 }
