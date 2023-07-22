@@ -6,12 +6,12 @@
 #    By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/01 10:55:01 by iwillens          #+#    #+#              #
-#    Updated: 2023/07/11 09:38:23 by iwillens         ###   ########.fr        #
+#    Updated: 2023/07/19 07:59:55 by iwillens         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # **************************************************************************** #
-#          a Limited version of libft specific for the malloc project          #
+#         a Limited version of libft specific for the ft_ping project          #
 # **************************************************************************** #
 
 NAME = libft.a
@@ -31,7 +31,8 @@ SRCS =  ft_putchar.c \
 		ft_strjoin.c \
 		ft_strdup.c \
 		ft_arglen.c \
-		ft_split.c
+		ft_split.c \
+		ft_sqrt.c
 
 OBJS = $(patsubst %.c, %.o, ${SRCS})
 

@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 13:02:27 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/13 16:57:40 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/19 11:05:47 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ void	opensocket(t_ping *ft_ping)
     tv_out.tv_usec = 0; (void)tv_out;
 	int fd;
 	fd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
-	printf("socket: %d\n", fd);
 	if (setsockopt(fd, SOL_IP, IP_TTL, &ttl_val, sizeof(ttl_val)))
 		printf("error setting sock option 1.\n");
 //    if (setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv_out, sizeof(struct timeval)))

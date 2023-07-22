@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 14:42:53 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/18 13:34:38 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/19 13:28:49 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,6 @@ void	set_default_pattern(t_ping *ft_ping)
 	ft_ping->options.echo.pattern.size = DFL_CUSTOM_PATTERN_SIZE;
 }
 
-
 void	set_defaults(t_ping *ft_ping)
 {
 	ft_ping->options.echo.size = DFL_PACKET_SIZE;
@@ -104,7 +103,15 @@ void	set_defaults(t_ping *ft_ping)
 void	setup(t_ping *ft_ping, char **argv)
 {
 	ft_bzero(ft_ping, sizeof(t_ping));
-	parse(ft_ping, argv);
-	ft_ping->pid = getpid();
 	set_defaults(ft_ping);
+	parse(ft_ping, argv);
+	/*
+	** initial options that should be parsed.
+	*/
+	ft_ping->options.all.ttl = 0;
+	ft_ping->options.all.count = 3;
+
+
+
+	ft_ping->pid = getpid();
 }

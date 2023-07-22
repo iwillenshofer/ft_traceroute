@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 08:52:05 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/18 14:08:00 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/19 10:57:01 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,42 +48,6 @@
 	int getaddrinfo(const char *node, const char *service,
 						const struct addrinfo *hints,
 						struct addrinfo **res);
-*/
-
-
-
-
-/*
-** struct iphdr {
-     __u8    ihl:4, version:4;
-     __u8    tos;
-     __be16  tot_len;
-     __be16  id;
-     __be16  frag_off;
-     __u8    ttl;
-     __u8    protocol;
-     __sum16 check;
-     __be32  saddr;
-     __be32  daddr;
- };
-
-struct icmphdr {
-  __u8		type;
-  __u8		code;
-  __sum16	checksum;
-  union {
-	struct {
-		__be16	id;
-		__be16	sequence;
-	} echo;
-	__be32	gateway;
-	struct {
-		__be16	__unused;
-		__be16	mtu;
-	} frag;
-  } un;
-};
-
 */
 
 void	print_icmptype(int type, char *buf)
@@ -220,7 +184,7 @@ char *qualified_address(t_ping *ft_ping, struct in_addr *in)
 	char *ret;
 
 	ret = inetname(in);
-	if (!(*ret))
+	if (!ret || !(*ret))
 		ret = ft_ping->raw_host;
 	ft_bzero(ft_ping->qualified_address, sizeof(ft_ping->qualified_address));
 	sprintf(ft_ping->qualified_address, "(%s) %s", ret, inet_ntoa(*in));

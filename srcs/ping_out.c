@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 07:12:16 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/18 14:49:57 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/18 15:29:57 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ static void	build_data(t_ping *ft_ping, char *data)
 */
 static void build_packet(t_ping *ft_ping)
 {
-	static t_u16bits sequence = 0;
 	t_icmpheader *header;
 	char *data;
 	size_t package_size;
@@ -59,12 +58,11 @@ static void build_packet(t_ping *ft_ping)
 	data = (char*)(ft_ping->packet) + sizeof(t_icmpheader);
 	ft_bzero(ft_ping->packet, package_size);
 	header->un.echo.id = bytes16_le((t_u16bits)ft_ping->pid);
-	header->un.echo.sequence = bytes16_le(sequence);
+	header->un.echo.sequence = htons(ft_ping->out.count);
 	header->type = ICMP_ECHO;
 	header->code = 0;
 	build_data(ft_ping, data);
 	header->checksum = checksum(header, package_size);
-	sequence++;
 }
 
 void	ping_out(t_ping *ft_ping)

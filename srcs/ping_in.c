@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 07:12:28 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/18 15:08:35 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/19 13:57:10 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static t_bool	check_icmp_size(t_ping *ft_ping, t_headers *headers)
 	if (size < sizeof(t_ipheader) || size < htons(headers->ip->tot_len)
 		|| size < (headers->ip->ihl * 4) + sizeof(t_icmpheader))
 	{
-		printf("packet too short\n");
+		dprintf(STDERR_FILENO,"packet too short\n");
 		return (false);
 	}
 	headers->icmp = (t_icmpheader *)((char *)(headers->ip)
@@ -55,11 +55,13 @@ static t_bool	parse_icmp(t_ping *ft_ping, t_headers *headers)
 {
 	if (!check_icmp_size(ft_ping, headers))
 		return (false);
-	if (check_duptrack(ft_ping, ntohs(headers->icmp->un.echo.sequence)))
+	if (headers->icmp->type == ICMP_TIME_EXCEEDED)
 	{
-		return (false);
-		printf("DUPLICATED!!!!!\n");
+		ft_ping->in.recv.ttl_exceeded = true;
+		return (true);
 	}
+	if (check_duptrack(ft_ping, ntohs(headers->icmp->un.echo.sequence)))
+		ft_ping->in.recv.duplicated = true;
 	set_duptrack(ft_ping, ntohs(headers->icmp->un.echo.sequence));
 	return (true);
 }
@@ -84,27 +86,55 @@ static void		init_receive(t_ping *ft_ping)
 */
 static void	ping_print(t_ping *ft_ping, t_headers *headers)
 {
+	dprintf(STDOUT_FILENO, "%d bytes from %d.%d.%d.%d: ",
+			ntohs(headers->ip->tot_len) - (headers->ip->ihl * 4),
+			(ft_ping->in.recv.peer_addr.sin_addr.s_addr) >> 24 & 0xff,
+			(ft_ping->in.recv.peer_addr.sin_addr.s_addr) >> 16 & 0xff,
+			(ft_ping->in.recv.peer_addr.sin_addr.s_addr) >> 8 & 0xff,
+			(ft_ping->in.recv.peer_addr.sin_addr.s_addr) & 0xff);
+	if (ft_ping->in.recv.ttl_exceeded)
+		dprintf(STDOUT_FILENO, "Time to live exceeded");
+	else
+		dprintf(STDOUT_FILENO, "icmp_seq=%d ttl=%d", ntohs(headers->icmp->un.echo.sequence), headers->ip->ttl);
+	if (ft_ping->in.recv.duplicated)
+    	printf (STDOUT_FILENO," (DUP!)");
+	if (ft_ping->in.time.record)
+		dprintf(STDOUT_FILENO, " time=%.3f ms", ft_ping->in.time.current);
+	dprintf(STDOUT_FILENO, "\n");
+}
+
+/*
+** extracts the timestamp of incoming message and, if exists,
+** sets time recording.
+*/
+void	ping_timestamp(t_ping *ft_ping, t_headers *headers)
+{
 	t_time	now;
 	t_time	timestamp;
+	double deviation_new;
+	double deviation_old;
 
-	dprintf(STDOUT_FILENO, "%d bytes from %d.%d.%d.%d: icmp_seq=%d ttl=%d",
-		ntohs(headers->ip->tot_len) - (headers->ip->ihl * 4),
-		(ft_ping->in.recv.peer_addr.sin_addr.s_addr) >> 24 & 0xff,
-		(ft_ping->in.recv.peer_addr.sin_addr.s_addr) >> 16 & 0xff,
-		(ft_ping->in.recv.peer_addr.sin_addr.s_addr) >> 8 & 0xff,
-		(ft_ping->in.recv.peer_addr.sin_addr.s_addr) & 0xff,
-		ntohs(headers->icmp->un.echo.sequence),
-		headers->ip->ttl);
-	if (headers->ip->tot_len - (headers->ip->ihl * 8) - sizeof(t_icmpheader) > sizeof(t_time))
+	ft_ping->in.time.record = false;
+	if (headers->ip->tot_len - (headers->ip->ihl * 8) - sizeof(t_icmpheader)
+			> sizeof(t_time))
 	{
-		/* there's time in the data. let's print it. */
 		gettimeofday(&now, NULL);
 		ft_memcpy(&timestamp, headers->data, sizeof(t_time));
 		timestamp = elapsed_time(timestamp, now);
-		if (!(timestamp.tv_sec))
-			dprintf(STDOUT_FILENO, " time=%.3f ms", (double)(timestamp.tv_sec) * 1000 + (double)(timestamp.tv_usec) / 1000);
+		ft_ping->in.time.current = (double)(timestamp.tv_sec) * 1000
+				+ (double)(timestamp.tv_usec) / 1000;
+		ft_ping->in.time.record = true;
+		if (ft_ping->in.time.current > ft_ping->in.time.max)
+			ft_ping->in.time.max = ft_ping->in.time.current;
+		if (ft_ping->in.time.current < ft_ping->in.time.min  || (ft_ping->in.replies == 1))
+			ft_ping->in.time.min = ft_ping->in.time.current;
+		deviation_old = ft_ping->in.time.current - ft_ping->in.time.avg;
+		ft_ping->in.time.avg = ft_ping->in.time.avg
+				+ ((ft_ping->in.time.current - ft_ping->in.time.avg) / ft_ping->in.replies);
+		deviation_new = ft_ping->in.time.current - ft_ping->in.time.avg;
+		ft_ping->in.time.sum_squares = ft_ping->in.time.sum_squares + deviation_old * deviation_new;
+		ft_ping->in.time.variance = ft_ping->in.time.sum_squares / ft_ping->in.replies;
 	}
-	dprintf(STDOUT_FILENO, "\n");
 }
 
 /*
@@ -123,14 +153,15 @@ t_bool	ping_in(t_ping *ft_ping)
 	{
 		if (parse_icmp(ft_ping, &headers))
 		{
-			if (headers.icmp && (headers.icmp->type == ICMP_ECHOREPLY || headers.icmp->type == ICMP_TIMESTAMPREPLY || headers.icmp->type == ICMP_ADDRESSREPLY))
+			ft_ping->in.count++;
+			if ((headers.icmp->type == ICMP_ECHOREPLY) && !(ft_ping->in.recv.duplicated))
 			{
-				ping_print(ft_ping, &headers);
-				ft_ping->in.count++;
+				ft_ping->in.replies++;
+				ping_timestamp(ft_ping, &headers);
 			}
+			ping_print(ft_ping, &headers);
 		}
 		return (true);
 	}
-	else
-		return (false);
+	return (false);
 }

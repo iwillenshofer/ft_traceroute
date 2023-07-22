@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:29:15 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/18 15:16:00 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/19 13:25:26 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,8 @@ typedef struct s_receive
 	struct iovec		iobuf;
 	char				buf[MAX_PACKET_SIZE];
 	int					received;
+	t_bool				duplicated;
+	t_bool				ttl_exceeded;
 }	t_receive;
 
 /*
@@ -187,10 +189,12 @@ typedef struct s_receive
 typedef struct s_timestats
 {
 	t_bool	record;
+	double	current;
 	double	min;
 	double	max;
 	double	avg;
-	double	stddev;
+	double	sum_squares;
+	double	variance;
 }	t_timestats;
 
 
@@ -202,6 +206,7 @@ typedef struct s_timestats
 typedef struct s_inloop
 {
 	size_t		count;
+	size_t		replies;
 	t_receive	recv;
 	t_timestats	time;
 	char		track[MAX_SEQ_TRACK];
@@ -226,10 +231,10 @@ typedef struct s_ping
 	pid_t			pid;
 	t_inloop		in;
 	t_outloop		out;
+	t_options		options;
 
 
 	t_icmpheader	*packet; //OK
-	t_options		options; //OK
 	char			*program; // stores the first line of argv
 	struct addrinfo	*addr_send;
 	struct addrinfo	addr_recv;
