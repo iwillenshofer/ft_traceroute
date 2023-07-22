@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 07:12:28 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/19 13:57:10 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/22 15:53:32 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,8 @@ static t_bool	parse_icmp(t_ping *ft_ping, t_headers *headers)
 		ft_ping->in.recv.ttl_exceeded = true;
 		return (true);
 	}
+	if (headers->icmp->type != ICMP_ECHOREPLY)
+		return false;
 	if (check_duptrack(ft_ping, ntohs(headers->icmp->un.echo.sequence)))
 		ft_ping->in.recv.duplicated = true;
 	set_duptrack(ft_ping, ntohs(headers->icmp->un.echo.sequence));
@@ -86,18 +88,18 @@ static void		init_receive(t_ping *ft_ping)
 */
 static void	ping_print(t_ping *ft_ping, t_headers *headers)
 {
-	dprintf(STDOUT_FILENO, "%d bytes from %d.%d.%d.%d: ",
+	dprintf(STDOUT_FILENO, "%d bytes from %s: ",
 			ntohs(headers->ip->tot_len) - (headers->ip->ihl * 4),
-			(ft_ping->in.recv.peer_addr.sin_addr.s_addr) >> 24 & 0xff,
-			(ft_ping->in.recv.peer_addr.sin_addr.s_addr) >> 16 & 0xff,
-			(ft_ping->in.recv.peer_addr.sin_addr.s_addr) >> 8 & 0xff,
-			(ft_ping->in.recv.peer_addr.sin_addr.s_addr) & 0xff);
+			inet_ntoa(ft_ping->in.recv.peer_addr.sin_addr));
 	if (ft_ping->in.recv.ttl_exceeded)
-		dprintf(STDOUT_FILENO, "Time to live exceeded");
+	{
+		dprintf(STDOUT_FILENO, "Time to live exceeded\n");
+		return ;
+	}
 	else
 		dprintf(STDOUT_FILENO, "icmp_seq=%d ttl=%d", ntohs(headers->icmp->un.echo.sequence), headers->ip->ttl);
 	if (ft_ping->in.recv.duplicated)
-    	printf (STDOUT_FILENO," (DUP!)");
+    	dprintf (STDOUT_FILENO," (DUP!)");
 	if (ft_ping->in.time.record)
 		dprintf(STDOUT_FILENO, " time=%.3f ms", ft_ping->in.time.current);
 	dprintf(STDOUT_FILENO, "\n");
@@ -154,7 +156,7 @@ t_bool	ping_in(t_ping *ft_ping)
 		if (parse_icmp(ft_ping, &headers))
 		{
 			ft_ping->in.count++;
-			if ((headers.icmp->type == ICMP_ECHOREPLY) && !(ft_ping->in.recv.duplicated))
+			if (ICMP_ECHOREPLY && !(ft_ping->in.recv.duplicated))
 			{
 				ft_ping->in.replies++;
 				ping_timestamp(ft_ping, &headers);

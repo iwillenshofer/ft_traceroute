@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 14:42:53 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/19 13:28:49 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/22 15:51:18 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,8 @@ void	setup(t_ping *ft_ping, char **argv)
 	/*
 	** initial options that should be parsed.
 	*/
-	ft_ping->options.all.ttl = 0;
-	ft_ping->options.all.count = 3;
+	ft_ping->options.all.ttl = 3;
+	ft_ping->options.all.count = 10;
 
 
 

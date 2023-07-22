@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 07:12:16 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/18 15:29:57 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/22 13:27:24 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,13 +64,13 @@ static void build_packet(t_ping *ft_ping)
 	build_data(ft_ping, data);
 	header->checksum = checksum(header, package_size);
 }
-
+#include <errno.h>
 void	ping_out(t_ping *ft_ping)
 {
 	build_packet(ft_ping);
 //	print_icmpheader((t_icmpheader *)ft_ping->packet);
 	if ( sendto(ft_ping->sock, ft_ping->packet, sizeof(t_icmpheader) + ft_ping->options.echo.size, 0, ft_ping->addr_send->ai_addr, sizeof(struct sockaddr)) <= 0)
-		printf("\nPacket Sending Failed!\n");
+		printf("\nPacket Sending Failed!: %s\n",strerror(errno));
 	else
 		ft_ping->out.count++;
 }

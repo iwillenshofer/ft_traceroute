@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:29:15 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/19 13:25:26 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/22 13:29:47 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ typedef struct iphdr	t_ipheader;
 **   |     Data ...
 **   +-+-+-+-+-
 **
+** PING USES ICMP: RFC 792
 */
 
 typedef struct icmphdr	t_icmpheader;
@@ -100,6 +101,7 @@ typedef struct icmphdr	t_icmpheader;
 ** ip and icmp headers, as well as data, without having to do multiple
 ** casting
 */
+
 typedef struct s_headers {
 	t_ipheader		*ip;
 	t_icmpheader	*icmp;
@@ -118,11 +120,13 @@ typedef struct s_headers {
 **  size_t msg_iovlen;		: iovec struct len
 **  ... };					: other fields are unused in our implementation.
 */
+
 typedef struct msghdr t_msghdr;
 
 /*
 ** options for all kinds of requests
 */
+
 typedef struct s_options_all
 {
 	t_u8bits	count;
@@ -197,12 +201,12 @@ typedef struct s_timestats
 	double	variance;
 }	t_timestats;
 
-
 /*
 ** structure for loop statistics. Holds information of the group of
 ** packets sent to a specific IP.
 ** It is 'reseted' for each new host
 */
+
 typedef struct s_inloop
 {
 	size_t		count;
