@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ping.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:41:35 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/18 11:15:21 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/23 12:26:36 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,4 +94,10 @@ void	ping_out(t_ping *ft_ping);
 */
 t_bool	check_duptrack(t_ping *ft_ping, size_t seq);
 void	set_duptrack(t_ping *ft_ping, size_t seq);
+
+/*
+** parser
+*/
+void	parse(t_ping *ft_ping, char **argv);
+
 #endif

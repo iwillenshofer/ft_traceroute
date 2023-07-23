@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+         #
+#    By: marvin <marvin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 15:22:29 by iwillens          #+#    #+#              #
-#    Updated: 2023/07/18 13:22:38 by iwillens         ###   ########.fr        #
+#    Updated: 2023/07/23 12:26:05 by marvin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,8 @@ SRCS = ${SRC_DIR}/main.c \
 		${SRC_DIR}/ping_in.c \
 		${SRC_DIR}/ping_out.c \
 		${SRC_DIR}/duplicate.c \
-		${SRC_DIR}/time.c
+		${SRC_DIR}/time.c \
+		${SRC_DIR}/parser/parser.c
 
 BONUS_SRCS = ${SRC_DIR}/bonus/new.c
 
