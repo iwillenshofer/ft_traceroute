@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:29:15 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/22 13:29:47 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/23 22:07:43 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # define DFL_TTL 64
 # define MAX_PACKET_SIZE 65535
 # define MAX_SEQ_TRACK 4
-
+# define MAX_PATTERN 31
 
 typedef enum e_bool {false, true}	t_bool;
 typedef struct timeval	t_time;

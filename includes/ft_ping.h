@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ping.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:41:35 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/23 12:26:36 by marvin           ###   ########.fr       */
+/*   Updated: 2023/07/23 21:36:12 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,11 @@
 # endif
 
 # ifndef OPTS_SINGLE
-#  define OPTS_SINGLE "hv"
+#  define OPTS_SINGLE "vUTnfq?V"
 # endif
 
 # ifndef OPTS_DOUBLE
-#  define OPTS_DOUBLE ""
+#  define OPTS_DOUBLE "Twcislp"
 # endif
 
 # define FALSE 0
@@ -99,5 +99,12 @@ void	set_duptrack(t_ping *ft_ping, size_t seq);
 ** parser
 */
 void	parse(t_ping *ft_ping, char **argv);
+void	parse_value_pattern(t_ping *ft_ping, char *value);
+void	parse_value_ttl(t_ping *ft_ping, size_t value, char *original);
+void	parse_value_timeout(t_ping *ft_ping, size_t value, char *original);
+void	parse_value_count(t_ping *ft_ping, size_t value);
+void	parse_value_interval(t_ping *ft_ping, size_t value);
+void	parse_value_size(t_ping *ft_ping, size_t value, char *original);
+void	parse_value_preload(t_ping *ft_ping, size_t value, char *original);
 
 #endif

@@ -6,7 +6,7 @@
 #    By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/01 10:55:01 by iwillens          #+#    #+#              #
-#    Updated: 2023/07/19 07:59:55 by iwillens         ###   ########.fr        #
+#    Updated: 2023/07/23 20:39:30 by iwillens         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,13 +26,20 @@ SRCS =  ft_putchar.c \
 		ft_puthex_byte.c \
 		ft_putbytes.c \
 		ft_isprint.c \
+		ft_isdigit.c \
+		ft_ishex.c \
 		ft_strcpy.c \
 		ft_memset.c \
 		ft_strjoin.c \
 		ft_strdup.c \
 		ft_arglen.c \
 		ft_split.c \
-		ft_sqrt.c
+		ft_sqrt.c \
+		ft_strcmp.c \
+		ft_strncmp.c \
+		ft_strrchr.c \
+		ft_atoul.c\
+		ft_atoi.c
 
 OBJS = $(patsubst %.c, %.o, ${SRCS})
 
