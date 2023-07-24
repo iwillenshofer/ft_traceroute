@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 07:12:16 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/24 10:21:05 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/24 10:37:00 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ static void	build_data(t_ping *ft_ping, char *data)
 			data[i] = i % (0xff + 1);
 		i++;
 	}
-	(void)ft_ping;
 }
 
 /*

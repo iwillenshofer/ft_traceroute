@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:29:15 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/23 22:07:43 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/24 15:47:01 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,35 @@
 # define MAX_PACKET_SIZE 65535
 # define MAX_SEQ_TRACK 4
 # define MAX_PATTERN 31
+
+# define OPT_COUNT			0
+# define OPT_INTERVAL		1
+# define OPT_NUMERIC		2
+# define OPT_TTL			3
+# define OPT_VERBOSE		4
+# define OPT_TIMEOUT		5
+# define OPT_FLOOD			6
+# define OPT_PRELOAD		7
+# define OPT_PATTERN		8
+# define OPT_QUIET			9
+# define OPT_SIZE			10
+# define OPT_HELP			11
+# define OPT_USAGE			12
+# define OPT_VERSION		13
+# define OPT_OPTIONS_SIZE	14
+# define OPTT_NULL			0
+# define OPTT_SHORT			1
+# define OPTT_LONG			2
+# define OPTT_PATTERN		3
+
+
+typedef struct s_lstopt
+{
+	char shortcut;
+	char type;
+	char fullname[16];
+	char desc[128];
+}	t_lstopt;
 
 typedef enum e_bool {false, true}	t_bool;
 typedef struct timeval	t_time;
@@ -166,8 +195,8 @@ typedef struct s_options
 	t_u8bits		request_type;
 	t_options_all	all;
 	t_options_echo	echo;
+	t_lstopt		available[OPT_OPTIONS_SIZE];
 }	t_options;
-
 
 /*
 ** structure to handle information of a single received packet...
@@ -236,7 +265,6 @@ typedef struct s_ping
 	t_inloop		in;
 	t_outloop		out;
 	t_options		options;
-
 
 	t_icmpheader	*packet; //OK
 	char			*program; // stores the first line of argv

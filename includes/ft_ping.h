@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:41:35 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/23 21:36:12 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/24 16:40:32 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@
 # endif
 
 # ifndef OPTS_SINGLE
-#  define OPTS_SINGLE "vUTnfq?V"
+#  define OPTS_SINGLE "vUnfq?V"
 # endif
 
 # ifndef OPTS_DOUBLE
@@ -106,5 +106,16 @@ void	parse_value_count(t_ping *ft_ping, size_t value);
 void	parse_value_interval(t_ping *ft_ping, size_t value);
 void	parse_value_size(t_ping *ft_ping, size_t value, char *original);
 void	parse_value_preload(t_ping *ft_ping, size_t value, char *original);
+
+/*
+** options
+*/
+void	add_options(t_ping *ft_ping);
+
+/*
+** printing
+*/
+void	print_help(t_ping *ft_ping);
+void	print_usage(t_ping *ft_ping);
 
 #endif

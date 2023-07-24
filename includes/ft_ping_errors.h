@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 13:39:25 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/23 23:13:27 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/24 12:52:46 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,6 @@
 char *get_errorstr(t_ping *ft_ping, char *error, char *arg1, char *arg2);
 void print_error(char *error, char *arg1, char *arg2);
 void fatal(t_ping *ft_ping, char *msg, t_bool usage);
-void	parse_fatal(t_ping *ft_ping, char *error, char *s1, char *s2);
+void parse_fatal(t_ping *ft_ping, char *error, char *s1, char *s2);
+
 #endif

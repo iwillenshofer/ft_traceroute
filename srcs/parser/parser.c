@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 12:22:38 by marvin            #+#    #+#             */
-/*   Updated: 2023/07/23 23:24:23 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/24 16:58:22 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ t_bool	try_shorten(char *s, char *option, char shortcut)
 	return (false);
 }
 
-t_bool	shorten_options(char *s)
+t_bool	shorten_options(t_ping *ft_ping, char *s)
 {
 	t_bool find;
 
@@ -59,13 +59,20 @@ t_bool	shorten_options(char *s)
 	find |= try_shorten(s, "-usage", 'U');
 	find |= try_shorten(s, "-version", 'V');
 	if (!find)
-		printf("Thats an invalid option!!!\n");
+	{
+		if (ft_strlen(s) == 1)
+			return (false);
+		parse_fatal(ft_ping, ERR_UNRECOGNIZED_OPTION, --s, NULL);
+	}
 	return (find);
 }
 
 void	parse_single(t_ping *ft_ping, char c)
 {
-	(void)ft_ping;(void)c;
+	if (c == '?')
+		print_help(ft_ping);
+	else if (c == 'U')
+		print_usage(ft_ping);
 }
 
 #define DECIMAL 1
@@ -80,19 +87,15 @@ void	parse_fatal(t_ping *ft_ping, char *error, char *s1, char *s2)
 void	check_numeric(t_ping *ft_ping, char *s, char c)
 {
 	char	*orig;
-	int		type;
 
 	orig = s;
-	type = DECIMAL;
-	if (c == 'p')
-		type = HEXADECIMAL;
-	if (type == DECIMAL && (*s == '-' || *s == '+'))
+	if (c != 'p' && (*s == '-' || *s == '+'))
 		s++;
 	while (*s)
 	{
-		if (type == DECIMAL && !(ft_isdigit(*s)))
+		if (c != 'p' && !(ft_isdigit(*s)))
 			parse_fatal(ft_ping, ERR_PARSE_VALUE, orig, s);
-		else if (type == HEXADECIMAL && s - orig < MAX_PATTERN && *s && !(ft_ishex(*s)))
+		else if (c == 'p' && s - orig < MAX_PATTERN && *s && !(ft_ishex(*s)))
 			parse_fatal(ft_ping, ERR_PARSE_PATTERN, s, NULL);
 		s++;
 	}
@@ -133,9 +136,9 @@ char	**parse_double(t_ping *ft_ping, char *p, char **argv, t_bool shortened)
 
 	c = *p;
 	p++;
-	if (shortened && *p != '=')
-		parse_fatal(ft_ping, ERR_UNRECOGNIZED_OPTION, *argv, NULL);
-	if (shortened)
+	if (!shortened && *p == '=')
+		parse_fatal(ft_ping, ERR_PARSE_VALUE, p, p);
+	if (shortened && *p == '=')
 		p++;
 	if (!(*p) && !shortened)
 		p = *(++argv);
@@ -162,13 +165,18 @@ char	**parse_options(t_ping *ft_ping, char **argv)
 	{
 		shortened = false;
 		if ((*s == '-') && s == begin)
-			shortened = shorten_options(s);
+			shortened = shorten_options(ft_ping, s);
 		if (ft_strrchr(OPTS_SINGLE, *s))
 			parse_single(ft_ping, *s);
 		else if (ft_strrchr(OPTS_DOUBLE, *s))
 			return(parse_double(ft_ping, s, argv, shortened));
 		else
 		{
+			if (ft_strlen(s) == 1)
+			{
+				s++;
+				continue;
+			}
 			/*huston, we have a problem! */
 			printf("invalid option -- '%c'\n", *s);
 			print_usage(ft_ping);
@@ -195,7 +203,7 @@ void	parse(t_ping *ft_ping, char **argv)
 	argv++;
 	while (argv && *argv)
 	{
-		if (**argv == '-')
+		if (**argv == '-' && ft_strlen(*argv) != 1)
 			argv = parse_options(ft_ping, argv);
 		else
 		{
