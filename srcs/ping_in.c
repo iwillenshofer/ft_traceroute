@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 07:12:28 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/22 15:53:32 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/24 10:29:43 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ static t_bool	check_icmp_size(t_ping *ft_ping, t_headers *headers)
 static t_bool	parse_icmp(t_ping *ft_ping, t_headers *headers)
 {
 	if (!check_icmp_size(ft_ping, headers))
+		return (false);
+	if (ntohs(headers->icmp->un.echo.id) != (unsigned short)(ft_ping->pid))
 		return (false);
 	if (headers->icmp->type == ICMP_TIME_EXCEEDED)
 	{

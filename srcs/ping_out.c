@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 07:12:16 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/22 13:27:24 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/24 10:21:05 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static void build_packet(t_ping *ft_ping)
 	header = (t_icmpheader*)(ft_ping->packet);
 	data = (char*)(ft_ping->packet) + sizeof(t_icmpheader);
 	ft_bzero(ft_ping->packet, package_size);
-	header->un.echo.id = bytes16_le((t_u16bits)ft_ping->pid);
+	header->un.echo.id = htons(ft_ping->pid);
 	header->un.echo.sequence = htons(ft_ping->out.count);
 	header->type = ICMP_ECHO;
 	header->code = 0;
