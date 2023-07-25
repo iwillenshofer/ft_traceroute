@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:41:35 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/25 14:41:56 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/25 23:17:11 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,27 +98,11 @@ void	set_duptrack(t_ping *ft_ping, size_t seq);
 /*
 ** parser
 */
-void	parse(t_ping *ft_ping, char **argv);
-void	prs_value_pattern(t_ping *ft_ping, char *value);
-void	prs_value_ttl(t_ping *ft_ping, size_t value, char *original);
-void	prs_value_timeout(t_ping *ft_ping, size_t value, char *original);
-void	prs_value_count(t_ping *ft_ping, size_t value);
-void	prs_value_interval(t_ping *ft_ping, size_t value);
-void	prs_value_size(t_ping *ft_ping, size_t value, char *original);
-void	prs_value_preload(t_ping *ft_ping, size_t value, char *original);
-void	prs_single(t_ping *ft_ping, char c);
-t_bool	prs_shorten_options(t_ping *ft_ping, char *s);
-char	**prs_double(t_ping *ft_ping, char *p, char **argv, t_bool shortened);
-
+void		parse(t_ping *ft_ping, char **argv);
 t_lstopt	*opt_byfullname(t_ping *ft_ping, char *s);
 t_lstopt	*opt_byshortcut(t_ping *ft_ping, char c);
-
-
-/*
-** options
-*/
-void	add_options(t_ping *ft_ping);
-const char *opt_getfullname(t_ping *ft_ping, char c);
+void		add_options(t_ping *ft_ping);
+void		add_handlers(t_ping *ft_ping);
 
 /*
 ** printing
@@ -126,5 +110,6 @@ const char *opt_getfullname(t_ping *ft_ping, char c);
 void	print_help(t_ping *ft_ping);
 void	print_usage(t_ping *ft_ping);
 void	print_shortusage(t_ping *ft_ping);
+void	print_version(t_ping *ft_ping);
 
 #endif

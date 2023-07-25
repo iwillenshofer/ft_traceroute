@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 09:08:03 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/25 08:52:56 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/25 22:08:43 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,4 +111,15 @@ void	print_usage(t_ping *ft_ping)
 void	print_shortusage(t_ping *ft_ping)
 {
 	dprintf(STDERR_FILENO, ERR_SRTUSAGE, ft_ping->program, ft_ping->program);
+}
+
+void	print_version(t_ping *ft_ping)
+{
+	dprintf(STDOUT_FILENO, "\033[37;1m%s Version 0.%u\033[0m\n", ft_ping->program, UINT_MAX);
+	dprintf(STDOUT_FILENO, "\033[0m\033[38;2;123;145;255m _         _  _  _\n");
+	dprintf(STDOUT_FILENO, "\033[38;2;87;115;255m<_> _ _ _ <_>| || | ___ ._ _  ___\n");
+	dprintf(STDOUT_FILENO, "\033[38;2;207;59;255m| || | | || || || |/ ._>| ' |<_-<\n");
+	dprintf(STDOUT_FILENO, "\033[38;2;255;135;255m|_||__/_/ |_||_||_|\\___.|_|_|/__/\033[0m\n\n");
+	dprintf(STDOUT_FILENO, "\033[37;1m      * * *   ft_ping   * * *\033[0m\n\n");
+	exit(0);
 }

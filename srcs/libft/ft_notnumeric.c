@@ -1,32 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   setup.c                                            :+:      :+:    :+:   */
+/*   ft_notnumeric.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/06/30 14:42:53 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/25 21:48:49 by iwillens         ###   ########.fr       */
+/*   Created: 2023/07/25 22:26:13 by iwillens          #+#    #+#             */
+/*   Updated: 2023/07/25 22:26:51 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
+
 /*
-** this file sets up the ft_ping structure.
+** returns NULL if all chars are numeric
+** otherwise returns the first non numeric pos
 */
-
-#include "ft_ping.h"
-
-void	set_defaults(t_ping *ft_ping)
+char *ft_notnumeric(char *s)
 {
-	ft_ping->options.size = DFL_PACKET_SIZE;
-	ft_ping->options.ttl = DFL_TTL;
-}
-
-void	setup(t_ping *ft_ping, char **argv)
-{
-	ft_bzero(ft_ping, sizeof(t_ping));
-	add_options(ft_ping);
-	set_defaults(ft_ping);
-	parse(ft_ping, argv);
-	ft_ping->pid = getpid(); 
+	while (s && *s && ft_isdigit(*s))
+		s++;
+	if (*s)
+		return (s);
+	return (NULL);
 }

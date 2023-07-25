@@ -1,21 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   prs_single.c                                     :+:      :+:    :+:   */
+/*   ft_nothex.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/25 10:50:46 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/25 10:51:09 by iwillens         ###   ########.fr       */
+/*   Created: 2023/07/25 22:23:47 by iwillens          #+#    #+#             */
+/*   Updated: 2023/07/25 22:27:12 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ping.h"
+#include "libft.h"
 
-void	prs_single(t_ping *ft_ping, char c)
+/*
+** returns NULL if all chars are hex, otherwise returns the first not hex pos
+*/
+char *ft_nothex(char *s)
 {
-	if (c == '?')
-		print_help(ft_ping);
-	else if (c == 'U')
-		print_usage(ft_ping);
+	while (s && *s && ft_ishex(*s))
+		s++;
+	if (*s)
+		return (s);
+	return (NULL);
 }

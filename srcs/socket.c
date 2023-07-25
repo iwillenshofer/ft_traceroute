@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 13:02:27 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/22 13:38:17 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/25 21:48:49 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	opensocket(t_ping *ft_ping)
 
 	allow_broadcast = 1;
 	fd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
-	if (setsockopt(fd, SOL_IP, IP_TTL, &(ft_ping->options.all.ttl), sizeof(ft_ping->options.all.ttl)))
+	if (setsockopt(fd, SOL_IP, IP_TTL, &(ft_ping->options.ttl), sizeof(ft_ping->options.ttl)))
 		printf("error setting sock option 1.\n");
 	if (setsockopt(fd, SOL_SOCKET, SO_BROADCAST, &allow_broadcast, sizeof(allow_broadcast)))
 		printf("error setting sock option 1.\n");

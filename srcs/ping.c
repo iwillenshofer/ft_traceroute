@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 08:17:04 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/19 13:27:15 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/25 21:48:49 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ static t_bool done(t_ping *ft_ping)
 {
 	if (g_signal)
 		return (true);
-	if (ft_ping->options.all.count
-			&& ft_ping->options.all.count <= ft_ping->in.count)
+	if (ft_ping->options.count
+			&& ft_ping->options.count <= ft_ping->in.count)
 		return (true);
 	return (false);
 }
@@ -49,7 +49,7 @@ void	ping_header(t_ping *ft_ping)
 	dprintf(STDOUT_FILENO, "PING %s (%s): %hu data bytes\n",
 			ft_ping->raw_host,
 			str,
-			ft_ping->options.echo.size);
+			ft_ping->options.size);
 }
 
 void ping(t_ping *ft_ping)

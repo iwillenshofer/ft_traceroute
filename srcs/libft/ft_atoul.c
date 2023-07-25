@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/21 06:56:17 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/23 21:37:18 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/25 22:21:37 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ static unsigned long		get_number(const char *str, size_t start)
 	}
 	return (number);
 }
-#include <stdio.h>
 
 size_t	ft_atoul(const char *str)
 {

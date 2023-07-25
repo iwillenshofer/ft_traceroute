@@ -6,7 +6,7 @@
 #    By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 15:22:29 by iwillens          #+#    #+#              #
-#    Updated: 2023/07/25 11:25:41 by iwillens         ###   ########.fr        #
+#    Updated: 2023/07/25 23:17:41 by iwillens         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,11 +39,7 @@ SRCS = ${SRC_DIR}/main.c \
 		${SRC_DIR}/time.c \
 		${SRC_DIR}/parser/options.c \
 		${SRC_DIR}/parser/parser.c \
-		${SRC_DIR}/parser/prs_double_short.c \
-		${SRC_DIR}/parser/prs_double_long.c \
-		${SRC_DIR}/parser/prs_double.c \
-		${SRC_DIR}/parser/prs_single.c \
-		${SRC_DIR}/parser/prs_shorten.c
+		${SRC_DIR}/parser/handlers.c
 
 
 BONUS_SRCS = ${SRC_DIR}/bonus/new.c

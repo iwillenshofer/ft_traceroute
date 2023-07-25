@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:29:15 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/25 15:52:34 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/25 21:47:23 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,46 +158,26 @@ typedef struct msghdr t_msghdr;
 ** options for all kinds of requests
 */
 
-typedef struct s_options_all
-{
-	t_u8bits	count;
-	t_bool		debug;
-	t_u8bits	interval;
-	t_bool		numeric;
-	t_bool		ignore_routing;
-	t_u8bits	ttl;
-	t_u16bits	tos;
-	t_bool		verbose;
-	t_u8bits	timeout;
-	t_u8bits	linger;	
-}	t_options_all;
-
 typedef struct s_options_pattern
 {
 	t_u8bits	pattern[DFL_CUSTOM_PATTERN_SIZE];
 	t_u8bits	size;
 }	t_options_pattern;
 
-/*
-** options specific for echo replies
-*/
-typedef struct s_options_echo
-{
-	t_bool				flood;
-	t_u8bits			ip_timestamp;
-	t_u8bits			preload;
-	t_options_pattern	pattern;
-	t_bool				quiet;
-	t_bool				route;
-	t_u16bits			size;	
-}	t_options_echo;
-
 typedef struct s_options
 {
-	t_u8bits		request_type;
-	t_options_all	all;
-	t_options_echo	echo;
-	t_lstopt		available[OPT_OPTIONS_SIZE];
+	t_bool				flood;
+	t_bool				quiet;
+	t_u8bits			preload;
+	t_options_pattern	pattern;
+	t_u16bits			size;	
+	t_u8bits			count;
+	t_u8bits			interval;
+	t_bool				numeric;
+	t_u8bits			ttl;
+	t_bool				verbose;
+	t_u8bits			timeout;
+	t_lstopt			available[OPT_OPTIONS_SIZE];
 }	t_options;
 
 /*

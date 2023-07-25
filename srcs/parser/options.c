@@ -6,57 +6,11 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 14:27:23 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/25 16:38:45 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/25 23:21:47 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
-
-void	hndlr_doubleopt(t_ping *ft_ping, t_lstopt *opt, char *value)
-{
-	(void)ft_ping;(void)opt;(void)(value);
-	dprintf(STDOUT_FILENO, "OPTION: %c (%s) --> %s\n", opt->shortcut, opt->fullname, value);
-}
-
-void	hndlr_singleopt(t_ping *ft_ping, t_lstopt *opt, char *value)
-{
-	(void)ft_ping;(void)opt;(void)(value);
-	if (opt->shortcut == '?')
-		print_help(ft_ping);
-	if (opt->shortcut == 'U')
-		print_usage(ft_ping);
-	if (opt->shortcut == 'n')
-		dprintf(STDOUT_FILENO, "OPTION: %c (%s) \n", opt->shortcut, opt->fullname);
-	if (opt->shortcut == 'v')
-		dprintf(STDOUT_FILENO, "OPTION: %c (%s) \n", opt->shortcut, opt->fullname);
-	if (opt->shortcut == 'f')
-		dprintf(STDOUT_FILENO, "OPTION: %c (%s) \n", opt->shortcut, opt->fullname);
-	if (opt->shortcut == 'q')
-		dprintf(STDOUT_FILENO, "OPTION: %c (%s)\n", opt->shortcut, opt->fullname);
-	if (opt->shortcut == 'V')
-		dprintf(STDOUT_FILENO, "OPTION: %c (%s) \n", opt->shortcut, opt->fullname);
-}
-
-void	add_handlers(t_ping *ft_ping)
-{
-	t_lstopt	*opt;
-
-	opt = ft_ping->options.available;
-	opt[OPT_QUIET].handler = hndlr_singleopt;
-	opt[OPT_HELP].handler = hndlr_singleopt;
-	opt[OPT_USAGE].handler = hndlr_singleopt;
-	opt[OPT_VERSION].handler = hndlr_singleopt;
-	opt[OPT_NUMERIC].handler = hndlr_singleopt;
-	opt[OPT_VERBOSE].handler = hndlr_singleopt;
-	opt[OPT_FLOOD].handler = hndlr_singleopt;
-	opt[OPT_TTL].handler = hndlr_doubleopt;
-	opt[OPT_TIMEOUT] .handler = hndlr_doubleopt;
-	opt[OPT_SIZE].handler = hndlr_doubleopt;
-	opt[OPT_COUNT].handler = hndlr_doubleopt;
-	opt[OPT_INTERVAL].handler = hndlr_doubleopt;
-	opt[OPT_PRELOAD].handler = hndlr_doubleopt;
-	opt[OPT_PATTERN].handler = hndlr_doubleopt;
-}
 
 static void	add_descriptions(t_ping *ft_ping)
 {
@@ -114,26 +68,6 @@ void	add_options(t_ping *ft_ping)
 	opt[OPT_PATTERN] = new_option('p', OPTT_PATTERN, "pattern");
 	add_descriptions(ft_ping);
 	add_handlers(ft_ping);
-}
-
-/*
-** retrieves the full name of an option, based on it's shortname.
-** ie: returns 'count' for 'c' or 'help' for '?';
-*/
-const char	*opt_getfullname(t_ping *ft_ping, char c)
-{
-	t_lstopt	*opt;
-	size_t		i;
-
-	i = 0;
-	opt = ft_ping->options.available;
-	while (i < OPT_OPTIONS_SIZE)
-	{
-		if (opt[i].shortcut == c)
-			return (opt[i].fullname);
-		i++;
-	}
-	return (NULL);
 }
 
 /*
