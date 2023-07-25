@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:41:35 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/25 11:25:12 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/25 14:41:56 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,10 @@ void	prs_value_preload(t_ping *ft_ping, size_t value, char *original);
 void	prs_single(t_ping *ft_ping, char c);
 t_bool	prs_shorten_options(t_ping *ft_ping, char *s);
 char	**prs_double(t_ping *ft_ping, char *p, char **argv, t_bool shortened);
+
+t_lstopt	*opt_byfullname(t_ping *ft_ping, char *s);
+t_lstopt	*opt_byshortcut(t_ping *ft_ping, char c);
+
 
 /*
 ** options

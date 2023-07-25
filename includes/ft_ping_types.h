@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:29:15 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/24 15:47:01 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/25 15:52:34 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,13 +41,15 @@
 # define OPTT_LONG			2
 # define OPTT_PATTERN		3
 
+struct s_ping;
 
 typedef struct s_lstopt
 {
-	char shortcut;
-	char type;
-	char fullname[16];
-	char desc[128];
+	char	shortcut;
+	char	type;
+	char	fullname[16];
+	char	desc[128];
+	void	(*handler)(struct s_ping *, struct s_lstopt *opt, char *val);
 }	t_lstopt;
 
 typedef enum e_bool {false, true}	t_bool;

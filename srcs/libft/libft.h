@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/01 10:54:12 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/23 20:35:46 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/25 14:33:36 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,5 +45,7 @@ void	ft_puthex_bytes(void *bytes, size_t size);
 int		ft_strcmp(const char *s1, const char *s2);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
+char	*ft_strrchr(const char *s, int c);
+char	*ft_strchr(const char *s, int c);
 size_t	ft_atoul(const char *str);
 #endif

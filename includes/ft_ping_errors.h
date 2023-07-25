@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 13:39:25 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/25 11:44:27 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/25 16:05:25 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # define ERR_PPRELOAD "%s: invalid preload value (%s)\n"
 # define ERR_PTOOBIG "%s: option value too big: %s\n"
 # define ERR_UNRECOGNIZED_OPTION "%s: unrecognized option '%s'\n"
+# define ERR_LUNRECG_OPT "%s: unrecognized option '--%s'\n"
 # define ERR_SRTUSAGE "Try '%s --help' or '%s --usage' for more information.\n"
 # define ERR_MISSING_HOST "%s: missing host operand\n"
 
