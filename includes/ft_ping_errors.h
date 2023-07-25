@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 13:39:25 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/24 12:52:46 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/25 11:44:27 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,21 @@
 
 # include "ft_ping_types.h"
 
-# define ERROR_UNKNOWN_HOST "%s: unknown host %s"
-# define ERROR_INVALID_ARGUMENT "%s: invalid argument %s"
-# define ERROR_INVALID_ARGUMENTS "%s: invalid arguments"
-# define ERR_PARSE_VALUE "%s: invalid value (`%s' near `%s')\n"
-# define ERR_PARSE_PATTERN "%s: error in pattern near %s\n"
-# define ERR_PARSE_PRELOAD "%s: invalid preload value (%s)\n"
-# define ERR_PARSE_TOOBIG "%s: option value too big: %s\n"
+# define ERR_INVALIDOPT "%s: invalid option -- '%s'\n"
+# define ERR_UNKNOWN_HOST "%s: unknown host\n"
+# define ERR_PVALUE "%s: invalid value (%s)\n"
+# define ERR_PREQVAL "%s: option requires an argument -- '%s'\n"
+# define ERR_PREQLVAL "%s: ping: option '--%s' requires an argument\n"
+# define ERR_PPATTERN "%s: error in pattern near %s\n"
+# define ERR_PPRELOAD "%s: invalid preload value (%s)\n"
+# define ERR_PTOOBIG "%s: option value too big: %s\n"
 # define ERR_UNRECOGNIZED_OPTION "%s: unrecognized option '%s'\n"
+# define ERR_SRTUSAGE "Try '%s --help' or '%s --usage' for more information.\n"
+# define ERR_MISSING_HOST "%s: missing host operand\n"
 
 char *get_errorstr(t_ping *ft_ping, char *error, char *arg1, char *arg2);
 void print_error(char *error, char *arg1, char *arg2);
 void fatal(t_ping *ft_ping, char *msg, t_bool usage);
-void parse_fatal(t_ping *ft_ping, char *error, char *s1, char *s2);
+void prs_fatal(t_ping *ft_ping, const char *error, const char *s, t_bool shortusage);
 
 #endif

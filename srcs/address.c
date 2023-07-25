@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 08:52:05 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/19 10:57:01 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/25 11:25:03 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,8 +146,7 @@ void	get_address(t_ping *ft_ping)
 	hints.ai_protocol = IPPROTO_ICMP;
     hints.ai_flags = AI_CANONNAME;
 	if(getaddrinfo(ft_ping->raw_host, NULL, &hints, &(ft_ping->addr_send)))
-		fatal(ft_ping,
-			get_errorstr(ft_ping, ERROR_UNKNOWN_HOST, ft_ping->program, ft_ping->raw_host), true);
+		prs_fatal(ft_ping, ERR_UNKNOWN_HOST, NULL, false);
 	if (ft_ping->addr_send->ai_canonname)
 		ft_strcpy(ft_ping->raw_host, ft_ping->addr_send->ai_canonname);
 //	print_addrinfo(ft_ping->addr_send);

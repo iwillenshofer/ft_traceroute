@@ -6,7 +6,7 @@
 #    By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 15:22:29 by iwillens          #+#    #+#              #
-#    Updated: 2023/07/24 14:28:27 by iwillens         ###   ########.fr        #
+#    Updated: 2023/07/25 11:25:41 by iwillens         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,10 +37,13 @@ SRCS = ${SRC_DIR}/main.c \
 		${SRC_DIR}/ping_out.c \
 		${SRC_DIR}/duplicate.c \
 		${SRC_DIR}/time.c \
-		${SRC_DIR}/options.c \
+		${SRC_DIR}/parser/options.c \
 		${SRC_DIR}/parser/parser.c \
-		${SRC_DIR}/parser/parser_short.c \
-		${SRC_DIR}/parser/parser_long.c
+		${SRC_DIR}/parser/prs_double_short.c \
+		${SRC_DIR}/parser/prs_double_long.c \
+		${SRC_DIR}/parser/prs_double.c \
+		${SRC_DIR}/parser/prs_single.c \
+		${SRC_DIR}/parser/prs_shorten.c
 
 
 BONUS_SRCS = ${SRC_DIR}/bonus/new.c
@@ -49,8 +52,6 @@ ifeq ($(HOSTTYPE),)
 	HOSTTYPE := $(shell uname -m)_$(shell uname -s)_$(shell uname -n)
 endif
 HOST_FILE = ${OBJ_DIR}/.host_${HOSTTYPE}
-
-
 
 COMPILE_BONUS = false
 BUILD_FILE = ${OBJ_DIR}/.build_release

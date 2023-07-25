@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 09:08:03 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/24 16:50:49 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/25 08:52:56 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,4 +106,9 @@ void	print_usage(t_ping *ft_ping)
 	used = prt_options(ft_ping, OPTS_DOUBLE, true, used, preceeding);
 	dprintf(STDERR_FILENO, " HOST ...\n");
 	exit(0);
+}
+
+void	print_shortusage(t_ping *ft_ping)
+{
+	dprintf(STDERR_FILENO, ERR_SRTUSAGE, ft_ping->program, ft_ping->program);
 }

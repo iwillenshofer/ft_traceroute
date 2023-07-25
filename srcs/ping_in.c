@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 07:12:28 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/24 15:34:44 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/25 11:23:12 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static t_bool	check_icmp_size(t_ping *ft_ping, t_headers *headers)
 ** as well as ft_ping->received has been set with the number of bytes that were
 ** received.
 */
-static t_bool	parse_icmp(t_ping *ft_ping, t_headers *headers)
+static t_bool	prs_icmp(t_ping *ft_ping, t_headers *headers)
 {
 	if (!check_icmp_size(ft_ping, headers))
 		return (false);
@@ -155,7 +155,7 @@ t_bool	ping_in(t_ping *ft_ping)
 	ft_ping->in.recv.received = recvmsg(ft_ping->sock, &(ft_ping->in.recv.msg), MSG_DONTWAIT);
 	if (ft_ping->in.recv.received > 0)
 	{
-		if (parse_icmp(ft_ping, &headers))
+		if (prs_icmp(ft_ping, &headers))
 		{
 			ft_ping->in.count++;
 			if (ICMP_ECHOREPLY && !(ft_ping->in.recv.duplicated))

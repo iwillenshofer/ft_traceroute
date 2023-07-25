@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 14:27:23 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/24 16:07:52 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/25 10:59:01 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,20 @@
 
 static void	add_descriptions(t_ping *ft_ping)
 {
-	t_lstopt *opt;
+	t_lstopt	*opt;
 
 	opt = ft_ping->options.available;
 	ft_strcpy(opt[OPT_COUNT].desc, "stop after sending NUMBER packets");
-	ft_strcpy(opt[OPT_INTERVAL].desc, "wait NUMBER seconds between sending each packet");
+	ft_strcpy(opt[OPT_INTERVAL].desc,
+		"wait NUMBER seconds between sending each packet");
 	ft_strcpy(opt[OPT_NUMERIC].desc, "do not resolve host addresses");
 	ft_strcpy(opt[OPT_TTL].desc, "specify N as time-to-live");
 	ft_strcpy(opt[OPT_VERBOSE].desc, "verbose output");
 	ft_strcpy(opt[OPT_TIMEOUT].desc, "stop after N seconds");
 	ft_strcpy(opt[OPT_FLOOD].desc, "flood ping");
-	ft_strcpy(opt[OPT_PRELOAD].desc, "send NUMBER packets as fast as possible before falling into normal mode of behavior");
+	ft_strcpy(opt[OPT_PRELOAD].desc,
+		"send NUMBER packets as fast as possible \
+		before falling into normal mode of behavior");
 	ft_strcpy(opt[OPT_PATTERN].desc, "fill ICMP packet with given pattern ");
 	ft_strcpy(opt[OPT_QUIET].desc, "quiet output");
 	ft_strcpy(opt[OPT_SIZE].desc, "send NUMBER data octets");
@@ -46,7 +49,7 @@ static t_lstopt	new_option(char shortcut, char type, char *name)
 
 void	add_options(t_ping *ft_ping)
 {
-	t_lstopt *opt;
+	t_lstopt	*opt;
 
 	opt = ft_ping->options.available;
 	opt[OPT_COUNT] = new_option('c', OPTT_LONG, "count");
@@ -64,4 +67,24 @@ void	add_options(t_ping *ft_ping)
 	opt[OPT_USAGE] = new_option('U', OPTT_NULL, "usage");
 	opt[OPT_VERSION] = new_option('V', OPTT_NULL, "version");
 	add_descriptions(ft_ping);
+}
+
+/*
+** retrieves the full name of an option, based on it's shortname.
+** ie: returns 'count' for 'c' or 'help' for '?';
+*/
+const char	*opt_getfullname(t_ping *ft_ping, char c)
+{
+	t_lstopt	*opt;
+	size_t		i;
+
+	i = 0;
+	opt = ft_ping->options.available;
+	while (i < OPT_OPTIONS_SIZE)
+	{
+		if (opt[i].shortcut == c)
+			return (opt[i].fullname);
+		i++;
+	}
+	return (NULL);
 }
