@@ -6,7 +6,7 @@
 #    By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 15:22:29 by iwillens          #+#    #+#              #
-#    Updated: 2023/07/25 23:17:41 by iwillens         ###   ########.fr        #
+#    Updated: 2023/07/28 18:25:25 by iwillens         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,18 +25,19 @@ INC_DIR = ./includes
 INCLUDES = ${INC_DIR}/ft_ping.h
 
 SRCS = ${SRC_DIR}/main.c \
-		${SRC_DIR}/endianess.c \
-		${SRC_DIR}/checksum.c \
 		${SRC_DIR}/socket.c \
 		${SRC_DIR}/address.c \
 		${SRC_DIR}/setup.c \
 		${SRC_DIR}/print.c \
 		${SRC_DIR}/error.c \
 		${SRC_DIR}/ping.c \
-		${SRC_DIR}/ping_in.c \
-		${SRC_DIR}/ping_out.c \
-		${SRC_DIR}/duplicate.c \
-		${SRC_DIR}/time.c \
+		${SRC_DIR}/in/ping_in.c \
+		${SRC_DIR}/in/noecho.c \
+		${SRC_DIR}/in/print.c \
+		${SRC_DIR}/out/ping_out.c \
+		${SRC_DIR}/common/checksum.c \
+		${SRC_DIR}/common/duplicate.c \
+		${SRC_DIR}/common/time.c \
 		${SRC_DIR}/parser/options.c \
 		${SRC_DIR}/parser/parser.c \
 		${SRC_DIR}/parser/handlers.c
@@ -90,7 +91,7 @@ ${OBJ_DIR}/%.o: $(SRC_DIR)/%.c ${INC_DIR} ${INCLUDES} Makefile ${HOST_FILE} ${BU
 ifeq (true,$(COMPILE_BONUS))
 	@mkdir -p ${OBJ_DIR}/bonus
 endif
-	@${CC} ${CCFLAGS} -MMD -c $< -I. -I ${INC_DIR} -I${LIBFT_DIR} -o $@
+	${CC} ${CCFLAGS} -MMD -c $< -I. -I ${INC_DIR} -I${LIBFT_DIR} -o $@
 
 ${HOST_FILE}:
 	@rm -rf ${OBJ_DIR}
