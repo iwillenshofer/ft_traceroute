@@ -6,7 +6,7 @@
 #    By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 15:22:29 by iwillens          #+#    #+#              #
-#    Updated: 2023/07/28 18:25:25 by iwillens         ###   ########.fr        #
+#    Updated: 2023/07/28 23:31:56 by iwillens         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,6 @@ SRCS = ${SRC_DIR}/main.c \
 		${SRC_DIR}/socket.c \
 		${SRC_DIR}/address.c \
 		${SRC_DIR}/setup.c \
-		${SRC_DIR}/print.c \
 		${SRC_DIR}/error.c \
 		${SRC_DIR}/ping.c \
 		${SRC_DIR}/in/ping_in.c \
@@ -38,6 +37,8 @@ SRCS = ${SRC_DIR}/main.c \
 		${SRC_DIR}/common/checksum.c \
 		${SRC_DIR}/common/duplicate.c \
 		${SRC_DIR}/common/time.c \
+		${SRC_DIR}/print/usage.c \
+		${SRC_DIR}/print/help.c \
 		${SRC_DIR}/parser/options.c \
 		${SRC_DIR}/parser/parser.c \
 		${SRC_DIR}/parser/handlers.c

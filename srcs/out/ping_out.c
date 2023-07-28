@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 07:12:16 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/28 18:20:38 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/28 23:08:44 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,17 +62,16 @@ static void build_packet(t_ping *ft_ping)
 	ft_bzero(ft_ping->packet, package_size);
 	header->un.echo.id = htons(ft_ping->pid);
 	header->un.echo.sequence = htons(ft_ping->out.count);
-	clear_duptrack(ft_ping, header->un.echo.sequence);
+	clear_duptrack(ft_ping, ft_ping->out.count);
 	header->type = ICMP_ECHO;
 	header->code = 0;
 	build_data(ft_ping, data);
 	header->checksum = checksum(header, package_size);
 }
-
 void	ping_out(t_ping *ft_ping)
 {
 	build_packet(ft_ping);
-	if ( sendto(ft_ping->sock, ft_ping->packet, sizeof(t_icmp) + ft_ping->options.size, 0, ft_ping->addr_send->ai_addr, sizeof(struct sockaddr)) <= 0)
+	if ( sendto(ft_ping->sock, ft_ping->packet, sizeof(t_icmp) + ft_ping->options.size, 0, (struct sockaddr *)&(ft_ping->out.daddr), sizeof(struct sockaddr)) <= 0)
 		printf("\nWE'VE GOT A FATAL ERROR HERE. ADJUST.");
 	else
 		ft_ping->out.count++;

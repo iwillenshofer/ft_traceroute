@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 08:17:04 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/28 14:41:21 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/28 23:29:20 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void ping_stats(t_ping *ft_ping)
 {
-	dprintf(STDOUT_FILENO, "--- %s ping statistics ---\n", ft_ping->raw_host);
+	dprintf(STDOUT_FILENO, "--- %s ping statistics ---\n", ft_ping->out.host);
 	dprintf(STDOUT_FILENO,
 			"%ld packets transmitted, %ld packets received",
 			ft_ping->out.count, ft_ping->in.count.total - ft_ping->in.count.dup);
@@ -46,10 +46,10 @@ void	ping_header(t_ping *ft_ping)
 {
 	/* WILL FIX THAT AND PUT IN OUR FT_PING STRUCT A.S.A.P.*/
 	char str[INET_ADDRSTRLEN];
-	inet_ntop(AF_INET, &((struct sockaddr_in *)ft_ping->addr_send->ai_addr)->sin_addr, str, INET_ADDRSTRLEN);
+	inet_ntop(AF_INET, &(ft_ping->out.daddr.sin_addr), str, INET_ADDRSTRLEN);
 
 	dprintf(STDOUT_FILENO, "PING %s (%s): %hu data bytes\n",
-			ft_ping->raw_host,
+			ft_ping->out.host,
 			str,
 			ft_ping->options.size);
 }
@@ -60,7 +60,6 @@ void ping(t_ping *ft_ping)
 	t_time	timeout = {1,0000};
 
 	ft_bzero(&(ft_ping->in), sizeof(ft_ping->in));
-	ft_bzero(&(ft_ping->out), sizeof(ft_ping->out));
 	ping_header(ft_ping);
 	ping_out(ft_ping);
 	gettimeofday(&start, NULL);

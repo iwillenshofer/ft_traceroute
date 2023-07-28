@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 13:39:25 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/25 23:28:14 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/28 23:16:31 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,11 @@
 # define ERR_SRTUSAGE "Try '%s --help' or '%s --usage' for more information.\n"
 # define ERR_MISSING_HOST "%s: missing host operand\n"
 # define ERR_ALLOWNOARGS "%s: option '--%s' doesn't allow an argument\n"
+# define ERR_VALTOOSMALL "%s: option value too small: %s\n"
 
-char *get_errorstr(t_ping *ft_ping, char *error, char *arg1, char *arg2);
+# define ERR_SCKOPTTTL "%s: setsockopt(IP_TTL)\n"
+# define ERR_SOCKET "%s: Lacking privilege for icmp socket.\n"
+
 void print_error(char *error, char *arg1, char *arg2);
 void fatal(t_ping *ft_ping, char *msg, t_bool usage);
 void prs_fatal(t_ping *ft_ping, const char *error, const char *s, t_bool shortusage);

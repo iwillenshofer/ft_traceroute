@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 23:13:29 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/25 23:23:41 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/28 21:33:31 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ void	hndlr_doubleopt(t_ping *ft_ping, t_lstopt *opt, char *value)
 		prs_fatal(ft_ping, ERR_PTOOBIG, value, false);
 	else if (opt->shortcut == 'l' && val > INT_MAX)
 		prs_fatal(ft_ping, ERR_PPRELOAD, value, false);
+	else if (val == 0 && (opt->shortcut == 'T' || opt->shortcut == 'w'))
+		prs_fatal(ft_ping, ERR_VALTOOSMALL, value, false);
 	if (opt->shortcut == 'c')
 		ft_ping->options.count = val;
 	else if (opt->shortcut == 'i')

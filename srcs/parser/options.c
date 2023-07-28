@@ -6,35 +6,11 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/24 14:27:23 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/25 23:21:47 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/28 23:26:32 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
-
-static void	add_descriptions(t_ping *ft_ping)
-{
-	t_lstopt	*opt;
-
-	opt = ft_ping->options.available;
-	ft_strcpy(opt[OPT_COUNT].desc, "stop after sending NUMBER packets");
-	ft_strcpy(opt[OPT_INTERVAL].desc,
-		"wait NUMBER seconds between sending each packet");
-	ft_strcpy(opt[OPT_NUMERIC].desc, "do not resolve host addresses");
-	ft_strcpy(opt[OPT_TTL].desc, "specify N as time-to-live");
-	ft_strcpy(opt[OPT_VERBOSE].desc, "verbose output");
-	ft_strcpy(opt[OPT_TIMEOUT].desc, "stop after N seconds");
-	ft_strcpy(opt[OPT_FLOOD].desc, "flood ping");
-	ft_strcpy(opt[OPT_PRELOAD].desc,
-		"send NUMBER packets as fast as possible \
-		before falling into normal mode of behavior");
-	ft_strcpy(opt[OPT_PATTERN].desc, "fill ICMP packet with given pattern ");
-	ft_strcpy(opt[OPT_QUIET].desc, "quiet output");
-	ft_strcpy(opt[OPT_SIZE].desc, "send NUMBER data octets");
-	ft_strcpy(opt[OPT_HELP].desc, "give this help list");
-	ft_strcpy(opt[OPT_USAGE].desc, "give a short usage message");
-	ft_strcpy(opt[OPT_VERSION].desc, "print program version");
-}
 
 static t_lstopt	new_option(char shortcut, char type, char *name)
 {
@@ -45,6 +21,27 @@ static t_lstopt	new_option(char shortcut, char type, char *name)
 	new.type = type;
 	ft_strcpy(new.fullname, name);
 	return (new);
+}
+
+static void	add_descriptions(t_ping *ft_ping)
+{
+	t_lstopt	*opt;
+
+	opt = ft_ping->options.available;
+	ft_strcpy(opt[OPT_COUNT].desc, ODSC_COUNT);
+	ft_strcpy(opt[OPT_INTERVAL].desc, ODSC_INTERVAL);
+	ft_strcpy(opt[OPT_NUMERIC].desc, ODSC_NUMERIC);
+	ft_strcpy(opt[OPT_TTL].desc, ODSC_TTL);
+	ft_strcpy(opt[OPT_VERBOSE].desc, ODSC_VERBOSE);
+	ft_strcpy(opt[OPT_TIMEOUT].desc, ODSC_TIMEOUT);
+	ft_strcpy(opt[OPT_FLOOD].desc, ODSC_FLOOD);
+	ft_strcpy(opt[OPT_PRELOAD].desc, ODSC_PRELOAD);
+	ft_strcpy(opt[OPT_PATTERN].desc, ODSC_PATTERN);
+	ft_strcpy(opt[OPT_QUIET].desc, ODSC_QUIET);
+	ft_strcpy(opt[OPT_SIZE].desc, ODSC_SIZE);
+	ft_strcpy(opt[OPT_HELP].desc, ODSC_HELP);
+	ft_strcpy(opt[OPT_USAGE].desc, ODSC_USAGE);
+	ft_strcpy(opt[OPT_VERSION].desc, ODSC_VERSION);
 }
 
 void	add_options(t_ping *ft_ping)
@@ -80,7 +77,7 @@ t_lstopt	*opt_byfullname(t_ping *ft_ping, char *s)
 
 	i = 0;
 	opt = ft_ping->options.available;
-	while (i < OPT_OPTIONS_SIZE)
+	while (i < OPT_LSTSIZE)
 	{
 		if (!(ft_strcmp(opt[i].fullname, s)))
 			return (&(opt[i]));
@@ -90,7 +87,7 @@ t_lstopt	*opt_byfullname(t_ping *ft_ping, char *s)
 }
 
 /*
-** retrieves an option by lastname.
+** retrieves an option by shortcut.
 */
 t_lstopt	*opt_byshortcut(t_ping *ft_ping, char c)
 {
@@ -99,7 +96,7 @@ t_lstopt	*opt_byshortcut(t_ping *ft_ping, char c)
 
 	i = 0;
 	opt = ft_ping->options.available;
-	while (i < OPT_OPTIONS_SIZE)
+	while (i < OPT_LSTSIZE)
 	{
 		if (opt[i].shortcut == c)
 			return (&(opt[i]));

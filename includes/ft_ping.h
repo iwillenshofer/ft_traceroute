@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:41:35 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/28 18:09:04 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/28 23:27:29 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # include "libft.h"
 # include "ft_ping_types.h"
 # include "ft_ping_errors.h"
+# include "ft_ping_parse.h"
 
 # ifdef BONUS
 #  define IS_BONUS 1
@@ -126,5 +127,6 @@ void	print_echo(t_ping *ft_ping);
 ** no echo
 */
 void	icmp_noecho(t_ping *ft_ping);
+char	*tname(int type);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 10:44:30 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/28 15:18:26 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/28 22:43:22 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,8 +111,7 @@ void	icmp_noecho(t_ping *ft_ping)
 		return ;
 	hdrs.icmp = (t_icmp *)(((char *)hdrs.ip) + (hdrs.ip->ihl * 4));
 	hdrs.data = ((char *)(hdrs.icmp)) + sizeof(t_icmp);
-	if ((((struct sockaddr_in *)ft_ping->addr_send->ai_addr)->sin_addr.s_addr)
-		!= hdrs.ip->daddr)
+	if (ft_ping->out.daddr.sin_addr.s_addr != hdrs.ip->daddr)
 		return ;
 	if ((hdrs.icmp->un.echo.id) != htons(ft_ping->pid))
 		return ;

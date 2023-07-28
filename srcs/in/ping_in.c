@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 07:12:28 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/28 17:52:52 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/28 23:01:40 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,6 @@ t_bool	ping_in(t_ping *ft_ping)
 		= recvmsg(ft_ping->sock, &(ft_ping->in.recv.msg), MSG_DONTWAIT);
 	if (ft_ping->in.recv.received > 0)
 	{
-		ft_ping->in.recv.received = sizeof(t_ip) + (sizeof(t_icmp)) - 1;
 		if (parse_icmp(ft_ping) && check_icmp(ft_ping))
 		{
 			ft_ping->in.count.total++;

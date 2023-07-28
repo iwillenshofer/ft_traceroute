@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:17:18 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/24 15:07:53 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/28 23:01:17 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,6 @@ void	shandler(int signal)
 		g_signal = true;
 }
 
-void	leave_graciously(t_ping *ft_ping)
-{
-	if (ft_ping->packet)
-		free(ft_ping->packet);
-}
-
 int	main(int argc, char **argv)
 {
 	t_ping ft_ping;
@@ -49,13 +43,12 @@ int	main(int argc, char **argv)
 	opensocket(&ft_ping);
 	while (*(++argv))
 	{
-		ft_strcpy(ft_ping.raw_host, *argv);
+		ft_bzero(&(ft_ping.out), sizeof(ft_ping.out));
+		ft_strcpy(ft_ping.out.host, *argv);
 		get_address(&ft_ping);
 		ping(&ft_ping);
-		freeaddrinfo((ft_ping.addr_send));
 	}
 	close(ft_ping.sock);
-	leave_graciously(&ft_ping);
 	(void)argc;
 	return (0);
 }

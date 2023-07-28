@@ -6,47 +6,50 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:29:15 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/28 15:13:56 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/28 23:28:26 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "ft_ping_parse.h"
 
 #ifndef FT_PING_TYPES_H
 # define FT_PING_TYPES_H
 
-# define ERROR_BUFFER_SIZE 64
-# define DFL_PACKET_SIZE 56
-# define DFL_CUSTOM_PATTERN_SIZE 16
-# define DFL_TTL 64
-# define MAX_PACKET_SIZE 65535
-# define MAX_SEQ_TRACK 32
-# define MAX_PATTERN 31
+# define ERROR_BUFFER_SIZE 			64
+# define DFL_PACKET_SIZE 			56
+# define DFL_CUSTOM_PATTERN_SIZE 	16
+# define DFL_TTL					64
+# define MAX_PACKET_SIZE			65535
+# define MAX_SEQ_TRACK				128
+# define MAX_PATTERN				31
+# define NI_MAXHOST     			1025
 
-# define OPT_COUNT			0
-# define OPT_INTERVAL		1
-# define OPT_NUMERIC		2
-# define OPT_TTL			3
-# define OPT_VERBOSE		4
-# define OPT_TIMEOUT		5
-# define OPT_FLOOD			6
-# define OPT_PRELOAD		7
-# define OPT_PATTERN		8
-# define OPT_QUIET			9
-# define OPT_SIZE			10
-# define OPT_HELP			11
-# define OPT_USAGE			12
-# define OPT_VERSION		13
-# define OPT_OPTIONS_SIZE	14
-# define OPTT_NULL			0
-# define OPTT_SHORT			1
-# define OPTT_LONG			2
-# define OPTT_PATTERN		3
+# define OPT_COUNT					0
+# define OPT_INTERVAL				1
+# define OPT_NUMERIC				2
+# define OPT_TTL					3
+# define OPT_VERBOSE				4
+# define OPT_TIMEOUT				5
+# define OPT_FLOOD					6
+# define OPT_PRELOAD				7
+# define OPT_PATTERN				8
+# define OPT_QUIET					9
+# define OPT_SIZE					10
+# define OPT_HELP					11
+# define OPT_USAGE					12
+# define OPT_VERSION				13
+# define OPT_OPTIONS_SIZE			14
+# define OPTT_NULL					0
+# define OPTT_SHORT					1
+# define OPTT_LONG					2
+# define OPTT_PATTERN				3
 
 struct s_ping;
 
 typedef struct s_lstopt
 {
 	char	shortcut;
-	char	type;
+	int		type;
 	char	fullname[16];
 	char	desc[128];
 	void	(*handler)(struct s_ping *, struct s_lstopt *opt, char *val);
@@ -59,19 +62,12 @@ typedef struct timeval	t_time;
 ** define unsigned 8, 16 and 32 bits variables. Those are
 ** system defined as __be16, __be32... but I'm defining it myself
 ** for learning purposes, testing and reference.
+** for 32bits systems, 32bits should be unsigned long instead of
+** int, but I didn't implement it as I found unecessary for this project.
 */
 typedef unsigned char		t_u8bits;
 typedef unsigned short		t_u16bits;
-
-# ifdef __x86_64__
-
 typedef unsigned int		t_u32bits;
-
-# else
-
-typedef unsigned long		t_u32bits;
-
-# endif
 
 /*
 ** the Internet protocol and the icmp protocol headers.
@@ -180,7 +176,7 @@ typedef struct s_options
 	t_u8bits			ttl;
 	t_bool				verbose;
 	t_u8bits			timeout;
-	t_lstopt			available[OPT_OPTIONS_SIZE];
+	t_lstopt			available[OPT_LSTSIZE];
 }	t_options;
 
 /*
@@ -195,15 +191,14 @@ typedef struct s_receive
 	struct iovec		iobuf;
 	char				buf[MAX_PACKET_SIZE];
 	int					received;
+	int					type;
 	t_bool				duplicated;
 	t_bool				ttl_exceeded;
 	t_headers			hdrs;
 }	t_receive;
 
 /*
-** time statistics. t_bool record is set to define
-** wether these stats are recorded or not, depending on the
-** size of the data received (wether we have a timestamp or not).
+** counts and records timed echo replies
 */
 typedef struct s_timestats
 {
@@ -240,7 +235,9 @@ typedef struct s_inloop
 typedef struct s_outloop
 {
 	size_t count;
-
+	char			host[NI_MAXHOST + 1];
+	char			fqdn[NI_MAXHOST + 1];
+	struct sockaddr_in	daddr;
 }	t_outloop;
 
 /*
@@ -260,11 +257,9 @@ typedef struct s_ping
 
 	t_icmp	*packet; //OK
 	char			*program; // stores the first line of argv
-	struct addrinfo	*addr_send;
 	struct addrinfo	addr_recv;
 	char			error[ERROR_BUFFER_SIZE];
-	char			raw_host[HOST_NAME_MAX]; // the original hostname that we are trying to ping
-	char			qualified_address[(HOST_NAME_MAX * 2) + 4];
+	char			qualified_address[HOST_NAME_MAX + 1];
 }	t_ping;
 
 #endif

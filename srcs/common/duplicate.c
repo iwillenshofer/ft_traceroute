@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:59:53 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/28 18:04:36 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/28 23:16:51 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,12 @@ void	clear_duptrack(t_ping *ft_ping, size_t seq)
 {
 	char	*c;
 	size_t	pos;
+	char	mask;
 
 	pos = seq % (MAX_SEQ_TRACK * 8);
 	c = &(ft_ping->in.track[pos / 8]);
-	*c = *c ^ (1 << (pos % 8));
+	mask = 0xff ^ (1 << (pos % 8));
+	*c = *c & mask;
 }
 
 void	set_duptrack(t_ping *ft_ping, size_t seq)

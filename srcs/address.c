@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 08:52:05 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/28 18:24:45 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/28 23:07:33 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,45 +50,38 @@
 **						struct addrinfo **res);
 */
 
-static char *inetname(t_inaddr *in)
-{
-	static char line[50];
-	struct hostent *hostentity;
-
-	hostentity = gethostbyaddr((char *)in, sizeof (*in), AF_INET);
-	if (hostentity && hostentity->h_name) {
-		(void) strcpy(line,  hostentity->h_name); 
-	}
-	return (line);
-}
-
 /*
 ** gets information on address to be ping'ed (host) and stores
-**  into ft_ping->addr_send, to be used by ping().
+**  into ft_ping->out.daddr, to be used by ping().
 */
+
+static void get_fqdn(t_ping *ft_ping)
+{
+	ft_bzero(ft_ping->out.fqdn, sizeof(ft_ping->out.fqdn));
+	if (getnameinfo((struct sockaddr*)&(ft_ping->out.daddr),
+		sizeof(ft_ping->out.daddr), ft_ping->out.fqdn,
+		sizeof(ft_ping->out.fqdn), NULL, 0, 0))
+		ft_strcpy(ft_ping->out.fqdn, inet_ntoa(ft_ping->out.daddr.sin_addr));
+	printf("Host: %s\n", ft_ping->out.fqdn);
+}
+
 void	get_address(t_ping *ft_ping)
 {
 	struct addrinfo hints;
+	struct addrinfo	*addr;
 
 	ft_bzero(&hints, sizeof(struct addrinfo));
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_RAW;
 	hints.ai_protocol = IPPROTO_ICMP;
     hints.ai_flags = AI_CANONNAME;
-	if(getaddrinfo(ft_ping->raw_host, NULL, &hints, &(ft_ping->addr_send)))
+	int ret;
+	ret = getaddrinfo(ft_ping->out.host, NULL, &hints, &addr);
+	if (ret)
 		prs_fatal(ft_ping, ERR_UNKNOWN_HOST, NULL, false);
-	if (ft_ping->addr_send->ai_canonname)
-		ft_strcpy(ft_ping->raw_host, ft_ping->addr_send->ai_canonname);
-}
-
-char *qualified_address(t_ping *ft_ping, t_inaddr *in)
-{
-	char *ret;
-
-	ret = inetname(in);
-	if (!ret || !(*ret))
-		ret = ft_ping->raw_host;
-	ft_bzero(ft_ping->qualified_address, sizeof(ft_ping->qualified_address));
-	sprintf(ft_ping->qualified_address, "(%s) %s", ret, inet_ntoa(*in));
-	return (ft_ping->qualified_address);
+	if (addr->ai_canonname)
+		ft_strcpy(ft_ping->out.host, addr->ai_canonname);
+	ft_ping->out.daddr = *(struct sockaddr_in*)(addr->ai_addr);
+	freeaddrinfo(addr);
+	get_fqdn(ft_ping);
 }
