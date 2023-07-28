@@ -6,14 +6,14 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 13:56:58 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/03 14:03:20 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/28 15:11:38 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
 
 
-char *inetname(struct in_addr *in)
+char *inetname(t_inaddr *in)
 {
 	static char line[50];
 	struct hostent *hostentity;
@@ -27,7 +27,7 @@ char *inetname(struct in_addr *in)
 
 #if BONUS
 
-char *qualified_address(t_ping *ft_ping, struct in_addr *in)
+char *qualified_address(t_ping *ft_ping, t_inaddr *in)
 {
 	char *ret;
 

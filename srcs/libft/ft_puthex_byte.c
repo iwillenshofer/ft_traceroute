@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 18:30:03 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/11 09:49:02 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/28 11:45:28 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,10 @@ void	ft_puthexbyte(unsigned char c)
 }
 
 /*
-** size in bytes. use with sizeof()
+** size in bytes. use with sizeof().
+** space is the number until a space, carr is the number until placing a \n
 */
-void	ft_puthex_bytes(void *bytes, size_t size)
+void	ft_puthex_bytes(void *bytes, size_t size, size_t space, size_t carr)
 {
 	char *s;
 	size_t i;
@@ -45,11 +46,10 @@ void	ft_puthex_bytes(void *bytes, size_t size)
 	while (i < size)
 	{
 		ft_puthexbyte(s[i]);
-		write(1, " ", 1);
 		i++;
-		if (!(i % 32))
+		if (carr && !(i % carr))
 			write(1, "\n", 1);
-		else if (!(i % 4))
+		else if (space && !(i % space))
 			write(1, " ", 1);
 	}
 	write(1, "\n", 1);

@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 09:12:12 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/16 11:11:38 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/28 15:40:20 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,13 @@ t_time elapsed_time(t_time begin, t_time end)
 ** hours before overflowing.
 ** Overflow will not be handled.
 */
-ssize_t elapsed_time_ms(t_time begin, t_time end)
+double elapsed_time_ms(t_time begin, t_time end)
 {
 	t_time elapsed;
 
 	elapsed = elapsed_time(begin, end);
-	return ((elapsed.tv_sec * 1000) + (elapsed.tv_usec / 1000));
+	return ((double)(elapsed.tv_sec) * 1000
+		+ (double)(elapsed.tv_usec) / 1000);
 }
 
 /*

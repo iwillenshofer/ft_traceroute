@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:41:35 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/25 23:17:11 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/28 18:09:04 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,13 @@
 #  define OPTS_DOUBLE "Twcislp"
 # endif
 
+
+/*
+** ICMP TYPES not included in header (for error response handling)
+*/
+# define ICMP_CSRTR_ADV 9 
+# define ICMP_CSRTR_DSC 10
+
 # define FALSE 0
 # define TRUE 1
 
@@ -54,9 +61,9 @@ extern t_bool g_signal;
 void	opensocket(t_ping *ft_ping);
 void	get_address(t_ping *ft_ping);
 void	print_addrinfo(struct addrinfo *head);
-void	print_icmpheader(t_icmpheader *head);
+void	print_icmp(t_icmp *head);
 
-void	print_ipheader(t_ipheader *head);
+
 void	setup(t_ping *ft_ping, char **argv);
 void	print_usage(t_ping *ft_ping);
 char	*qualified_address(t_ping *ft_ping, struct in_addr *in);
@@ -80,7 +87,7 @@ t_u16bits	checksum(void *buffer, size_t size);
 ** time
 */
 t_time elapsed_time(t_time begin, t_time end);
-ssize_t elapsed_time_ms(t_time begin, t_time end);
+double elapsed_time_ms(t_time begin, t_time end);
 t_bool timed_out(t_time begin, t_time timeout);
 
 /*
@@ -92,8 +99,9 @@ void	ping_out(t_ping *ft_ping);
 /*
 ** duplicate checker
 */
-t_bool	check_duptrack(t_ping *ft_ping, size_t seq);
 void	set_duptrack(t_ping *ft_ping, size_t seq);
+t_bool	check_duptrack(t_ping *ft_ping, size_t seq);
+void	clear_duptrack(t_ping *ft_ping, size_t seq);
 
 /*
 ** parser
@@ -111,5 +119,12 @@ void	print_help(t_ping *ft_ping);
 void	print_usage(t_ping *ft_ping);
 void	print_shortusage(t_ping *ft_ping);
 void	print_version(t_ping *ft_ping);
+void	print_headers(t_ping *ft_ping, t_headers *hdr);
+void	print_echo(t_ping *ft_ping);
+
+/*
+** no echo
+*/
+void	icmp_noecho(t_ping *ft_ping);
 
 #endif

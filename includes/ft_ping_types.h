@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:29:15 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/25 21:47:23 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/28 15:13:56 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # define DFL_CUSTOM_PATTERN_SIZE 16
 # define DFL_TTL 64
 # define MAX_PACKET_SIZE 65535
-# define MAX_SEQ_TRACK 4
+# define MAX_SEQ_TRACK 32
 # define MAX_PATTERN 31
 
 # define OPT_COUNT			0
@@ -107,7 +107,7 @@ typedef unsigned long		t_u32bits;
 ** below.
 */
 
-typedef struct iphdr	t_ipheader;
+typedef struct iphdr	t_ip;
 
 /*
 ** Echo or Echo Reply Message
@@ -125,7 +125,7 @@ typedef struct iphdr	t_ipheader;
 ** PING USES ICMP: RFC 792
 */
 
-typedef struct icmphdr	t_icmpheader;
+typedef struct icmphdr	t_icmp;
 
 /*
 ** simple struct to parse buffer into, and make it easier to access
@@ -133,10 +133,13 @@ typedef struct icmphdr	t_icmpheader;
 ** casting
 */
 
+typedef struct in_addr	t_inaddr;
+
 typedef struct s_headers {
-	t_ipheader		*ip;
-	t_icmpheader	*icmp;
+	t_ip		*ip;
+	t_icmp	*icmp;
 	char			*data;
+	size_t			data_size;
 }	t_headers;
 
 /*
@@ -194,6 +197,7 @@ typedef struct s_receive
 	int					received;
 	t_bool				duplicated;
 	t_bool				ttl_exceeded;
+	t_headers			hdrs;
 }	t_receive;
 
 /*
@@ -203,7 +207,6 @@ typedef struct s_receive
 */
 typedef struct s_timestats
 {
-	t_bool	record;
 	double	current;
 	double	min;
 	double	max;
@@ -211,6 +214,13 @@ typedef struct s_timestats
 	double	sum_squares;
 	double	variance;
 }	t_timestats;
+
+typedef struct s_counter
+{
+	size_t	total;
+	size_t	dup;
+	size_t	timed;
+}	t_counter;
 
 /*
 ** structure for loop statistics. Holds information of the group of
@@ -220,7 +230,7 @@ typedef struct s_timestats
 
 typedef struct s_inloop
 {
-	size_t		count;
+	t_counter	count;
 	size_t		replies;
 	t_receive	recv;
 	t_timestats	time;
@@ -248,7 +258,7 @@ typedef struct s_ping
 	t_outloop		out;
 	t_options		options;
 
-	t_icmpheader	*packet; //OK
+	t_icmp	*packet; //OK
 	char			*program; // stores the first line of argv
 	struct addrinfo	*addr_send;
 	struct addrinfo	addr_recv;

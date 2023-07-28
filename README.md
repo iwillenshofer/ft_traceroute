@@ -24,3 +24,25 @@ Options marked with (root only) are available only to superuser.
 
 Report bugs to <iwillens@student.42heilbronn.de>.
 
+
+
+
+Still to do:
+
+[ ] Setup initial values
+
+[ ] Make buffer on the stack
+
+[ ] Create decimal interval
+
+[ ] Norminette.
+
+[ ] Test as non root.
+
+[ ] Treat errors for socket and sending
+
+[ ] add verbose on ping out
+
+[ ] double check dns
+
+[ ] verify forbidden functions (specially for address)
