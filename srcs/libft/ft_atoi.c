@@ -6,21 +6,21 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/21 06:56:17 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/23 19:39:03 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/30 01:32:20 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int						my_isspace(int c)
+static int	my_isspace(int c)
 {
-	if (c == '\t' || c == '\n' || c == '\v' ||
-			c == '\f' || c == '\r' || c == ' ')
+	if (c == '\t' || c == '\n' || c == '\v'
+		|| c == '\f' || c == '\r' || c == ' ')
 		return (1);
 	return (0);
 }
 
-static unsigned long long		get_number(const char *str, size_t start)
+static unsigned long long	get_number(const char *str, size_t start)
 {
 	size_t					i;
 	unsigned long			multiplier;
@@ -47,7 +47,7 @@ static unsigned long long		get_number(const char *str, size_t start)
 	return (number);
 }
 
-int								ft_atoi(const char *str)
+int	ft_atoi(const char *str)
 {
 	size_t						i;
 	unsigned long long int		number;

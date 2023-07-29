@@ -56,14 +56,12 @@ Options implemented:
 -- verbose
 -- flood
 -- quiet
---help
---usage
---version
+-- help
+-- usage
+-- version
 -- numeric (not really useful)
 -- pattern
 -- ttl
 -- size
-
-To go:
 -- timeout
 -- preload

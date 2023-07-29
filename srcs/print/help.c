@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 14:43:19 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/26 12:46:30 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/30 01:04:20 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	print_help(t_ping *ft_ping)
 	char		buf[64];
 
 	i = 0;
-	opt = ft_ping->options.available;
+	opt = ft_ping->opts.available;
 	dprintf(STDOUT_FILENO, HPL_USAGE, ft_ping->program);
 	dprintf(STDOUT_FILENO, HPL_GOAL);
 	dprintf(STDOUT_FILENO, HPL_OPTIONS);

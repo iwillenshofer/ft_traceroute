@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igorwillenshofer <igorwillenshofer@stud    +#+  +:+       +#+        */
+/*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/21 06:32:33 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/20 12:05:48 by igorwillens      ###   ########.fr       */
+/*   Updated: 2023/07/30 01:27:57 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

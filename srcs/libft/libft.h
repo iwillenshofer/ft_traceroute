@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/01 10:54:12 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/28 10:59:44 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/30 01:26:23 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ char	ft_isprint(char c);
 int		ft_isdigit(int c);
 char	*ft_nothex(char *s);
 void	ft_puthex(size_t nb);
-char 	*ft_strdup(char *src);
-char 	**ft_split(char *src);
+char	*ft_strdup(char *src);
+char	**ft_split(char *src);
 size_t	ft_arglen(char **arg);
 double	ft_sqrt(double number);
 char	*ft_notnumeric(char *s);
@@ -39,7 +39,7 @@ size_t	ft_atoul(const char *str);
 void	ft_bzero(void *s, size_t n);
 void	ft_putbits(unsigned char byte);
 void	ft_puthexbyte(unsigned char c);
-char 	*ft_strjoin(char *s1, char *s2);
+char	*ft_strjoin(char *s1, char *s2);
 char	*ft_strcpy(char *dst, char *src);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strrchr(const char *s, int c);

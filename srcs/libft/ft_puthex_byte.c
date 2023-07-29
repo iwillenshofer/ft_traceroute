@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 18:30:03 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/28 11:45:28 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/30 01:31:32 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ void	ft_puthexbyte(unsigned char c)
 */
 void	ft_puthex_bytes(void *bytes, size_t size, size_t space, size_t carr)
 {
-	char *s;
-	size_t i;
+	char	*s;
+	size_t	i;
 
 	i = 0;
 	s = bytes;

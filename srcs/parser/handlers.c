@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 23:13:29 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/29 22:38:34 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/30 01:04:20 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /*
 ** special handler for pattern.
 **  -p, --pattern=PATTERN 
-** parses an hex pattern into ft_ping->options.pattern.pattern
+** parses an hex pattern into ft_ping->opts.pattern.pattern
 */
 void	hndlr_pattern(t_ping *ft_ping, t_lstopt *opt, char *value)
 {
@@ -35,15 +35,15 @@ void	hndlr_pattern(t_ping *ft_ping, t_lstopt *opt, char *value)
 		if ((size % 2))
 			c = c << 4;
 		c += *value;
-		ft_ping->options.pattern.pattern[size / 2] = c;
+		ft_ping->opts.pattern.pattern[size / 2] = c;
 		if ((size % 2))
 			c = 0;
 		size++;
 		value++;
 	}
-	ft_ping->options.pattern.size = size / 2;
+	ft_ping->opts.pattern.size = size / 2;
 	if (size % 2 || !size)
-		ft_ping->options.pattern.size = (size / 2) + 1;
+		ft_ping->opts.pattern.size = (size / 2) + 1;
 }
 
 /*
@@ -57,7 +57,7 @@ void	hndlr_interval(t_ping *ft_ping,
 	size_t	mask;
 	char	errbuf[ERR_BUF + 1];
 
-	if ((++(ft_ping->options.int_set) && ft_ping->options.flood))
+	if ((++(ft_ping->opts.int_set) && ft_ping->opts.flood))
 		prs_fatal(ft_ping, ERR_INCOMP_INTFLOOD, NULL, false);
 	dec = ft_strchr(value, '.');
 	snprintf(errbuf, ERR_BUF, "`%s' near `%s'", value, ft_notnumeric(value));
@@ -70,11 +70,11 @@ void	hndlr_interval(t_ping *ft_ping,
 		prs_fatal(ft_ping, ERR_PVALUE, errbuf, true);
 	if (dec)
 		*(dec - 1) = 0;
-	ft_ping->options.interval.tv_sec = ft_atoul(value);
+	ft_ping->opts.interval.tv_sec = ft_atoul(value);
 	mask = 100000;
 	while (dec && *dec && mask)
 	{
-		ft_ping->options.interval.tv_usec += ((*dec - '0') * mask);
+		ft_ping->opts.interval.tv_usec += ((*dec - '0') * mask);
 		mask = mask / 10;
 		dec++;
 	}
@@ -107,15 +107,15 @@ void	hndlr_doubleopt(t_ping *ft_ping, t_lstopt *opt, char *value)
 	else if (val == 0 && (opt->shortcut == 'T' || opt->shortcut == 'w'))
 		prs_fatal(ft_ping, ERR_VALTOOSMALL, value, false);
 	if (opt->shortcut == 'c')
-		ft_ping->options.count = val;
+		ft_ping->opts.count = val;
 	else if (opt->shortcut == 'T')
-		ft_ping->options.ttl = val;
+		ft_ping->opts.ttl = val;
 	else if (opt->shortcut == 'w')
-		ft_ping->options.timeout.tv_sec = val;
+		ft_ping->opts.timeout.tv_sec = val;
 	else if (opt->shortcut == 'l')
-		ft_ping->options.preload = val;
+		ft_ping->opts.preload = val;
 	else if (opt->shortcut == 's')
-		ft_ping->options.size = val;
+		ft_ping->opts.size = val;
 }
 
 /*
@@ -138,14 +138,14 @@ void	hndlr_singleopt(t_ping *ft_ping, t_lstopt *opt, char *value)
 	if (opt->shortcut == 'V')
 		print_version(ft_ping);
 	if (opt->shortcut == 'n')
-		ft_ping->options.numeric = true;
+		ft_ping->opts.numeric = true;
 	if (opt->shortcut == 'v')
-		ft_ping->options.verbose = true;
+		ft_ping->opts.verbose = true;
 	if (opt->shortcut == 'f')
-		ft_ping->options.flood = true;
+		ft_ping->opts.flood = true;
 	if (opt->shortcut == 'q')
-		ft_ping->options.quiet = true;
-	if (ft_ping->options.flood && ft_ping->options.int_set)
+		ft_ping->opts.quiet = true;
+	if (ft_ping->opts.flood && ft_ping->opts.int_set)
 		prs_fatal(ft_ping, "%s: -f and -i incompatible options\n", NULL, false);
 }
 
@@ -157,7 +157,7 @@ void	add_handlers(t_ping *ft_ping)
 {
 	t_lstopt	*opt;
 
-	opt = ft_ping->options.available;
+	opt = ft_ping->opts.available;
 	opt[OPT_QUIET].handler = hndlr_singleopt;
 	opt[OPT_HELP].handler = hndlr_singleopt;
 	opt[OPT_USAGE].handler = hndlr_singleopt;

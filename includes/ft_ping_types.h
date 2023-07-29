@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:29:15 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/29 22:37:32 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/30 01:04:44 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,7 +258,7 @@ typedef struct s_ping
 	pid_t			pid;
 	t_inloop		in;
 	t_outloop		out;
-	t_options		options;
+	t_options		opts;
 	t_time			begin;
 	char			*program;
 }	t_ping;

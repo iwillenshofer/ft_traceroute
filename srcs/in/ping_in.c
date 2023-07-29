@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 07:12:28 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/29 21:23:57 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/29 23:24:04 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,30 +22,29 @@
 static t_bool	parse_icmp(t_ping *ft_ping)
 {
 	size_t		cksum;
-	size_t		size;
-	t_headers	*hdrs;
+	t_headers	hdrs;
 
-	hdrs = &(ft_ping->in.recv.hdrs);
-	size = ft_ping->in.recv.received;
-	hdrs->ip = ft_ping->in.recv.msg.msg_iov->iov_base;
-	if (size < sizeof(t_ip) || size < htons(hdrs->ip->tot_len)
-		|| size < (hdrs->ip->ihl * 4) + sizeof(t_icmp))
+	hdrs.datalen = ft_ping->in.recv.received;
+	hdrs.ip = ft_ping->in.recv.msg.msg_iov->iov_base;
+	if (hdrs.datalen < sizeof(t_ip) || hdrs.datalen < htons(hdrs.ip->tot_len)
+		|| hdrs.datalen < (hdrs.ip->ihl * 4) + sizeof(t_icmp))
 	{
-		dprintf(STDERR_FILENO, "packet too short (%lu bytes) from %s\n", size,
-			inet_ntoa (*(t_inaddr *)(&(hdrs->ip->saddr))));
+		dprintf(STDERR_FILENO, "packet too short (%lu bytes) from %s\n",
+			hdrs.datalen, inet_ntoa (*(t_inaddr *)(&(hdrs.ip->saddr))));
 		return (false);
 	}
-	hdrs->icmp = (t_icmp *)((char *)(hdrs->ip) + (hdrs->ip->ihl * 4));
-	if (hdrs->icmp->type == ICMP_ECHO)
+	hdrs.icmp = (t_icmp *)((char *)(hdrs.ip) + (hdrs.ip->ihl * 4));
+	if (hdrs.icmp->type == ICMP_ECHO)
 		return (false);
-	ft_ping->in.recv.hdrs.data = (char *)(hdrs->icmp) + sizeof(t_icmp);
-	cksum = hdrs->icmp->checksum;
-	hdrs->icmp->checksum = 0;
-	hdrs->datalen = htons(hdrs->ip->tot_len)
-		- (hdrs->ip->ihl * 4) - sizeof(t_icmp);
-	if (checksum(hdrs->icmp, hdrs->datalen + sizeof(t_icmp)) != cksum)
+	hdrs.data = (char *)(hdrs.icmp) + sizeof(t_icmp);
+	cksum = hdrs.icmp->checksum;
+	hdrs.icmp->checksum = 0;
+	hdrs.datalen = htons(hdrs.ip->tot_len)
+		- (hdrs.ip->ihl * 4) - sizeof(t_icmp);
+	if (checksum(hdrs.icmp, hdrs.datalen + sizeof(t_icmp)) != cksum)
 		dprintf(STDERR_FILENO, "checksum mismatch from %s\n",
-			inet_ntoa(*(t_inaddr *)(&(hdrs->ip->saddr))));
+			inet_ntoa(*(t_inaddr *)(&(hdrs.ip->saddr))));
+	ft_ping->in.recv.hdrs = hdrs;
 	return (true);
 }
 
@@ -85,7 +84,7 @@ void	ping_timestamp(t_ping *ft_ping)
 {
 	double	deviation_new;
 	double	deviation_old;
-	t_time arrived;
+	t_time	arrived;
 
 	ft_memcpy(&arrived, ft_ping->in.recv.hdrs.data, sizeof(t_time));
 	if (ft_ping->in.recv.hdrs.datalen > sizeof(t_time))
@@ -151,9 +150,9 @@ t_bool	ping_in(t_ping *ft_ping)
 		{
 			ft_ping->in.count.total++;
 			ping_timestamp(ft_ping);
-			if (!(ft_ping->options.flood) && !(ft_ping->options.quiet))
+			if (!(ft_ping->opts.flood) && !(ft_ping->opts.quiet))
 				print_echo(ft_ping);
-			else if (!(ft_ping->options.quiet))
+			else if (!(ft_ping->opts.quiet))
 				ft_putchar('\b');
 			return (true);
 		}

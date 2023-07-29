@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   options.c                                          :+:      :+:    :+:   */
+/*   opts.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -27,7 +27,7 @@ static void	add_descriptions(t_ping *ft_ping)
 {
 	t_lstopt	*opt;
 
-	opt = ft_ping->options.available;
+	opt = ft_ping->opts.available;
 	ft_strcpy(opt[OPT_COUNT].desc, ODSC_COUNT);
 	ft_strcpy(opt[OPT_INTERVAL].desc, ODSC_INTERVAL);
 	ft_strcpy(opt[OPT_NUMERIC].desc, ODSC_NUMERIC);
@@ -48,7 +48,7 @@ void	add_options(t_ping *ft_ping)
 {
 	t_lstopt	*opt;
 
-	opt = ft_ping->options.available;
+	opt = ft_ping->opts.available;
 	opt[OPT_NUMERIC] = new_option('n', OPTT_NULL, "numeric");
 	opt[OPT_VERBOSE] = new_option('v', OPTT_NULL, "verbose");
 	opt[OPT_FLOOD] = new_option('f', OPTT_NULL, "flood");
@@ -76,7 +76,7 @@ t_lstopt	*opt_byfullname(t_ping *ft_ping, char *s)
 	size_t		i;
 
 	i = 0;
-	opt = ft_ping->options.available;
+	opt = ft_ping->opts.available;
 	while (i < OPT_LSTSIZE)
 	{
 		if (!(ft_strcmp(opt[i].fullname, s)))
@@ -95,7 +95,7 @@ t_lstopt	*opt_byshortcut(t_ping *ft_ping, char c)
 	size_t		i;
 
 	i = 0;
-	opt = ft_ping->options.available;
+	opt = ft_ping->opts.available;
 	while (i < OPT_LSTSIZE)
 	{
 		if (opt[i].shortcut == c)

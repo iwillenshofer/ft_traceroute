@@ -6,12 +6,11 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 09:08:03 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/26 13:57:16 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/30 01:32:42 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
-
 
 static int	prt_options(t_ping *ft_ping, int kind, int used, int preceeding)
 {
@@ -19,7 +18,7 @@ static int	prt_options(t_ping *ft_ping, int kind, int used, int preceeding)
 	t_lstopt	*opt;
 
 	i = 0;
-	opt = ft_ping->options.available;
+	opt = ft_ping->opts.available;
 	if (kind == OPTT_NULL)
 		used += dprintf(STDERR_FILENO, "%s", " -");
 	while (i < OPT_LSTSIZE)

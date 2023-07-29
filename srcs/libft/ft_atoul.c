@@ -6,25 +6,25 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/21 06:56:17 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/25 22:21:37 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/30 01:30:37 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int						my_isspace(int c)
+static int	my_isspace(int c)
 {
-	if (c == '\t' || c == '\n' || c == '\v' ||
-			c == '\f' || c == '\r' || c == ' ')
+	if (c == '\t' || c == '\n' || c == '\v'
+		|| c == '\f' || c == '\r' || c == ' ')
 		return (1);
 	return (0);
 }
 
-static unsigned long		get_number(const char *str, size_t start)
+static unsigned long	get_number(const char *str, size_t start)
 {
-	size_t					i;
-	unsigned long			multiplier;
-	unsigned long 			number;
+	size_t			i;
+	unsigned long	multiplier;
+	unsigned long	number;
 
 	number = 0;
 	multiplier = 1;
@@ -49,9 +49,9 @@ static unsigned long		get_number(const char *str, size_t start)
 
 size_t	ft_atoul(const char *str)
 {
-	size_t				i;
-	unsigned long 		number;
-	int					signal;
+	size_t			i;
+	unsigned long	number;
+	int				signal;
 
 	i = 0;
 	signal = 1;

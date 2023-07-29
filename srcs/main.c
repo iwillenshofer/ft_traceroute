@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:17:18 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/29 22:44:50 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/30 01:06:59 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 ** printf and its family.
 */
 
-t_bool g_signal = false;
+t_bool	g_signal = false;
 
 void	shandler(int signal)
 {
@@ -36,8 +36,8 @@ void	shandler(int signal)
 
 int	main(int argc, char **argv)
 {
-	t_ping ft_ping;
-	
+	t_ping	ft_ping;
+
 	setup(&ft_ping, argv);
 	signal(SIGINT, shandler);
 	opensocket(&ft_ping);

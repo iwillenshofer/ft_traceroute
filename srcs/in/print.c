@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 15:18:30 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/29 13:14:57 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/30 01:04:20 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,12 @@ static void	print_ip(t_ip *ip)
 */
 void	print_headers(t_ping *ft_ping, t_headers *hdr)
 {
-	if (ft_ping->options.verbose)
+	if (ft_ping->opts.verbose)
 	{
 		dprintf(STDOUT_FILENO, "IP Hdr Dump:\n");
 		ft_puthex_bytes(((char *)hdr->ip), (hdr->ip->ihl * 4), 2, 0);
 	}
-	if (ft_ping->options.verbose
+	if (ft_ping->opts.verbose
 		|| ft_ping->in.recv.hdrs.icmp->type == ICMP_SOURCE_QUENCH
 		|| ft_ping->in.recv.hdrs.icmp->type == ICMP_PARAMETERPROB)
 	{

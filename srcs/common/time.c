@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 09:12:12 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/29 20:34:08 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/30 01:36:00 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 /*
 ** returns a timeval with the difference between begin and end.
 */
-t_time elapsed_time(t_time begin, t_time end)
+t_time	elapsed_time(t_time begin, t_time end)
 {
-	int nsec;
-	t_time diff;
+	int		nsec;
+	t_time	diff;
 
 	if (end.tv_usec < begin.tv_usec)
 	{
@@ -43,23 +43,22 @@ t_time elapsed_time(t_time begin, t_time end)
 ** hours before overflowing.
 ** Overflow will not be handled.
 */
-double elapsed_time_ms(t_time begin, t_time end)
+double	elapsed_time_ms(t_time begin, t_time end)
 {
-	t_time elapsed;
+	t_time	elapsed;
 
 	elapsed = elapsed_time(begin, end);
-	return ((double)(elapsed.tv_sec) * 1000
-		+ (double)(elapsed.tv_usec) / 1000);
+	return ((double)elapsed.tv_sec * 1000 + (double)elapsed.tv_usec / 1000);
 }
 
 /*
 ** returns whether the elapsed time between begin and now
 ** is greater than timeout
 */
-t_bool timed_out(t_time begin, t_time timeout)
+t_bool	timed_out(t_time begin, t_time timeout)
 {
-	t_time now;
-	t_time elapsed;
+	t_time	now;
+	t_time	elapsed;
 
 	gettimeofday(&now, NULL);
 	elapsed = elapsed_time(begin, now);

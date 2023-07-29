@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 07:56:53 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/19 10:11:52 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/30 01:26:39 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ double	ft_sqrt(double number)
 	long double	res;
 	long double	div;
 	long double	precision;
-	int		min;
-	
+	int			min;
+
 	div = 1;
 	min = 5;
 	res = number;

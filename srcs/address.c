@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 08:52:05 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/29 11:15:21 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/30 01:09:08 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,12 @@
 **						struct addrinfo **res);
 */
 
-static void get_fqdn(t_ping *ft_ping)
+static void	get_fqdn(t_ping *ft_ping)
 {
 	ft_bzero(ft_ping->out.fqdn, sizeof(ft_ping->out.fqdn));
-	if (getnameinfo((struct sockaddr*)&(ft_ping->out.daddr),
-		sizeof(ft_ping->out.daddr), ft_ping->out.fqdn,
-		sizeof(ft_ping->out.fqdn), NULL, 0, 0))
+	if (getnameinfo((struct sockaddr *)&(ft_ping->out.daddr),
+			sizeof(ft_ping->out.daddr), ft_ping->out.fqdn,
+			sizeof(ft_ping->out.fqdn), NULL, 0, 0))
 		ft_strcpy(ft_ping->out.fqdn, inet_ntoa(ft_ping->out.daddr.sin_addr));
 }
 
@@ -65,21 +65,21 @@ static void get_fqdn(t_ping *ft_ping)
 */
 void	get_address(t_ping *ft_ping)
 {
-	struct addrinfo hints;
+	struct addrinfo	hints;
 	struct addrinfo	*addr;
+	int				ret;
 
 	ft_bzero(&hints, sizeof(struct addrinfo));
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_RAW;
 	hints.ai_protocol = IPPROTO_ICMP;
-    hints.ai_flags = AI_CANONNAME;
-	int ret;
+	hints.ai_flags = AI_CANONNAME;
 	ret = getaddrinfo(ft_ping->out.host, NULL, &hints, &addr);
 	if (ret)
 		prs_fatal(ft_ping, ERR_UNKNOWN_HOST, NULL, false);
 	if (addr->ai_canonname)
 		ft_strcpy(ft_ping->out.host, addr->ai_canonname);
-	ft_ping->out.daddr = *(struct sockaddr_in*)(addr->ai_addr);
+	ft_ping->out.daddr = *(struct sockaddr_in *)(addr->ai_addr);
 	freeaddrinfo(addr);
 	get_fqdn(ft_ping);
 }
