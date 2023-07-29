@@ -6,14 +6,14 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:29:15 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/30 01:04:44 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/30 01:51:26 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ping_parse.h"
-
 #ifndef FT_PING_TYPES_H
 # define FT_PING_TYPES_H
+
+# include "ft_ping_parse.h"
 
 # define ERROR_BUFFER_SIZE 			64
 # define DFL_PACKET_SIZE 			56
@@ -46,7 +46,13 @@
 # define OPTT_LONG					2
 # define OPTT_PATTERN				3
 
-struct s_ping;
+/*
+** ICMP TYPES not included in header (for error response handling)
+*/
+# define ICMP_CSRTR_ADV 9 
+# define ICMP_CSRTR_DSC 10
+
+struct					s_ping;
 
 typedef struct s_lstopt
 {
@@ -57,7 +63,11 @@ typedef struct s_lstopt
 	void	(*handler)(struct s_ping *, struct s_lstopt *opt, char *val);
 }	t_lstopt;
 
-typedef enum e_bool {false, true}	t_bool;
+typedef enum e_bool
+{
+	false,
+	true
+}	t_bool;
 typedef struct timeval	t_time;
 
 /*
@@ -67,9 +77,9 @@ typedef struct timeval	t_time;
 ** for 32bits systems, 32bits should be unsigned long instead of
 ** int, but I didn't implement it as I found unecessary for this project.
 */
-typedef unsigned char		t_u8bits;
-typedef unsigned short		t_u16bits;
-typedef unsigned int		t_u32bits;
+typedef unsigned char	t_u8bits;
+typedef unsigned short	t_u16bits;
+typedef unsigned int	t_u32bits;
 
 /*
 ** the Internet protocol and the icmp protocol headers.
@@ -133,7 +143,8 @@ typedef struct icmphdr	t_icmp;
 
 typedef struct in_addr	t_inaddr;
 
-typedef struct s_headers {
+typedef struct s_headers
+{
 	t_ip		*ip;
 	t_icmp		*icmp;
 	char		*data;
@@ -153,7 +164,7 @@ typedef struct s_headers {
 **  ... };					: other fields are unused in our implementation.
 */
 
-typedef struct msghdr t_msghdr;
+typedef struct msghdr	t_msghdr;
 
 /*
 ** options for all kinds of requests
@@ -188,7 +199,7 @@ typedef struct s_options
 */
 typedef struct s_receive
 {
-	int count;
+	int					count;
 	t_msghdr			msg;
 	struct sockaddr_in	peer_addr;
 	struct iovec		iobuf;
@@ -238,10 +249,10 @@ typedef struct s_inloop
 
 typedef struct s_outloop
 {
-	size_t count;
-	char			host[NI_MAXHOST + 1];
-	char			fqdn[NI_MAXHOST + 1];
-	char			packet[PACKET_BUFFER_SIZE];
+	size_t				count;
+	char				host[NI_MAXHOST + 1];
+	char				fqdn[NI_MAXHOST + 1];
+	char				packet[PACKET_BUFFER_SIZE];
 	struct sockaddr_in	daddr;
 }	t_outloop;
 

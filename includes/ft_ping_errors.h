@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 13:39:25 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/29 23:32:51 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/30 01:43:04 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@
 # define ERR_SOCKET "%s: Lacking privilege for icmp socket.\n"
 # define ERR_SEND "%s: sending packet"
 
-void print_error(char *error, char *arg1, char *arg2);
-void prs_fatal(t_ping *ft_ping,
-		const char *error, const char *s, t_bool shortusage);
+void	print_error(char *error, char *arg1, char *arg2);
+void	prs_fatal(t_ping *ft_ping,
+			const char *error, const char *s, t_bool shortusage);
 
 #endif
