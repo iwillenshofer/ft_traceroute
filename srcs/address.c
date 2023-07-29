@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 08:52:05 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/28 23:07:33 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/29 00:08:46 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,6 @@
 **						struct addrinfo **res);
 */
 
-/*
-** gets information on address to be ping'ed (host) and stores
-**  into ft_ping->out.daddr, to be used by ping().
-*/
 
 static void get_fqdn(t_ping *ft_ping)
 {
@@ -62,9 +58,12 @@ static void get_fqdn(t_ping *ft_ping)
 		sizeof(ft_ping->out.daddr), ft_ping->out.fqdn,
 		sizeof(ft_ping->out.fqdn), NULL, 0, 0))
 		ft_strcpy(ft_ping->out.fqdn, inet_ntoa(ft_ping->out.daddr.sin_addr));
-	printf("Host: %s\n", ft_ping->out.fqdn);
 }
 
+/*
+** gets information on address to be ping'ed (host) and stores
+**  into ft_ping->out.daddr, to be used by ping().
+*/
 void	get_address(t_ping *ft_ping)
 {
 	struct addrinfo hints;
