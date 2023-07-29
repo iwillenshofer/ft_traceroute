@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:29:15 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/29 01:21:29 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/29 22:37:32 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # define DFL_PACKET_SIZE 			56
 # define DFL_CUSTOM_PATTERN_SIZE 	16
 # define DFL_TTL					64
+# define DFL_USLEEP					200
 # define MAX_PACKET_SIZE			65399
 # define PACKET_BUFFER_SIZE			65535
 # define MAX_SEQ_TRACK				128
@@ -134,9 +135,9 @@ typedef struct in_addr	t_inaddr;
 
 typedef struct s_headers {
 	t_ip		*ip;
-	t_icmp	*icmp;
-	char			*data;
-	size_t			data_size;
+	t_icmp		*icmp;
+	char		*data;
+	size_t		datalen;
 }	t_headers;
 
 /*
@@ -168,15 +169,16 @@ typedef struct s_options
 {
 	t_bool				flood;
 	t_bool				quiet;
-	t_u8bits			preload;
-	t_options_pattern	pattern;
-	t_u16bits			size;	
-	t_u8bits			count;
-	t_u8bits			interval;
 	t_bool				numeric;
-	t_u8bits			ttl;
 	t_bool				verbose;
-	t_u8bits			timeout;
+	t_bool				int_set;
+	t_u32bits			preload;
+	t_options_pattern	pattern;
+	t_u32bits			size;	
+	t_u32bits			count;
+	t_time				interval;
+	t_u8bits			ttl;
+	t_time				timeout;
 	t_lstopt			available[OPT_LSTSIZE];
 }	t_options;
 
@@ -190,7 +192,7 @@ typedef struct s_receive
 	t_msghdr			msg;
 	struct sockaddr_in	peer_addr;
 	struct iovec		iobuf;
-	char				buf[MAX_PACKET_SIZE];
+	char				buf[PACKET_BUFFER_SIZE];
 	int					received;
 	int					type;
 	t_bool				duplicated;
@@ -203,6 +205,7 @@ typedef struct s_receive
 */
 typedef struct s_timestats
 {
+	t_time	now;
 	double	current;
 	double	min;
 	double	max;
@@ -256,6 +259,7 @@ typedef struct s_ping
 	t_inloop		in;
 	t_outloop		out;
 	t_options		options;
+	t_time			begin;
 	char			*program;
 }	t_ping;
 

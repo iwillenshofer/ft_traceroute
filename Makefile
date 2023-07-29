@@ -6,7 +6,7 @@
 #    By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 15:22:29 by iwillens          #+#    #+#              #
-#    Updated: 2023/07/28 23:31:56 by iwillens         ###   ########.fr        #
+#    Updated: 2023/07/29 22:42:10 by iwillens         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,12 +28,12 @@ SRCS = ${SRC_DIR}/main.c \
 		${SRC_DIR}/socket.c \
 		${SRC_DIR}/address.c \
 		${SRC_DIR}/setup.c \
-		${SRC_DIR}/error.c \
 		${SRC_DIR}/ping.c \
 		${SRC_DIR}/in/ping_in.c \
 		${SRC_DIR}/in/noecho.c \
 		${SRC_DIR}/in/print.c \
 		${SRC_DIR}/out/ping_out.c \
+		${SRC_DIR}/out/packet.c \
 		${SRC_DIR}/common/checksum.c \
 		${SRC_DIR}/common/duplicate.c \
 		${SRC_DIR}/common/time.c \
@@ -43,23 +43,10 @@ SRCS = ${SRC_DIR}/main.c \
 		${SRC_DIR}/parser/parser.c \
 		${SRC_DIR}/parser/handlers.c
 
-
-BONUS_SRCS = ${SRC_DIR}/bonus/new.c
-
 ifeq ($(HOSTTYPE),)
 	HOSTTYPE := $(shell uname -m)_$(shell uname -s)_$(shell uname -n)
 endif
 HOST_FILE = ${OBJ_DIR}/.host_${HOSTTYPE}
-
-COMPILE_BONUS = false
-BUILD_FILE = ${OBJ_DIR}/.build_release
-ifneq (,$(filter bonus,$(MAKECMDGOALS)))
-	COMPILE_BONUS = true
-	BUILD_FILE = ${OBJ_DIR}/.build_bonus
-	SRCS += $(BONUS_SRCS)
-	CCFLAGS += -DBONUS
-endif
-
 
 OBJS = $(patsubst ${SRC_DIR}/%.c, ${OBJ_DIR}/%.o, ${SRCS})
 
@@ -81,17 +68,11 @@ bonus: ${NAME}
 
 ${NAME}: ${LIBFT} ${OBJS} ${INCLUDES} Makefile ${HOST_FILE} ${BUILD_FILE}
 	gcc ${CCFLAGS} ${OBJS}  -L./srcs/libft -lft -o ${NAME}
-ifneq (true,$(COMPILE_BONUS))
 	@echo "\033[96m${NAME} is built. \033[0m"
-else
-	@echo "\033[92m${NAME} [bonus] is built. \033[0m"
-endif
+
 
 ${OBJ_DIR}/%.o: $(SRC_DIR)/%.c ${INC_DIR} ${INCLUDES} Makefile ${HOST_FILE} ${BUILD_FILE}
 	@mkdir -p ${@D}
-ifeq (true,$(COMPILE_BONUS))
-	@mkdir -p ${OBJ_DIR}/bonus
-endif
 	${CC} ${CCFLAGS} -MMD -c $< -I. -I ${INC_DIR} -I${LIBFT_DIR} -o $@
 
 ${HOST_FILE}:

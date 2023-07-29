@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 07:12:28 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/28 23:01:40 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/29 21:23:57 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,14 @@ static t_bool	parse_icmp(t_ping *ft_ping)
 		return (false);
 	}
 	hdrs->icmp = (t_icmp *)((char *)(hdrs->ip) + (hdrs->ip->ihl * 4));
+	if (hdrs->icmp->type == ICMP_ECHO)
+		return (false);
 	ft_ping->in.recv.hdrs.data = (char *)(hdrs->icmp) + sizeof(t_icmp);
 	cksum = hdrs->icmp->checksum;
 	hdrs->icmp->checksum = 0;
-	hdrs->data_size = htons(hdrs->ip->tot_len)
+	hdrs->datalen = htons(hdrs->ip->tot_len)
 		- (hdrs->ip->ihl * 4) - sizeof(t_icmp);
-	if (checksum(hdrs->icmp, hdrs->data_size + sizeof(t_icmp)) != cksum)
+	if (checksum(hdrs->icmp, hdrs->datalen + sizeof(t_icmp)) != cksum)
 		dprintf(STDERR_FILENO, "checksum mismatch from %s\n",
 			inet_ntoa(*(t_inaddr *)(&(hdrs->ip->saddr))));
 	return (true);
@@ -81,16 +83,16 @@ static t_bool	check_icmp(t_ping *ft_ping)
 */
 void	ping_timestamp(t_ping *ft_ping)
 {
-	t_time	now;
 	double	deviation_new;
 	double	deviation_old;
+	t_time arrived;
 
-	if (ft_ping->in.recv.hdrs.data_size > sizeof(t_time))
+	ft_memcpy(&arrived, ft_ping->in.recv.hdrs.data, sizeof(t_time));
+	if (ft_ping->in.recv.hdrs.datalen > sizeof(t_time))
 	{
 		ft_ping->in.count.timed++;
-		gettimeofday(&now, NULL);
 		ft_ping->in.time.current
-			= elapsed_time_ms(*(t_time*)(ft_ping->in.recv.hdrs.data), now);
+			= elapsed_time_ms(arrived, ft_ping->in.time.now);
 		if (ft_ping->in.time.current > ft_ping->in.time.max)
 			ft_ping->in.time.max = ft_ping->in.time.current;
 		if (ft_ping->in.time.current < ft_ping->in.time.min
@@ -144,11 +146,15 @@ t_bool	ping_in(t_ping *ft_ping)
 		= recvmsg(ft_ping->sock, &(ft_ping->in.recv.msg), MSG_DONTWAIT);
 	if (ft_ping->in.recv.received > 0)
 	{
+		gettimeofday(&(ft_ping->in.time.now), NULL);
 		if (parse_icmp(ft_ping) && check_icmp(ft_ping))
 		{
 			ft_ping->in.count.total++;
 			ping_timestamp(ft_ping);
-			print_echo(ft_ping);
+			if (!(ft_ping->options.flood) && !(ft_ping->options.quiet))
+				print_echo(ft_ping);
+			else if (!(ft_ping->options.quiet))
+				ft_putchar('\b');
 			return (true);
 		}
 	}

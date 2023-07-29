@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 15:18:30 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/29 00:55:01 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/29 13:14:57 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	print_headers(t_ping *ft_ping, t_headers *hdr)
 		dprintf (STDOUT_FILENO,
 			"ICMP: type %u, code %u, size %lu, id 0x%04x, seq 0x%04x\n",
 			hdr->icmp->type, hdr->icmp->code,
-			hdr->data_size + sizeof(t_icmp),
+			hdr->datalen + sizeof(t_icmp),
 			ntohs(hdr->icmp->un.echo.id), ntohs(hdr->icmp->un.echo.sequence));
 	}
 }
@@ -64,7 +64,7 @@ void	print_headers(t_ping *ft_ping, t_headers *hdr)
 void	print_echo(t_ping *ft_ping)
 {
 	dprintf(STDOUT_FILENO, "%lu bytes from %s: ",
-		ft_ping->in.recv.hdrs.data_size + sizeof(t_icmp),
+		ft_ping->in.recv.hdrs.datalen + sizeof(t_icmp),
 		inet_ntoa(ft_ping->in.recv.peer_addr.sin_addr));
 	dprintf(STDOUT_FILENO, "icmp_seq=%d ttl=%d",
 		ntohs(ft_ping->in.recv.hdrs.icmp->un.echo.sequence),

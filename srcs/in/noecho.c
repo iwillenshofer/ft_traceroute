@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 10:44:30 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/28 22:43:22 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/29 13:14:57 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ static void	print_nonecho(t_ping *ft_ping, t_headers *headers)
 	if (!type || type == ICMP_ECHO)
 		return ;
 	dprintf(STDOUT_FILENO, "%lu bytes from %s: ",
-		ft_ping->in.recv.hdrs.data_size + sizeof(t_icmp),
+		ft_ping->in.recv.hdrs.datalen + sizeof(t_icmp),
 		inet_ntoa(ft_ping->in.recv.peer_addr.sin_addr));
 	if (type != ICMP_DEST_UNREACH && type != ICMP_SOURCE_QUENCH
 		&& type != ICMP_PARAMETERPROB && type != ICMP_TIME_EXCEEDED
@@ -100,14 +100,14 @@ void	icmp_noecho(t_ping *ft_ping)
 {
 	t_headers	hdrs;
 
-	if (ft_ping->in.recv.hdrs.data_size < sizeof(t_ip) + sizeof(t_icmp))
+	if (ft_ping->in.recv.hdrs.datalen < sizeof(t_ip) + sizeof(t_icmp))
 		return ;
 	hdrs.ip = (t_ip *)ft_ping->in.recv.hdrs.data;
-	if (ft_ping->in.recv.hdrs.data_size < sizeof(t_ip) + 64)
+	if (ft_ping->in.recv.hdrs.datalen < sizeof(t_ip) + 64)
 		return ;
-	hdrs.data_size = ft_ping->in.recv.hdrs.data_size
+	hdrs.datalen = ft_ping->in.recv.hdrs.datalen
 		- (hdrs.ip->ihl * 4) - sizeof(t_icmp);
-	if (hdrs.data_size > ft_ping->in.recv.hdrs.data_size)
+	if (hdrs.datalen > ft_ping->in.recv.hdrs.datalen)
 		return ;
 	hdrs.icmp = (t_icmp *)(((char *)hdrs.ip) + (hdrs.ip->ihl * 4));
 	hdrs.data = ((char *)(hdrs.icmp)) + sizeof(t_icmp);

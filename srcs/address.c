@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 08:52:05 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/29 00:08:46 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/29 11:15:21 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@
 **						const struct addrinfo *hints,
 **						struct addrinfo **res);
 */
-
 
 static void get_fqdn(t_ping *ft_ping)
 {

@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:41:35 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/28 23:27:29 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/29 22:40:11 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,26 +58,10 @@
 
 extern t_bool g_signal;
 
-
-void	opensocket(t_ping *ft_ping);
 void	get_address(t_ping *ft_ping);
-void	print_addrinfo(struct addrinfo *head);
-void	print_icmp(t_icmp *head);
-
-
 void	setup(t_ping *ft_ping, char **argv);
-void	print_usage(t_ping *ft_ping);
-char	*qualified_address(t_ping *ft_ping, struct in_addr *in);
 void	ping(t_ping *ft_ping);
-void	fatal(t_ping *ft_ping,char *msg, t_bool usage);
-
-
-/*
-** Endianess
-*/
-t_u16bits	bytes16_le(t_u16bits hostshort);
-t_u32bits	bytes32_le(t_u32bits hostlong);
-t_u8bits	bitfield8_le(t_u8bits hostshort);
+void	opensocket(t_ping *ft_ping);
 
 /*
 ** checksum
@@ -95,7 +79,9 @@ t_bool timed_out(t_time begin, t_time timeout);
 ** ping in/out
 */
 t_bool	ping_in(t_ping *ft_ping);
-void	ping_out(t_ping *ft_ping);
+void	ping_out(t_ping *ft_ping, t_bool preload);
+void	prebuild_packet(t_ping *ft_ping);
+void	build_packet(t_ping *ft_ping);
 
 /*
 ** duplicate checker

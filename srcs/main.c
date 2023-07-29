@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:17:18 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/28 23:01:17 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/29 22:44:50 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int	main(int argc, char **argv)
 	setup(&ft_ping, argv);
 	signal(SIGINT, shandler);
 	opensocket(&ft_ping);
+	gettimeofday(&(ft_ping.begin), NULL);
 	while (*(++argv))
 	{
 		ft_bzero(&(ft_ping.out), sizeof(ft_ping.out));

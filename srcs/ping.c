@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 08:17:04 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/29 00:33:35 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/29 22:44:14 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,21 @@ void ping_stats(t_ping *ft_ping)
 		ft_ping->in.time.max, ft_sqrt(ft_ping->in.time.variance));
 }
 
-static t_bool done(t_ping *ft_ping)
+/*
+** checks if we are done pinging (at all) or just sending
+** if sending == true;
+*/
+static t_bool done(t_ping *ft_ping, t_bool sending)
 {
 	if (g_signal)
 		return (true);
 	if (ft_ping->options.count
 			&& ft_ping->options.count <= ft_ping->in.count.total)
+		return (true);
+	if (sending && ft_ping->options.count
+			&& ft_ping->options.count <= ft_ping->out.count)
+		return (true);
+	if (ft_ping->options.timeout.tv_sec && timed_out(ft_ping->begin, ft_ping->options.timeout))
 		return (true);
 	return (false);
 }
@@ -53,24 +62,37 @@ void	ping_header(t_ping *ft_ping)
 	dprintf(STDOUT_FILENO, "\n");
 }
 
+void	preload(t_ping *ft_ping)
+{
+	size_t i;
+
+	i = 0;
+	if (!(ft_ping->options.preload))
+		return ;
+	while (++i <= ft_ping->options.preload)
+		ping_out(ft_ping, true);
+}
+
+
 void ping(t_ping *ft_ping)
 {
 	t_time	start;
-	t_time	timeout = {1,0000};
 
 	ft_bzero(&(ft_ping->in), sizeof(ft_ping->in));
+	prebuild_packet(ft_ping);
 	ping_header(ft_ping);
-	ping_out(ft_ping);
+	preload(ft_ping);
+	ping_out(ft_ping, false);
 	gettimeofday(&start, NULL);
-	while (!(done(ft_ping)))
+	while (!(done(ft_ping, false)))
 	{
 		ping_in(ft_ping);
-		if (!(done(ft_ping)) && timed_out(start, timeout))
+		if (!(done(ft_ping, true)) && timed_out(start, ft_ping->options.interval))
 		{
-			ping_out(ft_ping);
+			ping_out(ft_ping, false);
 			gettimeofday(&start, NULL);
 		}
-		usleep(200);
+		usleep(DFL_USLEEP);
 	}
 	ping_stats(ft_ping);
 }

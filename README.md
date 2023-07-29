@@ -33,7 +33,7 @@ Still to do:
 
 [ X ] Make buffer on the stack
 
-[ ] Create decimal interval
+[ X ] Create decimal interval
 
 [ ] Norminette.
 
@@ -46,3 +46,24 @@ Still to do:
 [ X ] double check dns
 
 [ X ] verify forbidden functions (specially for address)
+
+[  ] test everything with multiple hosts
+
+Options implemented:
+-- numeric
+-- count
+-- interval
+-- verbose
+-- flood
+-- quiet
+--help
+--usage
+--version
+-- numeric (not really useful)
+-- pattern
+-- ttl
+-- size
+
+To go:
+-- timeout
+-- preload
