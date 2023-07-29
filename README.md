@@ -31,7 +31,7 @@ Still to do:
 
 [ ] Setup initial values
 
-[ ] Make buffer on the stack
+[ X ] Make buffer on the stack
 
 [ ] Create decimal interval
 
@@ -41,8 +41,8 @@ Still to do:
 
 [ ] Treat errors for socket and sending
 
-[ ] add verbose on ping out
+[ X ] add verbose on ping out
 
-[ ] double check dns
+[ X ] double check dns
 
-[ ] verify forbidden functions (specially for address)
+[ X ] verify forbidden functions (specially for address)

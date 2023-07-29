@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 08:17:04 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/28 23:29:20 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/29 00:33:35 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,13 @@ static t_bool done(t_ping *ft_ping)
 
 void	ping_header(t_ping *ft_ping)
 {
-	/* WILL FIX THAT AND PUT IN OUR FT_PING STRUCT A.S.A.P.*/
-	char str[INET_ADDRSTRLEN];
-	inet_ntop(AF_INET, &(ft_ping->out.daddr.sin_addr), str, INET_ADDRSTRLEN);
-
-	dprintf(STDOUT_FILENO, "PING %s (%s): %hu data bytes\n",
+	dprintf(STDOUT_FILENO, "PING %s (%s): %hu data bytes",
 			ft_ping->out.host,
-			str,
+			inet_ntoa(ft_ping->out.daddr.sin_addr),
 			ft_ping->options.size);
+	if (ft_ping->options.verbose)
+	    dprintf(STDOUT_FILENO, ", id 0x%04x = %u", ft_ping->pid, ft_ping->pid);
+	dprintf(STDOUT_FILENO, "\n");
 }
 
 void ping(t_ping *ft_ping)

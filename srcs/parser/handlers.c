@@ -6,14 +6,14 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 23:13:29 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/28 21:33:31 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/29 01:15:06 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
 
 /*
-** special hanbdler for pattern.
+** special handler for pattern.
 **  -p, --pattern=PATTERN 
 ** parses an hex pattern into ft_ping->options.pattern.pattern
 */
@@ -67,7 +67,7 @@ void	hndlr_doubleopt(t_ping *ft_ping, t_lstopt *opt, char *value)
 	val = ft_atoul(value);
 	if ((opt->shortcut == 'T' && val > 255)
 		|| (opt->shortcut == 'w' && val > INT_MAX)
-		|| (opt->shortcut == 'c' && val > 65399))
+		|| (opt->shortcut == 'c' && val > MAX_PACKET_SIZE))
 		prs_fatal(ft_ping, ERR_PTOOBIG, value, false);
 	else if (opt->shortcut == 'l' && val > INT_MAX)
 		prs_fatal(ft_ping, ERR_PPRELOAD, value, false);

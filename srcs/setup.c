@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 14:42:53 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/25 21:48:49 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/29 00:49:52 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,5 @@ void	setup(t_ping *ft_ping, char **argv)
 	add_options(ft_ping);
 	set_defaults(ft_ping);
 	parse(ft_ping, argv);
-	ft_ping->pid = getpid(); 
+	ft_ping->pid = (unsigned short)getpid(); 
 }

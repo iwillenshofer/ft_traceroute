@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 15:18:30 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/28 17:53:49 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/29 00:55:01 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,10 @@ void	print_headers(t_ping *ft_ping, t_headers *hdr)
 	{
 		print_ip(hdr->ip);
 		dprintf (STDOUT_FILENO,
-			"\nICMP: type %u, code %u, size %lu, id 0x%04x, seq 0x%04x\n",
+			"ICMP: type %u, code %u, size %lu, id 0x%04x, seq 0x%04x\n",
 			hdr->icmp->type, hdr->icmp->code,
 			hdr->data_size + sizeof(t_icmp),
-			hdr->icmp->un.echo.id, hdr->icmp->un.echo.sequence);
+			ntohs(hdr->icmp->un.echo.id), ntohs(hdr->icmp->un.echo.sequence));
 	}
 }
 

@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 07:12:16 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/28 23:08:44 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/29 01:19:22 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,10 @@ static void build_packet(t_ping *ft_ping)
 	char *data;
 	size_t package_size;
 
+	ft_bzero(ft_ping->out.packet, sizeof(ft_ping->out.packet));
 	package_size = sizeof(t_icmp) + ft_ping->options.size;
-	if (!(ft_ping->packet))
-		ft_ping->packet = malloc(package_size);
-	if (!(ft_ping->packet))
-		printf("MALLOC FAILED, LET'S FATALLY QUIT!!!!! ARRRRRGH!\n");
-	header = (t_icmp*)(ft_ping->packet);
-	data = (char*)(ft_ping->packet) + sizeof(t_icmp);
-	ft_bzero(ft_ping->packet, package_size);
+	header = (t_icmp*)(ft_ping->out.packet);
+	data = (char*)(ft_ping->out.packet) + sizeof(t_icmp);
 	header->un.echo.id = htons(ft_ping->pid);
 	header->un.echo.sequence = htons(ft_ping->out.count);
 	clear_duptrack(ft_ping, ft_ping->out.count);
@@ -71,7 +67,7 @@ static void build_packet(t_ping *ft_ping)
 void	ping_out(t_ping *ft_ping)
 {
 	build_packet(ft_ping);
-	if ( sendto(ft_ping->sock, ft_ping->packet, sizeof(t_icmp) + ft_ping->options.size, 0, (struct sockaddr *)&(ft_ping->out.daddr), sizeof(struct sockaddr)) <= 0)
+	if ( sendto(ft_ping->sock, ft_ping->out.packet, sizeof(t_icmp) + ft_ping->options.size, 0, (struct sockaddr *)&(ft_ping->out.daddr), sizeof(struct sockaddr)) <= 0)
 		printf("\nWE'VE GOT A FATAL ERROR HERE. ADJUST.");
 	else
 		ft_ping->out.count++;

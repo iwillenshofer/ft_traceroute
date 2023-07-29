@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:29:15 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/28 23:28:26 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/29 01:21:29 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@
 # define DFL_PACKET_SIZE 			56
 # define DFL_CUSTOM_PATTERN_SIZE 	16
 # define DFL_TTL					64
-# define MAX_PACKET_SIZE			65535
+# define MAX_PACKET_SIZE			65399
+# define PACKET_BUFFER_SIZE			65535
 # define MAX_SEQ_TRACK				128
 # define MAX_PATTERN				31
 # define NI_MAXHOST     			1025
@@ -237,6 +238,7 @@ typedef struct s_outloop
 	size_t count;
 	char			host[NI_MAXHOST + 1];
 	char			fqdn[NI_MAXHOST + 1];
+	char			packet[PACKET_BUFFER_SIZE];
 	struct sockaddr_in	daddr;
 }	t_outloop;
 
@@ -254,12 +256,7 @@ typedef struct s_ping
 	t_inloop		in;
 	t_outloop		out;
 	t_options		options;
-
-	t_icmp	*packet; //OK
-	char			*program; // stores the first line of argv
-	struct addrinfo	addr_recv;
-	char			error[ERROR_BUFFER_SIZE];
-	char			qualified_address[HOST_NAME_MAX + 1];
+	char			*program;
 }	t_ping;
 
 #endif
