@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 08:17:04 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/30 01:05:14 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/30 15:26:50 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ static t_bool	done(t_ping *ft_ping, t_bool sending)
 	if (g_signal)
 		return (true);
 	if (ft_ping->opts.count
-		&& ft_ping->opts.count <= ft_ping->in.count.total)
+		&& ft_ping->opts.count
+		<= (ft_ping->in.count.total + ft_ping->in.count.err))
 		return (true);
 	if (sending && ft_ping->opts.count
 		&& ft_ping->opts.count <= ft_ping->out.count)
@@ -67,6 +68,10 @@ void	ping_header(t_ping *ft_ping)
 	dprintf(STDOUT_FILENO, "\n");
 }
 
+/*
+** Sends preloaded # of pings as fast as possible before even beginning.
+** option --preload (-p) = NUMBER
+*/
 void	preload(t_ping *ft_ping)
 {
 	size_t	i;
@@ -94,6 +99,7 @@ void	ping(t_ping *ft_ping)
 		if (!(done(ft_ping, true)) && timed_out(start, ft_ping->opts.interval))
 		{
 			ping_out(ft_ping, false);
+			ping_in(ft_ping);
 			gettimeofday(&start, NULL);
 		}
 		usleep(DFL_USLEEP);

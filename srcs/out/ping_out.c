@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 07:12:16 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/30 01:04:20 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/30 10:51:19 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,5 @@ void	ping_out(t_ping *ft_ping, t_bool preload)
 		prs_fatal(ft_ping, ERR_SEND, NULL, false);
 	ft_ping->out.count++;
 	if ((ft_ping->opts.flood) && !(ft_ping->opts.quiet) && !(preload))
-		ft_putchar('.');
+		dprintf(STDOUT_FILENO, ".");
 }

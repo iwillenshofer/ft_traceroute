@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 10:44:30 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/29 13:14:57 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/30 09:54:42 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,5 +118,6 @@ void	icmp_noecho(t_ping *ft_ping)
 	if (hdrs.ip->protocol != IPPROTO_ICMP
 		|| hdrs.icmp->type != ICMP_ECHO)
 		return ;
+	ft_ping->in.count.err++;
 	print_nonecho(ft_ping, &hdrs);
 }

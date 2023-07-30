@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:29:15 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/30 01:51:26 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/30 14:52:28 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@
 # define MAX_SEQ_TRACK				128
 # define MAX_PATTERN				31
 # define NI_MAXHOST     			1025
-
+# define MIN_ICMP_RATE				5000
+# define DFL_FLOOD_RATE				10000
 # define OPT_COUNT					0
 # define OPT_INTERVAL				1
 # define OPT_NUMERIC				2
@@ -229,6 +230,7 @@ typedef struct s_counter
 {
 	size_t	total;
 	size_t	dup;
+	size_t	err;
 	size_t	timed;
 }	t_counter;
 

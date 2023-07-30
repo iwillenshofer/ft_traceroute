@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 15:18:30 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/30 01:04:20 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/30 09:23:13 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	print_headers(t_ping *ft_ping, t_headers *hdr)
 {
 	if (ft_ping->opts.verbose)
 	{
-		dprintf(STDOUT_FILENO, "IP Hdr Dump:\n");
+		dprintf(STDOUT_FILENO, "IP Hdr Dump:\n ");
 		ft_puthex_bytes(((char *)hdr->ip), (hdr->ip->ihl * 4), 2, 0);
 	}
 	if (ft_ping->opts.verbose

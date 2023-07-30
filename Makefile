@@ -6,7 +6,7 @@
 #    By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 15:22:29 by iwillens          #+#    #+#              #
-#    Updated: 2023/07/29 22:42:10 by iwillens         ###   ########.fr        #
+#    Updated: 2023/07/30 14:53:58 by iwillens         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@
 NAME = ft_ping
 
 CC = gcc
-CCFLAGS = -Wall -Werror -Wextra -fsanitize=address -g
+CCFLAGS = -Wall -Werror -Wextra #-fsanitize=address -g
 
 SRC_DIR = ./srcs
 OBJ_DIR = ./build
