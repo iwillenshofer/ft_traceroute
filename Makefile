@@ -6,7 +6,7 @@
 #    By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 15:22:29 by iwillens          #+#    #+#              #
-#    Updated: 2023/07/30 14:53:58 by iwillens         ###   ########.fr        #
+#    Updated: 2023/07/31 14:38:54 by iwillens         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,13 +22,12 @@ CCFLAGS = -Wall -Werror -Wextra #-fsanitize=address -g
 SRC_DIR = ./srcs
 OBJ_DIR = ./build
 INC_DIR = ./includes
-INCLUDES = ${INC_DIR}/ft_ping.h
 
 SRCS = ${SRC_DIR}/main.c \
-		${SRC_DIR}/socket.c \
-		${SRC_DIR}/address.c \
-		${SRC_DIR}/setup.c \
-		${SRC_DIR}/ping.c \
+		${SRC_DIR}/core/socket.c \
+		${SRC_DIR}/core/address.c \
+		${SRC_DIR}/core/setup.c \
+		${SRC_DIR}/core/ping.c \
 		${SRC_DIR}/in/ping_in.c \
 		${SRC_DIR}/in/noecho.c \
 		${SRC_DIR}/in/print.c \
@@ -43,10 +42,7 @@ SRCS = ${SRC_DIR}/main.c \
 		${SRC_DIR}/parser/parser.c \
 		${SRC_DIR}/parser/handlers.c
 
-ifeq ($(HOSTTYPE),)
-	HOSTTYPE := $(shell uname -m)_$(shell uname -s)_$(shell uname -n)
-endif
-HOST_FILE = ${OBJ_DIR}/.host_${HOSTTYPE}
+
 
 OBJS = $(patsubst ${SRC_DIR}/%.c, ${OBJ_DIR}/%.o, ${SRCS})
 
@@ -66,25 +62,14 @@ all: ${NAME}
 
 bonus: ${NAME}
 
-${NAME}: ${LIBFT} ${OBJS} ${INCLUDES} Makefile ${HOST_FILE} ${BUILD_FILE}
-	gcc ${CCFLAGS} ${OBJS}  -L./srcs/libft -lft -o ${NAME}
+${NAME}: ${LIBFT} ${OBJS} Makefile
+	@gcc ${CCFLAGS} ${OBJS}  -L./srcs/libft -lft -o ${NAME}
 	@echo "\033[96m${NAME} is built. \033[0m"
 
 
-${OBJ_DIR}/%.o: $(SRC_DIR)/%.c ${INC_DIR} ${INCLUDES} Makefile ${HOST_FILE} ${BUILD_FILE}
+${OBJ_DIR}/%.o: $(SRC_DIR)/%.c ${LIBFT} Makefile
 	@mkdir -p ${@D}
-	${CC} ${CCFLAGS} -MMD -c $< -I. -I ${INC_DIR} -I${LIBFT_DIR} -o $@
-
-${HOST_FILE}:
-	@rm -rf ${OBJ_DIR}
-	@mkdir -p ${OBJ_DIR}
-	@touch ${HOST_FILE}
-
-${BUILD_FILE}:
-	@rm -rf ${OBJ_DIR}/.build_*
-	@mkdir -p ${OBJ_DIR}
-	@touch ${BUILD_FILE}
-	@echo "\033[99m${BUILD_FILE} is built. \033[0m"
+	@${CC} ${CCFLAGS} -MMD -c $< -I ${INC_DIR} -I${LIBFT_DIR} -o $@
 
 run: all
 	./${NAME}

@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 12:22:38 by marvin            #+#    #+#             */
-/*   Updated: 2023/07/28 14:41:08 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/31 16:51:29 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	prs_fatal(t_ping *ft_ping, const char *error,
 	exit (1);
 }
 
-char	**prs_shortname(t_ping *ft_ping, char **argv)
+static char	**prs_shortname(t_ping *ft_ping, char **argv)
 {
 	char		*c;
 	t_lstopt	*opt;
@@ -50,7 +50,7 @@ char	**prs_shortname(t_ping *ft_ping, char **argv)
 	return (argv);
 }
 
-char	**prs_fullname(t_ping *ft_ping, char **argv)
+static char	**prs_fullname(t_ping *ft_ping, char **argv)
 {
 	char		*name;
 	char		*equal;

@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:29:15 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/30 14:52:28 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/31 15:00:34 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,22 +53,17 @@
 # define ICMP_CSRTR_ADV 9 
 # define ICMP_CSRTR_DSC 10
 
-struct					s_ping;
-
-typedef struct s_lstopt
-{
-	char	shortcut;
-	int		type;
-	char	fullname[16];
-	char	desc[128];
-	void	(*handler)(struct s_ping *, struct s_lstopt *opt, char *val);
-}	t_lstopt;
-
 typedef enum e_bool
 {
 	false,
 	true
 }	t_bool;
+
+/*
+** forward declaration of s_ping for use in options.
+*/
+struct					s_ping;
+
 typedef struct timeval	t_time;
 
 /*
@@ -92,7 +87,6 @@ typedef unsigned int	t_u32bits;
 **  https://datatracker.ietf.org/doc/html/rfc791
 ** RFC for Internet Control Message Protocol:
 **  https://datatracker.ietf.org/doc/html/rfc792
-
 ** 
 **  A summary of the contents of the internet header follows:
 **   0                   1                   2                   3
@@ -176,6 +170,15 @@ typedef struct s_options_pattern
 	t_u8bits	pattern[DFL_CUSTOM_PATTERN_SIZE];
 	t_u8bits	size;
 }	t_options_pattern;
+
+typedef struct s_lstopt
+{
+	char	shortcut;
+	int		type;
+	char	fullname[16];
+	char	desc[128];
+	void	(*handler)(struct s_ping *, struct s_lstopt *opt, char *val);
+}	t_lstopt;
 
 typedef struct s_options
 {

@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 23:13:29 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/30 01:04:20 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/31 16:50:12 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 **  -p, --pattern=PATTERN 
 ** parses an hex pattern into ft_ping->opts.pattern.pattern
 */
-void	hndlr_pattern(t_ping *ft_ping, t_lstopt *opt, char *value)
+static void	hndlr_pattern(t_ping *ft_ping, t_lstopt *opt, char *value)
 {
 	size_t	size;
 	char	c;
@@ -50,7 +50,7 @@ void	hndlr_pattern(t_ping *ft_ping, t_lstopt *opt, char *value)
 ** -i, --interval=NUMBER 
 ** accepts decimal values.
 */
-void	hndlr_interval(t_ping *ft_ping,
+static void	hndlr_interval(t_ping *ft_ping,
 		t_lstopt *opt __attribute__((unused)), char *value)
 {
 	char	*dec;
@@ -89,7 +89,7 @@ void	hndlr_interval(t_ping *ft_ping,
 **  -l, --preload=NUMBER  
 **  -s, --size=NUMBER     
 */
-void	hndlr_doubleopt(t_ping *ft_ping, t_lstopt *opt, char *value)
+static void	hndlr_doubleopt(t_ping *ft_ping, t_lstopt *opt, char *value)
 {
 	size_t	val;
 	char	errbuf[ERR_BUF + 1];
@@ -128,7 +128,7 @@ void	hndlr_doubleopt(t_ping *ft_ping, t_lstopt *opt, char *value)
 **  -U, --usage           
 **  -V, --version         
 */
-void	hndlr_singleopt(t_ping *ft_ping, t_lstopt *opt, char *value)
+static void	hndlr_singleopt(t_ping *ft_ping, t_lstopt *opt, char *value)
 {
 	(void)(value);
 	if (opt->shortcut == '?')

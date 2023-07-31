@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 09:12:12 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/30 01:36:00 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/31 14:40:03 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /*
 ** returns a timeval with the difference between begin and end.
 */
-t_time	elapsed_time(t_time begin, t_time end)
+static t_time	elapsed_time(t_time begin, t_time end)
 {
 	int		nsec;
 	t_time	diff;

@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:41:35 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/30 01:50:13 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/07/31 14:40:26 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ t_u16bits	checksum(void *buffer, size_t size);
 /*
 ** time
 */
-t_time		elapsed_time(t_time begin, t_time end);
 double		elapsed_time_ms(t_time begin, t_time end);
 t_bool		timed_out(t_time begin, t_time timeout);
 
