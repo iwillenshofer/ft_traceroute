@@ -6,7 +6,7 @@
 #    By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 15:22:29 by iwillens          #+#    #+#              #
-#    Updated: 2023/07/31 14:38:54 by iwillens         ###   ########.fr        #
+#    Updated: 2023/07/31 17:56:27 by iwillens         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@
 NAME = ft_ping
 
 CC = gcc
-CCFLAGS = -Wall -Werror -Wextra #-fsanitize=address -g
+CCFLAGS = -Wall -Werror -Wextra 
 
 SRC_DIR = ./srcs
 OBJ_DIR = ./build
@@ -60,8 +60,6 @@ LIBFT = ${LIBFT_DIR}/libft.a
 
 all: ${NAME}
 
-bonus: ${NAME}
-
 ${NAME}: ${LIBFT} ${OBJS} Makefile
 	@gcc ${CCFLAGS} ${OBJS}  -L./srcs/libft -lft -o ${NAME}
 	@echo "\033[96m${NAME} is built. \033[0m"
@@ -71,8 +69,6 @@ ${OBJ_DIR}/%.o: $(SRC_DIR)/%.c ${LIBFT} Makefile
 	@mkdir -p ${@D}
 	@${CC} ${CCFLAGS} -MMD -c $< -I ${INC_DIR} -I${LIBFT_DIR} -o $@
 
-run: all
-	./${NAME}
 
 # **************************************************************************** #
 # *** Libft Rules                                                              #
