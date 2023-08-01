@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 10:44:30 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/30 09:54:42 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/01 09:27:48 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,6 @@ void	icmp_noecho(t_ping *ft_ping)
 	if (ft_ping->in.recv.hdrs.datalen < sizeof(t_ip) + sizeof(t_icmp))
 		return ;
 	hdrs.ip = (t_ip *)ft_ping->in.recv.hdrs.data;
-	if (ft_ping->in.recv.hdrs.datalen < sizeof(t_ip) + 64)
-		return ;
 	hdrs.datalen = ft_ping->in.recv.hdrs.datalen
 		- (hdrs.ip->ihl * 4) - sizeof(t_icmp);
 	if (hdrs.datalen > ft_ping->in.recv.hdrs.datalen)
