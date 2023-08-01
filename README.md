@@ -83,13 +83,15 @@ $ ./ft_ping google.com
 |short| long option | description |
 |--- |--- |--- |
 | -c	| --count=NUMBER       |   stop after sending NUMBER packets													|
-| -i	| --interval=NUMBER    |   wait NUMBER seconds between sending each packet										|
+| -i	| --interval=NUMBER    |   wait NUMBER seconds between 															|
+||| - sending each packet	|
 | -n	| --numeric            |   do not resolve host addresses														|
 | -T	| --ttl=N              |   specify N as time-to-live															|
 | -v	| --verbose            |   verbose output																		|
 | -w	| --timeout=N          |   stop after N seconds																	|
 | -f	| --flood              |   flood ping																			|
-| -l	| --preload=NUMBER     |   send NUMBER packets as fast as possible before falling into normal mode of behavior	|
+| -l	| --preload=NUMBER     |   send NUMBER packets as fast as possible |
+||| - before falling into normal mode of behavior	|
 | -p	| --pattern=PATTERN    |   fill ICMP packet with given pattern													|
 | -q	| --quiet              |   quiet output																			|
 | -s	| --size=NUMBER        |   send NUMBER data octets																|
