@@ -6,11 +6,11 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 07:12:28 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/30 11:57:21 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/01 10:39:37 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ping.h"
+#include "ft_traceroute.h"
 
 /*
 ** validates the size of the icmp packet and sets the headers shortcuts for use

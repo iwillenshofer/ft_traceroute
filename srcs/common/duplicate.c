@@ -6,11 +6,11 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:59:53 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/28 23:16:51 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/01 10:39:37 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ping.h"
+#include "ft_traceroute.h"
 
 /*
 ** this file contains functions for tracking duplicated received messages

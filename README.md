@@ -54,10 +54,10 @@
 				<img src="https://img.shields.io/badge/recvfrom()-lightgrey">
 				<img src="https://img.shields.io/badge/sendto()-lightgrey">
 				<img src="https://img.shields.io/badge/nthos()-lightgrey">
-				<img src="https://img.shields.io/badge/htons()-lightgrey">
-				<img src="https://img.shields.io/badge/bind()-lightgrey"><br>
+				<img src="https://img.shields.io/badge/htons()-lightgrey"><br>
+				<img src="https://img.shields.io/badge/bind()-lightgrey">
 				<img src="https://img.shields.io/badge/close()-lightgrey">
-				<img src="https://img.shields.io/badge/socket()-lightgrey"><br>
+				<img src="https://img.shields.io/badge/socket()-lightgrey">
 				<img src="https://img.shields.io/badge/strerror()-lightgrey"><br>
 				<img src="https://img.shields.io/badge/gai__strerror()-lightgrey">
 				<img src="https://img.shields.io/badge/printf()_and_its_family-lightgrey"><br>

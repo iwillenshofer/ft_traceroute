@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ping.h"
+#include "ft_traceroute.h"
 
 static t_lstopt	new_option(char shortcut, char type, char *name)
 {

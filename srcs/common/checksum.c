@@ -6,11 +6,11 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/12 14:25:33 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/30 01:32:54 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/01 10:39:37 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ping.h"
+#include "ft_traceroute.h"
 
 /*
 ** calculates the checksum.

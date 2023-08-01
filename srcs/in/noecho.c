@@ -6,11 +6,11 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 10:44:30 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/01 09:27:48 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/01 10:39:37 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ping.h"
+#include "ft_traceroute.h"
 
 static void	print_unreach(size_t code)
 {

@@ -6,11 +6,11 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 22:00:49 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/30 01:12:08 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/01 10:39:37 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ping.h"
+#include "ft_traceroute.h"
 
 /*
 ** Sets the data values right after the icmp header.

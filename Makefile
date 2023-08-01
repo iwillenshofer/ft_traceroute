@@ -6,7 +6,7 @@
 #    By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 15:22:29 by iwillens          #+#    #+#              #
-#    Updated: 2023/07/31 17:56:27 by iwillens         ###   ########.fr        #
+#    Updated: 2023/08/01 10:40:47 by iwillens         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@
 # *** Main Definitions                                                         #
 # **************************************************************************** #
 
-NAME = ft_ping
+NAME = ft_traceroute
 
 CC = gcc
 CCFLAGS = -Wall -Werror -Wextra 
