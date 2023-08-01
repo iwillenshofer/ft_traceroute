@@ -1,6 +1,6 @@
 <p align="center">
 	<img width="130px;" src="https://game.42sp.org.br/static/assets/images/42_logo_black.svg" align="center" alt="42" />
-	<h1 align="center">malloc</h1>
+	<h1 align="center">ft_ping</h1>
 </p>
 <p align="center">
 	<img src="https://img.shields.io/badge/Success-125/100_✓-gray.svg?colorA=61c265&colorB=4CAF50&style=for-the-badge">
@@ -80,7 +80,8 @@ $ ./ft_ping google.com
 
 ### Implemented Arguments
 
-|shrt| long | description |
+|short| long option | description |
+|--- |--- |--- |
 | -c	| --count=NUMBER       |   stop after sending NUMBER packets													|
 | -i	| --interval=NUMBER    |   wait NUMBER seconds between sending each packet										|
 | -n	| --numeric            |   do not resolve host addresses														|
