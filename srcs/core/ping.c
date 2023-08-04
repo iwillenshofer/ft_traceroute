@@ -42,8 +42,6 @@ static void	ping_stats(t_ping *ft_ping)
 */
 static t_bool	done(t_ping *ft_ping, t_bool sending)
 {
-	if (g_signal)
-		return (true);
 	if (ft_ping->opts.count
 		&& ft_ping->opts.count
 		<= (ft_ping->in.count.total + ft_ping->in.count.err))

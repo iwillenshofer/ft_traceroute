@@ -23,60 +23,50 @@ static t_lstopt	new_option(char shortcut, char type, char *name)
 	return (new);
 }
 
-static void	add_descriptions(t_ping *ft_ping)
+static void	add_descriptions(t_trace *tr)
 {
 	t_lstopt	*opt;
 
-	opt = ft_ping->opts.available;
-	ft_strcpy(opt[OPT_COUNT].desc, ODSC_COUNT);
-	ft_strcpy(opt[OPT_INTERVAL].desc, ODSC_INTERVAL);
-	ft_strcpy(opt[OPT_NUMERIC].desc, ODSC_NUMERIC);
-	ft_strcpy(opt[OPT_TTL].desc, ODSC_TTL);
-	ft_strcpy(opt[OPT_VERBOSE].desc, ODSC_VERBOSE);
-	ft_strcpy(opt[OPT_TIMEOUT].desc, ODSC_TIMEOUT);
-	ft_strcpy(opt[OPT_FLOOD].desc, ODSC_FLOOD);
-	ft_strcpy(opt[OPT_PRELOAD].desc, ODSC_PRELOAD);
-	ft_strcpy(opt[OPT_PATTERN].desc, ODSC_PATTERN);
-	ft_strcpy(opt[OPT_QUIET].desc, ODSC_QUIET);
-	ft_strcpy(opt[OPT_SIZE].desc, ODSC_SIZE);
-	ft_strcpy(opt[OPT_HELP].desc, ODSC_HELP);
+	opt = tr->opts.available;
+	ft_strcpy(opt[OPT_FIRSTTTL].desc, ODSC_FIRSTTTL);
+	ft_strcpy(opt[OPT_MAXTTL].desc, ODSC_MAXTTL);
+	ft_strcpy(opt[OPT_PORT].desc, ODSC_PORT);
+	ft_strcpy(opt[OPT_SQUERIES].desc, ODSC_SQUERIES);
+	ft_strcpy(opt[OPT_RESOLVEH].desc, ODSC_RESOLVEH);
+	ft_strcpy(opt[OPT_NQUERIES].desc, ODSC_NQUERIES);
 	ft_strcpy(opt[OPT_USAGE].desc, ODSC_USAGE);
+	ft_strcpy(opt[OPT_HELP].desc, ODSC_HELP);
 	ft_strcpy(opt[OPT_VERSION].desc, ODSC_VERSION);
 }
 
-void	add_options(t_ping *ft_ping)
+void	add_options(t_trace *tr)
 {
 	t_lstopt	*opt;
 
-	opt = ft_ping->opts.available;
-	opt[OPT_NUMERIC] = new_option('n', OPTT_NULL, "numeric");
-	opt[OPT_VERBOSE] = new_option('v', OPTT_NULL, "verbose");
-	opt[OPT_FLOOD] = new_option('f', OPTT_NULL, "flood");
-	opt[OPT_QUIET] = new_option('q', OPTT_NULL, "quiet");
+	opt = tr->opts.available;
+	opt[OPT_FIRSTTTL] = new_option('f', OPTT_FTTL, "first");
+	opt[OPT_MAXTTL] = new_option('m', OPTT_MAXTTL, "max-hops");
+	opt[OPT_SQUERIES] = new_option('N', OPTT_SQUERIES, "sim-queries");
+	opt[OPT_PORT] = new_option('p', OPTT_PORT, "port");
+	opt[OPT_RESOLVEH] = new_option('n', OPTT_NULL, "resolve-hostnames");
+	opt[OPT_NQUERIES] = new_option('q', OPTT_NQUERIES, "queries");
+	opt[OPT_USAGE] = new_option('u', OPTT_NULL, "usage");
 	opt[OPT_HELP] = new_option('?', OPTT_NULL, "help");
-	opt[OPT_USAGE] = new_option('U', OPTT_NULL, "usage");
 	opt[OPT_VERSION] = new_option('V', OPTT_NULL, "version");
-	opt[OPT_TTL] = new_option('T', OPTT_SHORT, "ttl");
-	opt[OPT_TIMEOUT] = new_option('w', OPTT_SHORT, "timeout");
-	opt[OPT_PRELOAD] = new_option('l', OPTT_LONG, "preload");
-	opt[OPT_COUNT] = new_option('c', OPTT_LONG, "count");
-	opt[OPT_INTERVAL] = new_option('i', OPTT_LONG, "interval");
-	opt[OPT_SIZE] = new_option('s', OPTT_LONG, "size");
-	opt[OPT_PATTERN] = new_option('p', OPTT_PATTERN, "pattern");
-	add_descriptions(ft_ping);
-	add_handlers(ft_ping);
+	add_descriptions(tr);
+	add_handlers(tr);
 }
 
 /*
 ** retrieves an option by fullname.
 */
-t_lstopt	*opt_byfullname(t_ping *ft_ping, char *s)
+t_lstopt	*opt_byfullname(t_trace *tr, char *s)
 {
 	t_lstopt	*opt;
 	size_t		i;
 
 	i = 0;
-	opt = ft_ping->opts.available;
+	opt = tr->opts.available;
 	while (i < OPT_LSTSIZE)
 	{
 		if (!(ft_strcmp(opt[i].fullname, s)))
@@ -89,13 +79,13 @@ t_lstopt	*opt_byfullname(t_ping *ft_ping, char *s)
 /*
 ** retrieves an option by shortcut.
 */
-t_lstopt	*opt_byshortcut(t_ping *ft_ping, char c)
+t_lstopt	*opt_byshortcut(t_trace *tr, char c)
 {
 	t_lstopt	*opt;
 	size_t		i;
 
 	i = 0;
-	opt = ft_ping->opts.available;
+	opt = tr->opts.available;
 	while (i < OPT_LSTSIZE)
 	{
 		if (opt[i].shortcut == c)

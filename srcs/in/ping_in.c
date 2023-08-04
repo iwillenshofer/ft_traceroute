@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 07:12:28 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/01 10:39:37 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/04 14:23:59 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,7 @@ void	ping_timestamp(t_ping *ft_ping)
 */
 static void	init_receive(t_ping *ft_ping)
 {
+	
 	ft_bzero(&(ft_ping->in.recv), sizeof(t_receive));
 	ft_ping->in.recv.msg.msg_name = &(ft_ping->in.recv.peer_addr);
 	ft_ping->in.recv.msg.msg_namelen = sizeof(struct sockaddr_in);

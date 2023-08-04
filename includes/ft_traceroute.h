@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ping.h                                          :+:      :+:    :+:   */
+/*   tr.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -21,28 +21,28 @@
 # include <time.h>
 # include <sys/time.h>
 # include <arpa/inet.h>
-# include <netinet/ip_icmp.h>
 # include <stdlib.h>
 # include <limits.h>
 # include <sys/types.h>
-# include <signal.h>
+# include <sys/select.h>
 # include "libft.h"
+# include <netinet/udp.h>
+# include <netinet/ip.h>
+# include <linux/if_ether.h>
+
 # include "ft_traceroute_types.h"
 # include "ft_traceroute_errors.h"
 # include "ft_traceroute_parse.h"
 
-extern t_bool	g_signal;
+void		trace(t_trace *tr);
+void		setup(t_trace *tr, char **argv);
+void		build_packet(t_trace *tr);
 
-void		get_address(t_ping *ft_ping);
-void		setup(t_ping *ft_ping, char **argv);
-void		ping(t_ping *ft_ping);
-void		opensocket(t_ping *ft_ping);
+void		get_address(t_trace *tr);
+void		opensockets(t_trace *tr);
+void		set_sockttl(t_trace *tr, size_t ttl);
 
-/*
-** checksum
-*/
-t_u16bits	checksum(void *buffer, size_t size);
-
+void		ping(t_trace *tr);
 /*
 ** time
 */
@@ -52,41 +52,39 @@ t_bool		timed_out(t_time begin, t_time timeout);
 /*
 ** ping in/out
 */
-t_bool		ping_in(t_ping *ft_ping);
-void		ping_out(t_ping *ft_ping, t_bool preload);
-void		prebuild_packet(t_ping *ft_ping);
-void		build_packet(t_ping *ft_ping);
+t_bool		ping_in(t_trace *tr);
+void		ping_out(t_trace *tr, t_bool preload);
+void		prebuild_packet(t_trace *tr);
 
 /*
 ** duplicate checker
 */
-void		set_duptrack(t_ping *ft_ping, size_t seq);
-t_bool		check_duptrack(t_ping *ft_ping, size_t seq);
-void		clear_duptrack(t_ping *ft_ping, size_t seq);
+void		set_duptrack(t_trace *tr, size_t seq);
+t_bool		check_duptrack(t_trace *tr, size_t seq);
+void		clear_duptrack(t_trace *tr, size_t seq);
 
 /*
 ** parser
 */
-void		parse(t_ping *ft_ping, char **argv);
-t_lstopt	*opt_byfullname(t_ping *ft_ping, char *s);
-t_lstopt	*opt_byshortcut(t_ping *ft_ping, char c);
-void		add_options(t_ping *ft_ping);
-void		add_handlers(t_ping *ft_ping);
+void		parse(t_trace *tr, char **argv);
+t_lstopt	*opt_byfullname(t_trace *tr, char *s);
+t_lstopt	*opt_byshortcut(t_trace *tr, char c);
+void		add_options(t_trace *tr);
+void		add_handlers(t_trace *tr);
 
 /*
 ** printing
 */
-void		print_help(t_ping *ft_ping);
-void		print_usage(t_ping *ft_ping);
-void		print_shortusage(t_ping *ft_ping);
-void		print_version(t_ping *ft_ping);
-void		print_headers(t_ping *ft_ping, t_headers *hdr);
-void		print_echo(t_ping *ft_ping);
+void		print_help(t_trace *tr);
+void		print_usage(t_trace *tr);
+void		print_shortusage(t_trace *tr);
+void		print_version(t_trace *tr);
+void		print_echo(t_trace *tr);
 
 /*
 ** no echo
 */
-void		icmp_noecho(t_ping *ft_ping);
+void		icmp_noecho(t_trace *tr);
 char		*tname(int type);
 
 #endif

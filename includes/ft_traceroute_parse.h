@@ -14,61 +14,77 @@
 # define FT_TRACEROUTE_PARSE_H
 
 /*
+  
+  -f first_ttl  --first=first_ttl
+                              Start from the first_ttl hop (instead from 1)
+  -m max_ttl  --max-hops=max_ttl
+                              Set the max number of hops (max TTL to be reached). Default is 30
+  -N squeries  --sim-queries=squeries
+                              Set the number of probes to be tried simultaneously (default is 16)
+  -p port  --port=port        Set the destination port to use. It is either
+                              initial udp port value for "default" method
+                              (incremented by each probe, default is 33434), or
+                              initial seq for "icmp" (incremented as well,
+                              default from 1), or some constant destination
+                              port for other methods (with default of 80 for
+                              "tcp", 53 for "udp", etc.)
+  -q nqueries  --queries=nqueries
+                              Set the number of probes per each hop. Default is 3
+
+
+
+
+  -n                          Do not resolve IP addresses to their domain names
+  -V  --version               Print version info and exit
+  --help                      Read this help and exit
+*/
+
+
+
+/*
 ** list of options allowed by this program.
 ** OPT_LSTSIZE must be the count of options available
 */
-# define OPT_COUNT			0
-# define OPT_INTERVAL		1
-# define OPT_NUMERIC		2
-# define OPT_TTL			3
-# define OPT_VERBOSE		4
-# define OPT_TIMEOUT		5
-# define OPT_FLOOD			6
-# define OPT_PRELOAD		7
-# define OPT_PATTERN		8
-# define OPT_QUIET			9
-# define OPT_SIZE			10
-# define OPT_HELP			11
-# define OPT_USAGE			12
-# define OPT_VERSION		13
-# define OPT_LSTSIZE		14
+# define OPT_FIRSTTTL		0
+# define OPT_MAXTTL			1
+# define OPT_PORT			2
+# define OPT_SQUERIES		3
+# define OPT_NQUERIES		4
+# define OPT_RESOLVEH		5
+# define OPT_USAGE			6
+# define OPT_HELP			7
+# define OPT_VERSION		8
+# define OPT_LSTSIZE		9
 
 /*
 ** Descriptions for the above otions
 */
-# define ODSC_COUNT		"stop after sending NUMBER packets"
-# define ODSC_INTERVAL	"wait NUMBER seconds between sending each packet"
-# define ODSC_NUMERIC	"do not resolve host addresses"
-# define ODSC_TTL		"specify N as time-to-live"
-# define ODSC_VERBOSE	"verbose output"
-# define ODSC_TIMEOUT	"stop after N seconds"
-# define ODSC_FLOOD		"flood ping"
-# define ODSC_PRELOAD	"send NUMBER packets as fast as possible before \
-falling into normal mode of behavior"
-# define ODSC_PATTERN	"fill ICMP packet with given pattern"
-# define ODSC_QUIET		"quiet output"
-# define ODSC_SIZE		"send NUMBER data octets"
-# define ODSC_HELP		"give this help list"
-# define ODSC_USAGE		"give a short usage message"
-# define ODSC_VERSION	"print program version"
 
-/*
-** definitions for option types
-** and its printing counterparts
-OPTT_NULL: --numeric
-OPTT_SHORT: --ttl=N
-OPTT_LONG: --count=NUMBER
-OPTT_PATTERN: --pattern=PATTERN
-*/
+# define ODSC_FIRSTTTL	"Start from the first_ttl hop (instead from 1)"
+# define ODSC_MAXTTL	"Set the max number of hops (max TTL to be reached). Default is 30"
+# define ODSC_PORT		"Set the initial value for destination port. (default: 33434)"
+# define ODSC_SQUERIES	"Set the number of probes to be tried simultaneously (default is 16)"
+# define ODSC_NQUERIES	"Set the number of probes per each hop. Default is 3"
+# define ODSC_RESOLVEH	"Do not resolve IP addresses to their domain names"
+# define ODSC_USAGE		"give a short usage message and exit"
+# define ODSC_HELP		"Read this help and exit"
+# define ODSC_VERSION	"Print version info and exit"
+
 # define OPTT_NULL		0
-# define OPTT_SHORT		1
-# define OPTT_LONG		2
-# define OPTT_PATTERN	3
+# define OPTT_FTTL		1
+# define OPTT_MAXTTL	2
+# define OPTT_SQUERIES	3
+# define OPTT_NQUERIES	4
+# define OPTT_PORT		5
 
 # define OSTR_NULL		""
-# define OSTR_SHORT		"N"
-# define OSTR_LONG		"NUMBER"
-# define OSTR_PATTERN	"PATTERN"
+# define OSTR_FTTL		"first_ttl"
+# define OSTR_MAXTTL	"max_ttl"
+# define OSTR_SQUERIES	"squeries"
+# define OSTR_NQUERIES	"nqueries"
+# define OSTR_PORT		"port"
+
+# define OSTR_QUERIES	"nqueries"
 
 /*
 ** definitions types for printing.
@@ -86,7 +102,7 @@ OPTT_PATTERN: --pattern=PATTERN
 /*
 ** Definitions for Help strings
 */
-# define HPL_USAGE "Usage: %s [OPTION...] HOST ...\n"
+# define HPL_USAGE "Usage: %s [OPTION...] host [ packetlen ]\n"
 # define HPL_GOAL "Send ICMP ECHO_REQUEST packets to network hosts.\n\n"
 # define HPL_OPTIONS "Options valid for all request types:\n\n"
 # define HPL_ARGS "Mandatory or optional arguments to long options are also"
@@ -95,7 +111,6 @@ OPTT_PATTERN: --pattern=PATTERN
 /*
 ** Definitions for Version Strings
 */
-
 # define VRS "\033[37;1m%s Version %u.%u\033[0m\n"
 # define VRS1 "\033[0m\033[38;2;123;145;255m _         _  _  _\n"
 # define VRS2 "\033[38;2;87;115;255m<_> _ _ _ <_>| || | ___ ._ _  ___\n"

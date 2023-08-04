@@ -12,13 +12,13 @@
 
 #include "ft_traceroute.h"
 
-static int	prt_options(t_ping *ft_ping, int kind, int used, int preceeding)
+static int	prt_options(t_trace *tr, int kind, int used, int preceeding)
 {
 	size_t		i;
 	t_lstopt	*opt;
 
 	i = 0;
-	opt = ft_ping->opts.available;
+	opt = tr->opts.available;
 	if (kind == OPTT_NULL)
 		used += dprintf(STDERR_FILENO, "%s", " -");
 	while (i < OPT_LSTSIZE)
@@ -42,31 +42,35 @@ static int	prt_options(t_ping *ft_ping, int kind, int used, int preceeding)
 
 char	*tname(int type)
 {
-	if (type == OPTT_SHORT)
-		return (OSTR_SHORT);
-	else if (type == OPTT_LONG)
-		return (OSTR_LONG);
-	else if (type == OPTT_PATTERN)
-		return (OSTR_PATTERN);
+	if (type == OPTT_FTTL)
+		return (OSTR_FTTL);
+	else if (type == OPTT_MAXTTL)
+		return (OSTR_MAXTTL);
+	else if (type == OPTT_SQUERIES)
+		return (OSTR_SQUERIES);
+	else if (type == OPTT_NQUERIES)
+		return (OSTR_NQUERIES);
+	else if (type == OPTT_PORT)
+		return (OSTR_PORT);
 	return (OSTR_NULL);
 }
 
-void	print_usage(t_ping *ft_ping)
+void	print_usage(t_trace *tr)
 {
 	int			preceeding;
 	int			used;
 
-	preceeding = dprintf(STDERR_FILENO, "Usage: %s", ft_ping->program);
+	preceeding = dprintf(STDERR_FILENO, "Usage: %s", tr->program);
 	used = preceeding;
-	used = prt_options(ft_ping, OPRT_SHORTCUT, used, preceeding);
-	used = prt_options(ft_ping, OPRT_DSHORTCUT, used, preceeding);
-	used = prt_options(ft_ping, OPRT_FULLNAME, used, preceeding);
-	used += prt_options(ft_ping, OPRT_DFULLNAME, used, preceeding);
-	dprintf(STDERR_FILENO, " HOST ...\n");
+	used = prt_options(tr, OPRT_SHORTCUT, used, preceeding);
+	used = prt_options(tr, OPRT_DSHORTCUT, used, preceeding);
+	used = prt_options(tr, OPRT_FULLNAME, used, preceeding);
+	used += prt_options(tr, OPRT_DFULLNAME, used, preceeding);
+	dprintf(STDERR_FILENO, " host [ packetlen ]\n");
 	exit(0);
 }
 
-void	print_shortusage(t_ping *ft_ping)
+void	print_shortusage(t_trace *tr)
 {
-	dprintf(STDERR_FILENO, ERR_SRTUSAGE, ft_ping->program, ft_ping->program);
+	dprintf(STDERR_FILENO, ERR_SRTUSAGE, tr->program, tr->program);
 }

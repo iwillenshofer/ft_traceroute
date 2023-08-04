@@ -6,22 +6,22 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 12:22:38 by marvin            #+#    #+#             */
-/*   Updated: 2023/08/01 10:39:37 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/02 19:49:46 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_traceroute.h"
 
-void	prs_fatal(t_ping *ft_ping, const char *error,
+void	prs_fatal(t_trace *tr, const char *error,
 	const char *s, t_bool shortusage)
 {
-	dprintf(STDERR_FILENO, error, ft_ping->program, s);
+	dprintf(STDERR_FILENO, error, tr->program, s);
 	if (shortusage)
-		print_shortusage(ft_ping);
+		print_shortusage(tr);
 	exit (1);
 }
 
-static char	**prs_shortname(t_ping *ft_ping, char **argv)
+static char	**prs_shortname(t_trace *tr, char **argv)
 {
 	char		*c;
 	t_lstopt	*opt;
@@ -32,17 +32,17 @@ static char	**prs_shortname(t_ping *ft_ping, char **argv)
 	while (*c)
 	{
 		err[0] = *c;
-		opt = opt_byshortcut(ft_ping, *c);
+		opt = opt_byshortcut(tr, *c);
 		if (!opt)
-			prs_fatal(ft_ping, ERR_INVALIDOPT, err, true);
+			prs_fatal(tr, ERR_INVALIDOPT, err, true);
 		if (opt->type == OPTT_NULL)
-			opt->handler(ft_ping, opt, NULL);
+			opt->handler(tr, opt, NULL);
 		else if (*(++c))
-			opt->handler(ft_ping, opt, c);
+			opt->handler(tr, opt, c);
 		else if (!(*(++argv)))
-			prs_fatal(ft_ping, ERR_PREQVAL, err, true);
+			prs_fatal(tr, ERR_PREQVAL, err, true);
 		else
-			opt->handler(ft_ping, opt, *(argv));
+			opt->handler(tr, opt, *(argv));
 		if (opt->type != OPTT_NULL)
 			break ;
 		c++;
@@ -50,7 +50,7 @@ static char	**prs_shortname(t_ping *ft_ping, char **argv)
 	return (argv);
 }
 
-static char	**prs_fullname(t_ping *ft_ping, char **argv)
+static char	**prs_fullname(t_trace *tr, char **argv)
 {
 	char		*name;
 	char		*equal;
@@ -62,46 +62,59 @@ static char	**prs_fullname(t_ping *ft_ping, char **argv)
 	equal = ft_strchr(name, '=');
 	if (equal)
 		*equal = 0;
-	opt = opt_byfullname(ft_ping, name);
+	opt = opt_byfullname(tr, name);
 	if (!(opt))
-		prs_fatal(ft_ping, ERR_LUNRECG_OPT, name, true);
+		prs_fatal(tr, ERR_LUNRECG_OPT, name, true);
 	if (equal && opt->type == OPTT_NULL)
-		prs_fatal(ft_ping, ERR_ALLOWNOARGS, opt->fullname, true);
+		prs_fatal(tr, ERR_ALLOWNOARGS, opt->fullname, true);
 	else if (!equal && opt->type == OPTT_NULL)
-		opt->handler(ft_ping, opt, NULL);
+		opt->handler(tr, opt, NULL);
 	else if (equal)
-		opt->handler(ft_ping, opt, ++equal);
+		opt->handler(tr, opt, ++equal);
 	else if (!(*(++argv)))
-		prs_fatal(ft_ping, ERR_PREQLVAL, name, true);
+		prs_fatal(tr, ERR_PREQLVAL, name, true);
 	else
-		opt->handler(ft_ping, opt, *(argv));
+		opt->handler(tr, opt, *(argv));
 	return (argv);
+}
+
+void	set_packetsize(t_trace *tr, char *val)
+{
+	size_t value;
+
+	if (ft_notnumeric(val))
+		prs_fatal(tr, ERR_PACKLENV, val, true);
+	value = ft_atoul(val);
+	if (value > MAX_PACKET)
+		prs_fatal(tr, ERR_PACKLENS, val, true);
+	else if (value < 28)
+		value = 28;
+	tr->opts.packetsize = value;
 }
 
 /*
 ** after parsing, sets hosts to argv[] starting at position 1.
 */
-void	parse(t_ping *ft_ping, char **argv)
+void	parse(t_trace *tr, char **argv)
 {
-	char	**orig_args;
-	size_t	hosts_pos;
-
-	orig_args = argv;
-	hosts_pos = 0;
-	ft_ping->program = *argv;
+	tr->program = *argv;
 	argv++;
 	while (argv && *argv)
 	{
 		if (!(ft_strncmp(*argv, "--", 2)))
-			argv = prs_fullname(ft_ping, argv);
+			argv = prs_fullname(tr, argv);
 		else if (!(ft_strncmp(*argv, "-", 1)) && ft_strlen(*argv) > 1)
-			argv = prs_shortname(ft_ping, argv);
+			argv = prs_shortname(tr, argv);
+		else if (!(tr->hostname))
+			tr->hostname = *argv;
+		else if (!(tr->opts.packetsize))
+			set_packetsize(tr, *argv);
 		else
-			orig_args[++hosts_pos] = *argv;
+			prs_fatal(tr, ERR_EXTRAARG, *argv, true);	
 		if (*argv)
 			argv++;
 	}
-	if (!hosts_pos)
-		prs_fatal(ft_ping, ERR_MISSING_HOST, ft_ping->program, true);
-	orig_args[++hosts_pos] = NULL;
+	if (!(tr->hostname))
+		prs_fatal(tr, ERR_MISSING_HOST, tr->program, true);
+
 }

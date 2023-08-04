@@ -12,15 +12,15 @@
 
 #include "ft_traceroute.h"
 
-void	print_help(t_ping *ft_ping)
+void	print_help(t_trace *tr)
 {
 	t_lstopt	*opt;
 	size_t		i;
 	char		buf[64];
 
 	i = 0;
-	opt = ft_ping->opts.available;
-	dprintf(STDOUT_FILENO, HPL_USAGE, ft_ping->program);
+	opt = tr->opts.available;
+	dprintf(STDOUT_FILENO, HPL_USAGE, tr->program);
 	dprintf(STDOUT_FILENO, HPL_GOAL);
 	dprintf(STDOUT_FILENO, HPL_OPTIONS);
 	while (i < OPT_LSTSIZE)
@@ -39,9 +39,9 @@ void	print_help(t_ping *ft_ping)
 	exit(0);
 }
 
-void	print_version(t_ping *ft_ping)
+void	print_version(t_trace *tr)
 {
-	dprintf(STDOUT_FILENO, VRS, ft_ping->program, 0, UINT_MAX);
+	dprintf(STDOUT_FILENO, VRS, tr->program, 0, UINT_MAX);
 	dprintf(STDOUT_FILENO, VRS1);
 	dprintf(STDOUT_FILENO, VRS2);
 	dprintf(STDOUT_FILENO, VRS3);

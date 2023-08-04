@@ -6,170 +6,103 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 23:13:29 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/01 10:39:37 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/02 19:48:10 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_traceroute.h"
 
 /*
-** special handler for pattern.
-**  -p, --pattern=PATTERN 
-** parses an hex pattern into ft_ping->opts.pattern.pattern
-*/
-static void	hndlr_pattern(t_ping *ft_ping, t_lstopt *opt, char *value)
-{
-	size_t	size;
-	char	c;
-
-	size = 0;
-	c = 0;
-	while (value && *value && size < MAX_PATTERN && opt)
-	{
-		if (ft_isdigit(*value))
-			*value = *value - '0';
-		else if ((ft_ishex(*value)))
-			*value = (*value - 'a') + 10;
-		else
-			prs_fatal(ft_ping, ERR_PPATTERN, value, false);
-		if ((size % 2))
-			c = c << 4;
-		c += *value;
-		ft_ping->opts.pattern.pattern[size / 2] = c;
-		if ((size % 2))
-			c = 0;
-		size++;
-		value++;
-	}
-	ft_ping->opts.pattern.size = size / 2;
-	if (size % 2 || !size)
-		ft_ping->opts.pattern.size = (size / 2) + 1;
-}
-
-/*
-** -i, --interval=NUMBER 
-** accepts decimal values.
-*/
-static void	hndlr_interval(t_ping *ft_ping,
-		t_lstopt *opt __attribute__((unused)), char *value)
-{
-	char	*dec;
-	size_t	mask;
-	char	errbuf[ERR_BUF + 1];
-
-	if ((++(ft_ping->opts.int_set) && ft_ping->opts.flood))
-		prs_fatal(ft_ping, ERR_INCOMP_INTFLOOD, NULL, false);
-	dec = ft_strchr(value, '.');
-	snprintf(errbuf, ERR_BUF, "`%s' near `%s'", value, ft_notnumeric(value));
-	if (ft_strlen(value) && ft_notnumeric(value)
-		&& (ft_notnumeric(value) != dec || ft_strlen(value) == 1))
-		prs_fatal(ft_ping, ERR_PVALUE, errbuf, true);
-	if (dec && *(++dec))
-		snprintf(errbuf, ERR_BUF, "`%s' near `%s'", value, ft_notnumeric(dec));
-	if (dec && ft_notnumeric(dec))
-		prs_fatal(ft_ping, ERR_PVALUE, errbuf, true);
-	if (dec)
-		*(dec - 1) = 0;
-	ft_ping->opts.interval.tv_sec = ft_atoul(value);
-	mask = 100000;
-	while (dec && *dec && mask)
-	{
-		ft_ping->opts.interval.tv_usec += ((*dec - '0') * mask);
-		mask = mask / 10;
-		dec++;
-	}
-}
-
-/*
 ** here are handled all options that need an argument
-** except -p, pattern. and -i, --interval
-**  -c, --count=NUMBER    
-**  -T, --ttl=N           
-**  -w, --timeout=N       
-**  -l, --preload=NUMBER  
-**  -s, --size=NUMBER     
+** f --first-hop (1-30)
+** m --max-hop (1-255)
+** p --port (1-65536, but if too high, sendto will throw an error)
+** w --wait (0 - 60)
+** q --tries (1 - 10)
 */
-static void	hndlr_doubleopt(t_ping *ft_ping, t_lstopt *opt, char *value)
+static void	hndlr_doubleopt(t_trace *tr, t_lstopt *opt, char *value)
 {
 	size_t	val;
 	char	errbuf[ERR_BUF + 1];
 
 	snprintf(errbuf, ERR_BUF, "`%s' near `%s'", value, ft_notnumeric(value));
-	if ((ft_notnumeric(value)))
-		prs_fatal(ft_ping, ERR_PVALUE, errbuf, false);
 	val = ft_atoul(value);
-	if ((opt->shortcut == 'T' && val > 255)
-		|| (opt->shortcut == 'w' && val > INT_MAX)
-		|| (opt->shortcut == 's' && val > MAX_PACKET_SIZE))
-		prs_fatal(ft_ping, ERR_PTOOBIG, value, false);
-	else if (opt->shortcut == 'l' && val > INT_MAX)
-		prs_fatal(ft_ping, ERR_PPRELOAD, value, false);
-	else if (val == 0 && (opt->shortcut == 'T' || opt->shortcut == 'w'))
-		prs_fatal(ft_ping, ERR_VALTOOSMALL, value, false);
-	if (opt->shortcut == 'c')
-		ft_ping->opts.count = val;
-	else if (opt->shortcut == 'T')
-		ft_ping->opts.ttl = val;
-	else if (opt->shortcut == 'w')
-		ft_ping->opts.timeout.tv_sec = val;
-	else if (opt->shortcut == 'l')
-		ft_ping->opts.preload = val;
-	else if (opt->shortcut == 's')
-		ft_ping->opts.size = val;
+	if (opt->shortcut == 'f' && (ft_notnumeric(value) || val < 1 || val > DFL_MAXTTL))
+		prs_fatal(tr, ERR_FIRSTHOP, value, false);
+	else if (opt->shortcut == 'm' && (ft_notnumeric(value) || val < 1 || val > MAX_HOPS))
+		prs_fatal(tr, ERR_MAXHOP, value, false);
+	else if (opt->shortcut == 'N' && (ft_notnumeric(value)))
+		prs_fatal(tr, ERR_INVALID, errbuf, false);
+	else if (opt->shortcut == 'p' && (ft_notnumeric(value) || val < 1 || val > MAX_PORT))
+		prs_fatal(tr, ERR_PORT, value, false);
+	else if (opt->shortcut == 'q' && (ft_notnumeric(value)))
+		prs_fatal(tr, ERR_INVALID, errbuf, false);
+	else if (opt->shortcut == 'q' && (val < 1 || val > 10))
+		prs_fatal(tr, ERR_TRIES, value, false);
+
+
+
+/* WILL DO VALUE LIMITING LATER*/
+//	if ((opt->shortcut == 'T' && val > 255)
+//		|| (opt->shortcut == 'w' && val > INT_MAX)
+//		|| (opt->shortcut == 's' && val > MAX_PACKET_SIZE))
+//		prs_fatal(tr, ERR_PTOOBIG, value, false);
+//	else if (opt->shortcut == 'l' && val > INT_MAX)
+//		prs_fatal(tr, ERR_PPRELOAD, value, false);
+//	else if (val == 0 && (opt->shortcut == 'T' || opt->shortcut == 'w'))
+//		prs_fatal(tr, ERR_VALTOOSMALL, value, false);
+	if (opt->shortcut == 'f')
+		tr->opts.firsthop = val;
+	else if (opt->shortcut == 'm')
+		tr->opts.maxhop = val;
+	else if (opt->shortcut == 'N')
+	{
+		if (!val)
+			val++;
+		tr->opts.squeries = val;
+	}
+	else if (opt->shortcut == 'p')
+		tr->opts.port = val;
+	else if (opt->shortcut == 'q')
+		tr->opts.nqueries = val;
 }
 
 /*
 ** here are handled all options that do not need an argument
-**  -n, --numeric         
-**  -v, --verbose         
-**  -f, --flood           
-**  -q, --quiet           
-**  -?, --help            
-**  -U, --usage           
-**  -V, --version         
+** ? --help
+** m --resolve-names
+** u --usage
+** V --version   
 */
-static void	hndlr_singleopt(t_ping *ft_ping, t_lstopt *opt, char *value)
+static void	hndlr_singleopt(t_trace *tr, t_lstopt *opt, char *value)
 {
 	(void)(value);
 	if (opt->shortcut == '?')
-		print_help(ft_ping);
-	if (opt->shortcut == 'U')
-		print_usage(ft_ping);
+		print_help(tr);
+	if (opt->shortcut == 'u')
+		print_usage(tr);
 	if (opt->shortcut == 'V')
-		print_version(ft_ping);
+		print_version(tr);
 	if (opt->shortcut == 'n')
-		ft_ping->opts.numeric = true;
-	if (opt->shortcut == 'v')
-		ft_ping->opts.verbose = true;
-	if (opt->shortcut == 'f')
-		ft_ping->opts.flood = true;
-	if (opt->shortcut == 'q')
-		ft_ping->opts.quiet = true;
-	if (ft_ping->opts.flood && ft_ping->opts.int_set)
-		prs_fatal(ft_ping, "%s: -f and -i incompatible options\n", NULL, false);
+		tr->opts.resolvehosts = true;
 }
 
 /*
 ** add the option handlers, so the parser can call
 ** the apropriate function.
 */
-void	add_handlers(t_ping *ft_ping)
+void	add_handlers(t_trace *tr)
 {
 	t_lstopt	*opt;
 
-	opt = ft_ping->opts.available;
-	opt[OPT_QUIET].handler = hndlr_singleopt;
+	opt = tr->opts.available;
+	opt[OPT_RESOLVEH].handler = hndlr_singleopt;
 	opt[OPT_HELP].handler = hndlr_singleopt;
 	opt[OPT_USAGE].handler = hndlr_singleopt;
 	opt[OPT_VERSION].handler = hndlr_singleopt;
-	opt[OPT_NUMERIC].handler = hndlr_singleopt;
-	opt[OPT_VERBOSE].handler = hndlr_singleopt;
-	opt[OPT_FLOOD].handler = hndlr_singleopt;
-	opt[OPT_TTL].handler = hndlr_doubleopt;
-	opt[OPT_TIMEOUT].handler = hndlr_doubleopt;
-	opt[OPT_SIZE].handler = hndlr_doubleopt;
-	opt[OPT_COUNT].handler = hndlr_doubleopt;
-	opt[OPT_INTERVAL].handler = hndlr_interval;
-	opt[OPT_PRELOAD].handler = hndlr_doubleopt;
-	opt[OPT_PATTERN].handler = hndlr_pattern;
+	opt[OPT_FIRSTTTL].handler = hndlr_doubleopt;
+	opt[OPT_MAXTTL].handler = hndlr_doubleopt;
+	opt[OPT_PORT].handler = hndlr_doubleopt;
+	opt[OPT_NQUERIES].handler = hndlr_doubleopt;
+	opt[OPT_SQUERIES].handler = hndlr_doubleopt;
 }
