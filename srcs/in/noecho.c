@@ -6,11 +6,11 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/27 10:44:30 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/01 10:39:37 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/05 12:12:20 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_traceroute.h"
+#include "ft_trace.h"
 
 static void	print_unreach(size_t code)
 {
@@ -64,18 +64,18 @@ static void	print_common(size_t type, size_t code)
 		dprintf(STDOUT_FILENO, "Redirect, Unknown Code: %lu", code);
 }
 
-static void	print_nonecho(t_ping *ft_ping, t_headers *headers)
+static void	print_nonecho(t_trace *tr, t_headers *headers)
 {
 	size_t			type;
 	size_t			code;
 
-	type = ft_ping->in.recv.hdrs.icmp->type;
-	code = ft_ping->in.recv.hdrs.icmp->code;
+	type = tr->in.recv.hdrs.icmp->type;
+	code = tr->in.recv.hdrs.icmp->code;
 	if (!type || type == ICMP_ECHO)
 		return ;
 	dprintf(STDOUT_FILENO, "%lu bytes from %s: ",
-		ft_ping->in.recv.hdrs.datalen + sizeof(t_icmp),
-		inet_ntoa(ft_ping->in.recv.peer_addr.sin_addr));
+		tr->in.recv.hdrs.datalen + sizeof(t_icmp),
+		inet_ntoa(tr->in.recv.peer_addr.sin_addr));
 	if (type != ICMP_DEST_UNREACH && type != ICMP_SOURCE_QUENCH
 		&& type != ICMP_PARAMETERPROB && type != ICMP_TIME_EXCEEDED
 		&& type != ICMP_REDIRECT && type != ICMP_CSRTR_ADV
@@ -85,37 +85,37 @@ static void	print_nonecho(t_ping *ft_ping, t_headers *headers)
 		print_unreach(code);
 	else if (type == ICMP_PARAMETERPROB)
 		dprintf(STDOUT_FILENO, "Parameter probe: IP address = %s",
-			inet_ntoa(*(t_inaddr *)&(ft_ping->in.recv.hdrs.icmp->un.gateway)));
+			inet_ntoa(*(t_inaddr *)&(tr->in.recv.hdrs.icmp->un.gateway)));
 	else
 		print_common(type, code);
 	dprintf(STDOUT_FILENO, "\n");
-	print_headers(ft_ping, headers);
+	print_headers(tr, headers);
 }
 
 /*
 ** if it is not an echo reply we've received, we will check if it is ours and 
 ** then call the print function 
 */
-void	icmp_noecho(t_ping *ft_ping)
+void	icmp_noecho(t_trace *tr)
 {
 	t_headers	hdrs;
 
-	if (ft_ping->in.recv.hdrs.datalen < sizeof(t_ip) + sizeof(t_icmp))
+	if (tr->in.recv.hdrs.datalen < sizeof(t_ip) + sizeof(t_icmp))
 		return ;
-	hdrs.ip = (t_ip *)ft_ping->in.recv.hdrs.data;
-	hdrs.datalen = ft_ping->in.recv.hdrs.datalen
+	hdrs.ip = (t_ip *)tr->in.recv.hdrs.data;
+	hdrs.datalen = tr->in.recv.hdrs.datalen
 		- (hdrs.ip->ihl * 4) - sizeof(t_icmp);
-	if (hdrs.datalen > ft_ping->in.recv.hdrs.datalen)
+	if (hdrs.datalen > tr->in.recv.hdrs.datalen)
 		return ;
 	hdrs.icmp = (t_icmp *)(((char *)hdrs.ip) + (hdrs.ip->ihl * 4));
 	hdrs.data = ((char *)(hdrs.icmp)) + sizeof(t_icmp);
-	if (ft_ping->out.daddr.sin_addr.s_addr != hdrs.ip->daddr)
+	if (tr->out.daddr.sin_addr.s_addr != hdrs.ip->daddr)
 		return ;
-	if ((hdrs.icmp->un.echo.id) != htons(ft_ping->pid))
+	if ((hdrs.icmp->un.echo.id) != htons(tr->pid))
 		return ;
 	if (hdrs.ip->protocol != IPPROTO_ICMP
 		|| hdrs.icmp->type != ICMP_ECHO)
 		return ;
-	ft_ping->in.count.err++;
-	print_nonecho(ft_ping, &hdrs);
+	tr->in.count.err++;
+	print_nonecho(tr, &hdrs);
 }

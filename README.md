@@ -76,3 +76,9 @@ $ make
 $ ./ft_traceroute google.com
 ```
 
+
+
+
+
+#TODO:
+[ ] upon receival of the packet, verify if it is a valid ICMP packet, and if it is the last hop.

@@ -27,6 +27,8 @@
 # include <sys/select.h>
 # include "libft.h"
 # include <netinet/udp.h>
+# include <netinet/ip_icmp.h>
+
 # include <netinet/ip.h>
 # include <linux/if_ether.h>
 
@@ -87,4 +89,5 @@ void		print_echo(t_trace *tr);
 void		icmp_noecho(t_trace *tr);
 char		*tname(int type);
 
+void		traceroute(t_trace *tr);
 #endif

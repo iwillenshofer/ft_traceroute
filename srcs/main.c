@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:17:18 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/04 18:57:35 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/07 15:40:43 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,28 @@
 ** u --usage
 ** V --version
 */
+
+/*
+print herader
+*/
+void	print_init(t_trace *tr)
+{
+	printf("traceroute to %s (%s), %lu hops max, %lu byte packets\n",
+	tr->out.host, 
+	inet_ntoa(tr->out.daddr.sin_addr),
+	tr->opts.maxhop, tr->opts.packetsize + sizeof(t_ip) + sizeof(t_udp));
+}
+
 int	main(int argc, char **argv)
 {
 	t_trace	tr;
 
 	setup(&tr, argv);
 	opensockets(&tr);
-	while (1)
-		trace(&tr);
+	print_init(&tr);
+	//while (!(tr.done))
+	//	trace(&tr);
+	traceroute(&tr);
 
 //	opensocket(&ft_ping);
 //	gettimeofday(&(ft_ping.begin), NULL);

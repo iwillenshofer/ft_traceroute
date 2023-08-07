@@ -46,7 +46,7 @@ typedef enum e_bool
 typedef struct timeval	t_time;
 typedef struct iphdr	t_ip;
 typedef struct udphdr	t_udp;
-typedef struct udphdr	t_icmp;
+typedef struct icmphdr	t_icmp;
 typedef struct in_addr	t_inaddr;
 struct s_trace; /* forward declaration for traceroute */
 
@@ -70,24 +70,27 @@ typedef struct s_options
 	size_t		squeries;
 	size_t		nqueries;
 	size_t		packetsize;
+	t_time		timeout;
 	t_lstopt	available[OPT_LSTSIZE];
 }	t_options;
 
 typedef struct s_probe
 {
+	size_t				id;
 	t_bool				sent;
 	t_bool				received;
-	int					sock;
 	in_port_t			port;
 	t_time				ts;
 	t_time				tr;
 	struct sockaddr_in	daddr;
 	struct sockaddr_in	bindaddr;
+	t_icmp				icmp;
 }	t_probe;
 
 typedef struct s_hop
 {
-	size_t	id;
+	size_t	ttl;
+	t_bool	lasthop;
 	t_probe	probe[MAX_PROBESPERHOP];
 }	t_hop;
 
@@ -108,13 +111,21 @@ typedef struct s_counter
 
 typedef struct s_inloop
 {
-	int		sock;
-	char	buf[MAX_PACKET];
+	int					sock;
+	struct sockaddr_in	saddr;
+	socklen_t			saddrlen;
+	char				buf[MAX_PACKET];
 }	t_inloop;
 
 
+/*
+** lasthop: last hop has been found... if there are any packages to send,
+** send only up to lasthop + nqueries.
+*/
 typedef struct s_trace
 {
+	size_t		curr_prt;
+	t_bool		done;
 	t_outloop	out;
 	t_inloop	in;
 	t_counter	count;
