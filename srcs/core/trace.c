@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 12:42:54 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/08 12:56:52 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/08 16:09:04 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ static void	print_udp(t_udp *udp)
 		ntohs(udp->check));
 }
 
+
 void	trace(t_trace *tr)
 {
 	struct sockaddr_in baddr;
@@ -156,6 +157,28 @@ void	trace(t_trace *tr)
 		tr->done = true;
 }
 
+/*
+** gets the last valid address of a hop, up to the current probe
+** if there is none, returnes a zeroed address
+*/
+struct sockaddr_in lastaddr(t_trace *tr, t_probe *probe)
+{
+	struct sockaddr_in ret;
+	size_t	idx;
+
+	ft_bzero(&ret, sizeof(ret));
+	if (!probe->idx)
+		return (ret);
+	idx = 0;
+
+	while (idx < probe->idx)
+	{
+		if (tr->hop[probe->hdx].probe[idx].received && tr->hop[probe->hdx].probe[idx].elapsed) /* maybe change this to timedout */
+			ret = tr->hop[probe->hdx].probe[idx].saddr;
+		idx++;
+	}
+	return (ret);
+}
 
 t_probe *getprobe(t_trace *tr, in_port_t port)
 {
@@ -185,7 +208,7 @@ t_probe *getprobe(t_trace *tr, in_port_t port)
 ** next hop, or MAX (default 5.0) seconds (float
 ** point values allowed too)
 */
-t_time	timetowait(t_trace *tr, t_hop *hop)
+t_time	timetowait(t_trace *tr, t_hop *hop, t_bool print)
 {
 	double ttw;
 	size_t hidx;
@@ -201,16 +224,19 @@ t_time	timetowait(t_trace *tr, t_hop *hop)
 			if (tr->hop[hidx].probe[pidx].received && tr->hop[hidx].probe[pidx].elapsed)
 			{
 				if (hidx == hop->id && (tr->hop[hidx].probe[pidx].elapsed * 3 < ttw || !(ttw)))
-					ttw = tr->hop[hidx].probe[pidx].elapsed * 3;
+					ttw = (tr->hop[hidx].probe[pidx].elapsed + 1) * 3;
 				else if (tr->hop[hidx].probe[pidx].elapsed * 10 < ttw || !(ttw))
-					ttw = tr->hop[hidx].probe[pidx].elapsed * 10;
+					ttw = (tr->hop[hidx].probe[pidx].elapsed + 1) * 10;
 			}
 			pidx++;
 		}
 		hidx++;
 	}
-//	if (!ttw)
+	if (!ttw)
 		ttw = 5000;
+	(void)print;
+//	if (print)
+//		printf(" supposed to wait: %lfms\n",ttw);
 	return (ms_to_time(ttw));
 }
 
@@ -230,28 +256,31 @@ void	prntpackets(t_trace *tr)
 	if (hop->probe[probeidx].sent && hop->probe[probeidx].received)
 	{
 		if (!probeidx)
-			dprintf(STDOUT_FILENO, "%lu: ", hop->ttl);
-		dprintf(STDOUT_FILENO, " %.3f ms ", hop->probe[probeidx].elapsed);
+			dprintf(STDOUT_FILENO, " %lu", hop->ttl);
+		struct sockaddr_in last = lastaddr(tr, &(hop->probe[probeidx]));
+		if (ft_memcmp(&hop->probe[probeidx].saddr.sin_addr, &last.sin_addr, sizeof(struct in_addr)))
+			dprintf(STDOUT_FILENO, "  %s", inet_ntoa(hop->probe[probeidx].saddr.sin_addr));
+		dprintf(STDOUT_FILENO, "  %.3f ms", hop->probe[probeidx].elapsed);
 		if (probeidx == tr->opts.nqueries - 1)
 			dprintf(STDOUT_FILENO, "\n");
 		tr->curr_prt++;
-		if (probeidx == tr->opts.nqueries - 1 && hop->lasthop)
+		if ((probeidx == tr->opts.nqueries - 1 && hop->lasthop) || tr->curr_prt == (tr->opts.nqueries * tr->opts.maxhop))
 			tr->done = true;
 	}
-	else if (hop->probe[probeidx].sent && timed_out(hop->probe[probeidx].ts, timetowait(tr, hop)))
+	else if (hop->probe[probeidx].sent && timed_out(hop->probe[probeidx].ts, timetowait(tr, hop, false)))
 	{
 		if (!probeidx)
 			dprintf(STDOUT_FILENO, "%lu: ", hop->ttl);
-		dprintf(STDOUT_FILENO, " * ");
+		dprintf(STDOUT_FILENO, " *");
 //		t_time t;
-//		t = timetowait(tr, hop);
+//		t = timetowait(tr, hop, true);
 //		printf(" was waiting: tvsec: %lu.%lu\n", t.tv_sec, t.tv_usec);
 		if (probeidx == tr->opts.nqueries - 1)
 			dprintf(STDOUT_FILENO, "\n");
 		hop->probe[probeidx].received = true;
 		tr->count.recv++;
 		tr->curr_prt++;
-		if (probeidx == tr->opts.nqueries - 1 && hop->lasthop)
+		if ((probeidx == tr->opts.nqueries - 1 && hop->lasthop) || tr->curr_prt == (tr->opts.nqueries * tr->opts.maxhop))
 			tr->done = true;
 	}
 }
@@ -267,46 +296,53 @@ void	recvpackets(t_trace *tr)
 //	ft_bzero(tr->in.buf, sizeof(tr->in.buf));
 	ft_bzero(&tr->in.saddr, sizeof(tr->in.saddr));
 
-	
-
-	ret = recvfrom(tr->in.sock, tr->in.buf, sizeof(tr->in.buf), MSG_DONTWAIT, (struct sockaddr*)&(tr->in.saddr), &tr->in.saddrlen);
-	if (ret > 0)
-	{
-		//the whole work now will be checking if this is a valid ICMP packet.... we'll ignore it validation for now
-		//and assume the packet is valid... 
-		t_ip *ip = (t_ip*)tr->in.buf;
-		t_icmp *icmp = (t_icmp*)(ip + 1);
-		t_ip *oip = (t_ip*)(icmp + 1);
-		t_udp *oudp = (t_udp*)(oip + 1);
-
-
-//		dprintf(STDOUT_FILENO, "\n-----------------\n");
-//		dprintf(STDOUT_FILENO, "recv ttl: %u. sport: %u. dport: %u.\n", oip->ttl,ntohs(oudp->source) , ntohs(oudp->dest));
-//		print_ip(ip);
-//		print_icmp(icmp);
-//		print_ip(oip);
-//		print_udp(oudp);
-//		dprintf(STDOUT_FILENO, "-----------------\n");
-		probe = getprobe(tr, ntohs(oudp->dest));
-		if (probe && !(probe->received))
+//	FD_ZERO(&tr->in.rfds);
+//	FD_SET(tr->in.sock, &tr->in.rfds);
+//	t_time ttw = timetowait(tr, &(tr->hop[tr->curr_prt / tr->opts.nqueries]));
+//	if (select(tr->in.sock + 1, &(tr->in.rfds),NULL, NULL, &ttw) > 0)
+//	{
+		ret = recvfrom(tr->in.sock, tr->in.buf, sizeof(tr->in.buf), MSG_DONTWAIT, (struct sockaddr*)&(tr->in.saddr), &tr->in.saddrlen);
+		if (ret < 1 && (errno != EWOULDBLOCK) && (errno != EWOULDBLOCK))
+			printf("wb: %d, ag: %d, e: %d ERROR: %s\n",EWOULDBLOCK,EAGAIN, errno, strerror(errno));
+		if (ret > 0)
 		{
-			gettimeofday(&(probe->tr), NULL);
-			probe->elapsed = elapsed_time_ms(probe->ts, probe->tr);
-			probe->received = true;
-			if (!ft_memcmp(&probe->daddr.sin_addr, &ip->saddr, sizeof(in_addr_t)))
+			//the whole work now will be checking if this is a valid ICMP packet.... we'll ignore it validation for now
+			//and assume the packet is valid... 
+			t_ip *ip = (t_ip*)tr->in.buf;
+			t_icmp *icmp = (t_icmp*)(ip + 1);
+			t_ip *oip = (t_ip*)(icmp + 1);
+			t_udp *oudp = (t_udp*)(oip + 1);
+
+
+//			dprintf(STDOUT_FILENO, "\n-----------------\n");
+//			dprintf(STDOUT_FILENO, "recv ttl: %u. sport: %u. dport: %u.\n", oip->ttl,ntohs(oudp->source) , ntohs(oudp->dest));
+//			print_ip(ip);
+//			print_icmp(icmp);
+//			print_ip(oip);
+//			print_udp(oudp);
+//			dprintf(STDOUT_FILENO, "-----------------\n");
+			probe = getprobe(tr, ntohs(oudp->dest));
+			if (probe && !(probe->received))// && probe->id <= tr->curr_prt)
 			{
-//				dprintf(STDOUT_FILENO, "%s, %s\n", inet_ntoa(*(struct in_addr*)&(probe->daddr.sin_addr)), inet_ntoa(*(struct in_addr*)&(ip->saddr)));
-				tr->hop[probe->hdx].lasthop = true;
+				gettimeofday(&(probe->tr), NULL);
+				probe->elapsed = elapsed_time_ms(probe->ts, probe->tr);
+				probe->received = true;
+				probe->saddr.sin_addr = *(struct in_addr*)&(ip->saddr);
+				if (!ft_memcmp(&probe->daddr.sin_addr, &ip->saddr, sizeof(in_addr_t)))
+				{
+	//				dprintf(STDOUT_FILENO, "%s, %s\n", inet_ntoa(*(struct in_addr*)&(probe->daddr.sin_addr)), inet_ntoa(*(struct in_addr*)&(ip->saddr)));
+					tr->hop[probe->hdx].lasthop = true;
+				}
+				tr->count.recv++;
 			}
-			tr->count.recv++;
+	//		printf("ICMP type: %d, code: %d\n", icmp->type, icmp->code);
+	//		printf("%d: %s\n", oip->ttl, inet_ntoa(tr->in.saddr.sin_addr));
+	//		print_icmp(icmp);
+	//		print_ip(oip);
+	//		print_udp(oudp);
+	//		ft_puthex_bytes(tr->in.buf, ret, 1, 0);
 		}
-//		printf("ICMP type: %d, code: %d\n", icmp->type, icmp->code);
-//		printf("%d: %s\n", oip->ttl, inet_ntoa(tr->in.saddr.sin_addr));
-//		print_icmp(icmp);
-//		print_ip(oip);
-//		print_udp(oudp);
-//		ft_puthex_bytes(tr->in.buf, ret, 1, 0);
-	}
+	//}
 }
 
 /*
@@ -316,37 +352,41 @@ void	recvpackets(t_trace *tr)
 #include <errno.h>
 void	sendpackets(t_trace *tr)
 {
-	size_t			i;
+//	size_t			i;
 	t_hop			*hop;
 	t_probe			*probe;	
 	static size_t	sent = 0;
 
-	i = 0;
-	if (sent > tr->count.recv)
+//	i = 0;
+	if ((sent > tr->count.recv + tr->opts.squeries && !(sent % tr->opts.nqueries)) || sent >= tr->opts.nqueries * tr->opts.maxhop)
 		return ;
-	while (i < tr->opts.squeries && sent < tr->opts.nqueries * tr->opts.maxhop)
-	{
-		hop = &(tr->hop[sent / tr->opts.nqueries]);
-		probe = &(hop->probe[sent % tr->opts.nqueries]);
-		hop->id = sent / tr->opts.nqueries;
-		hop->ttl = hop->id + 1;
-		probe->port = DFL_STARTPORT + sent;
-		probe->sent = true;
-		probe->id = sent;
-		probe->idx = sent % tr->opts.nqueries;
-		probe->hdx = sent / tr->opts.nqueries;
-		set_sockttl(tr, hop->ttl);
-		probe->daddr.sin_addr = tr->out.daddr.sin_addr;
-		probe->daddr.sin_port = htons(probe->port);
-		if (sendto(tr->out.sock, tr->out.packet, sizeof(tr->opts.packetsize), 0, (struct sockaddr*)&(probe->daddr), sizeof(probe->daddr)) == -1)
-		{	
-			dprintf(STDOUT_FILENO, "SEND ERROR: %s\n", strerror(errno));
-			dprintf(STDOUT_FILENO, "hop[%lu] probe[%lu]: p:%u \n", hop->ttl, probe->id, probe->port);
-		}
-		gettimeofday(&(probe->ts), NULL);
-		tr->count.sent = ++sent;
-		i++;
+
+	hop = &(tr->hop[sent / tr->opts.nqueries]);
+	probe = &(hop->probe[sent % tr->opts.nqueries]);
+	hop->id = sent / tr->opts.nqueries;
+	hop->ttl = hop->id + 1;
+	probe->port = DFL_STARTPORT + sent;
+	probe->sent = true;
+	probe->id = sent;
+	probe->idx = sent % tr->opts.nqueries;
+	probe->hdx = sent / tr->opts.nqueries;
+	set_sockttl(tr, hop->ttl);
+	probe->daddr.sin_addr = tr->out.daddr.sin_addr;
+	probe->daddr.sin_port = htons(probe->port);
+	if (sendto(tr->out.sock, tr->out.packet, sizeof(tr->opts.packetsize), 0, (struct sockaddr*)&(probe->daddr), sizeof(probe->daddr)) == -1)
+	{	
+		dprintf(STDOUT_FILENO, "SEND ERROR: %s\n", strerror(errno));
+		dprintf(STDOUT_FILENO, "hop[%lu] probe[%lu]: p:%u \n", hop->ttl, probe->id, probe->port);
 	}
+	gettimeofday(&(probe->ts), NULL);
+	tr->count.sent = ++sent;
+//	i++;
+
+//	t_time newtime;
+//	gettimeofday(&(newtime), NULL);
+//	printf("TIME TOOK TO SEND ALL: %.3f ms \n", elapsed_time_ms(tr->hop[0].probe[0].ts, newtime));
+
+
 //	i = 0;
 //	size_t j = 0;
 //	while (i < tr->opts.maxhop)
@@ -380,6 +420,6 @@ void	traceroute(t_trace *tr)
 		sendpackets(tr);
 		recvpackets(tr);
 		prntpackets(tr);
-		usleep(10);
+	//	usleep(10);
 	}
 }

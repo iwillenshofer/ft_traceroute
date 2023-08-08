@@ -86,6 +86,7 @@ typedef struct s_probe
 	t_time				tr;
 	double				elapsed;
 	struct sockaddr_in	daddr;
+	struct sockaddr_in	saddr;
 }	t_probe;
 
 typedef struct s_hop
@@ -116,6 +117,7 @@ typedef struct s_inloop
 	int					sock;
 	struct sockaddr_in	saddr;
 	socklen_t			saddrlen;
+	fd_set				rfds;
 	char				buf[MAX_PACKET];
 }	t_inloop;
 
