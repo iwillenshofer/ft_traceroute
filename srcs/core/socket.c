@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 13:02:27 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/07 19:08:36 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/08 10:38:30 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ static void	bindsocket(t_trace *tr)
 	saddr.sin_family = AF_INET;
 	saddr.sin_addr.s_addr = INADDR_ANY; (void)tr;
 	saddr.sin_port = htons(DFL_STARTPORT);
-	if (bind(tr->in.sock, (struct sockaddr*)&(saddr), sizeof(saddr)) < 0)
-		prs_fatal(tr, ERR_BIND, NULL, false);
-	if (bind(tr->out.sock, (struct sockaddr*)&(saddr), sizeof(saddr)) < 0)
-		prs_fatal(tr, ERR_BIND, NULL, false);
+//	if (bind(tr->in.sock, (struct sockaddr*)&(saddr), sizeof(saddr)) < 0)
+//		prs_fatal(tr, ERR_BIND, NULL, false);
+//	if (bind(tr->out.sock, (struct sockaddr*)&(saddr), sizeof(saddr)) < 0)
+//		prs_fatal(tr, ERR_BIND, NULL, false);
 }
 
 /*

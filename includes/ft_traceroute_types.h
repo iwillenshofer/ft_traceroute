@@ -77,18 +77,20 @@ typedef struct s_options
 typedef struct s_probe
 {
 	size_t				id;
+	size_t				idx;
+	size_t				hdx;
 	t_bool				sent;
 	t_bool				received;
 	in_port_t			port;
 	t_time				ts;
 	t_time				tr;
+	double				elapsed;
 	struct sockaddr_in	daddr;
-	struct sockaddr_in	bindaddr;
-	t_icmp				icmp;
 }	t_probe;
 
 typedef struct s_hop
 {
+	size_t	id;
 	size_t	ttl;
 	t_bool	lasthop;
 	t_probe	probe[MAX_PROBESPERHOP];

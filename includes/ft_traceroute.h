@@ -50,6 +50,7 @@ void		ping(t_trace *tr);
 */
 double		elapsed_time_ms(t_time begin, t_time end);
 t_bool		timed_out(t_time begin, t_time timeout);
+t_time		ms_to_time(double ms);
 
 /*
 ** ping in/out

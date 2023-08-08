@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 09:12:12 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/01 10:39:37 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/08 12:24:02 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,15 @@ double	elapsed_time_ms(t_time begin, t_time end)
 
 	elapsed = elapsed_time(begin, end);
 	return ((double)elapsed.tv_sec * 1000 + (double)elapsed.tv_usec / 1000);
+}
+
+t_time	ms_to_time(double ms)
+{
+	t_time t;
+
+	t.tv_sec = ms / 1000;
+	t.tv_usec = (ms - (double)(t.tv_sec * 1000.0)) * 1000.0;
+	return (t);
 }
 
 /*
