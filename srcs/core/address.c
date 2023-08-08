@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 08:52:05 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/04 22:19:16 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/08 21:46:56 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,14 @@
 **						struct addrinfo **res);
 */
 
-static void	get_fqdn(t_trace *tr)
+char	*fqdn(t_trace *tr, struct sockaddr_in *addr)
 {
-	ft_bzero(tr->out.fqdn, sizeof(tr->out.fqdn));
-	if (getnameinfo((struct sockaddr *)&(tr->out.daddr),
-			sizeof(tr->out.daddr), tr->out.fqdn,
-			sizeof(tr->out.fqdn), NULL, 0, 0))
-		ft_strcpy(tr->out.fqdn, inet_ntoa(tr->out.daddr.sin_addr));
+	ft_bzero(tr->in.fqdn, sizeof(tr->in.fqdn));
+	if (getnameinfo((struct sockaddr *)addr,
+			sizeof(struct sockaddr_in), tr->in.fqdn,
+			sizeof(tr->in.fqdn), NULL, 0, 0))
+		ft_strcpy(tr->in.fqdn, inet_ntoa(addr->sin_addr));
+	return (tr->in.fqdn);
 }
 
 /*
@@ -81,5 +82,5 @@ void	get_address(t_trace *tr)
 		ft_strcpy(tr->out.host, addr->ai_canonname);
 	tr->out.daddr = *(struct sockaddr_in *)(addr->ai_addr);
 	freeaddrinfo(addr);
-	get_fqdn(tr);
+	//get_fqdn(tr);
 }

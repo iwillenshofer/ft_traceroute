@@ -42,6 +42,8 @@ void		build_packet(t_trace *tr);
 
 void		get_address(t_trace *tr);
 void		opensockets(t_trace *tr);
+char		*fqdn(t_trace *tr, struct sockaddr_in *addr);
+
 void		set_sockttl(t_trace *tr, size_t ttl);
 
 void		ping(t_trace *tr);

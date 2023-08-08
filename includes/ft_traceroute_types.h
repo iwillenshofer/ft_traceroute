@@ -101,7 +101,6 @@ typedef struct s_outloop
 {
 	int					sock;
 	char				host[NI_MAXHOST + 1];
-	char				fqdn[NI_MAXHOST + 1];
 	char				packet[MAX_PACKET];
 	struct sockaddr_in	daddr;
 }	t_outloop;
@@ -119,6 +118,7 @@ typedef struct s_inloop
 	socklen_t			saddrlen;
 	fd_set				rfds;
 	char				buf[MAX_PACKET];
+	char				fqdn[NI_MAXHOST + 1];
 }	t_inloop;
 
 

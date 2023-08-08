@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 12:42:54 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/08 16:09:04 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/08 22:09:58 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,10 +256,10 @@ void	prntpackets(t_trace *tr)
 	if (hop->probe[probeidx].sent && hop->probe[probeidx].received)
 	{
 		if (!probeidx)
-			dprintf(STDOUT_FILENO, " %lu", hop->ttl);
+			dprintf(STDOUT_FILENO, "%2lu ", hop->ttl);
 		struct sockaddr_in last = lastaddr(tr, &(hop->probe[probeidx]));
 		if (ft_memcmp(&hop->probe[probeidx].saddr.sin_addr, &last.sin_addr, sizeof(struct in_addr)))
-			dprintf(STDOUT_FILENO, "  %s", inet_ntoa(hop->probe[probeidx].saddr.sin_addr));
+			dprintf(STDOUT_FILENO, " %s (%s)", fqdn(tr, &hop->probe[probeidx].saddr), inet_ntoa(hop->probe[probeidx].saddr.sin_addr));
 		dprintf(STDOUT_FILENO, "  %.3f ms", hop->probe[probeidx].elapsed);
 		if (probeidx == tr->opts.nqueries - 1)
 			dprintf(STDOUT_FILENO, "\n");
@@ -270,11 +270,8 @@ void	prntpackets(t_trace *tr)
 	else if (hop->probe[probeidx].sent && timed_out(hop->probe[probeidx].ts, timetowait(tr, hop, false)))
 	{
 		if (!probeidx)
-			dprintf(STDOUT_FILENO, "%lu: ", hop->ttl);
+			dprintf(STDOUT_FILENO, "%2lu ", hop->ttl);
 		dprintf(STDOUT_FILENO, " *");
-//		t_time t;
-//		t = timetowait(tr, hop, true);
-//		printf(" was waiting: tvsec: %lu.%lu\n", t.tv_sec, t.tv_usec);
 		if (probeidx == tr->opts.nqueries - 1)
 			dprintf(STDOUT_FILENO, "\n");
 		hop->probe[probeidx].received = true;
@@ -327,6 +324,8 @@ void	recvpackets(t_trace *tr)
 				gettimeofday(&(probe->tr), NULL);
 				probe->elapsed = elapsed_time_ms(probe->ts, probe->tr);
 				probe->received = true;
+				ft_bzero(&probe->saddr, sizeof(probe->saddr));
+				probe->saddr.sin_family = AF_INET;
 				probe->saddr.sin_addr = *(struct in_addr*)&(ip->saddr);
 				if (!ft_memcmp(&probe->daddr.sin_addr, &ip->saddr, sizeof(in_addr_t)))
 				{
