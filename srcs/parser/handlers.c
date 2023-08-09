@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 23:13:29 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/02 19:48:10 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/09 12:04:13 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,18 +39,6 @@ static void	hndlr_doubleopt(t_trace *tr, t_lstopt *opt, char *value)
 		prs_fatal(tr, ERR_INVALID, errbuf, false);
 	else if (opt->shortcut == 'q' && (val < 1 || val > 10))
 		prs_fatal(tr, ERR_TRIES, value, false);
-
-
-
-/* WILL DO VALUE LIMITING LATER*/
-//	if ((opt->shortcut == 'T' && val > 255)
-//		|| (opt->shortcut == 'w' && val > INT_MAX)
-//		|| (opt->shortcut == 's' && val > MAX_PACKET_SIZE))
-//		prs_fatal(tr, ERR_PTOOBIG, value, false);
-//	else if (opt->shortcut == 'l' && val > INT_MAX)
-//		prs_fatal(tr, ERR_PPRELOAD, value, false);
-//	else if (val == 0 && (opt->shortcut == 'T' || opt->shortcut == 'w'))
-//		prs_fatal(tr, ERR_VALTOOSMALL, value, false);
 	if (opt->shortcut == 'f')
 		tr->opts.firsthop = val;
 	else if (opt->shortcut == 'm')

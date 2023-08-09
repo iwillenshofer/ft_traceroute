@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/28 15:18:30 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/09 01:01:06 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/09 20:39:20 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	print_ip(t_ip *ip)
 /*
 ** prints the UDP header for debugging
 */
-void print_icmp (t_icmp *icmp)
+void	print_icmp(t_icmp *icmp)
 {
 	dprintf (STDOUT_FILENO,
 		"ICMP: type %u, code %u, id 0x%04x, seq 0x%04x\n",

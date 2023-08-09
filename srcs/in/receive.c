@@ -6,13 +6,13 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 00:58:04 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/09 01:03:02 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/09 19:07:25 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_traceroute.h"
 
-static t_probe *getprobe(t_trace *tr, in_port_t port)
+static t_probe	*getprobe(t_trace *tr, in_port_t port)
 {
 	size_t	i;
 	size_t	j;
@@ -32,32 +32,73 @@ static t_probe *getprobe(t_trace *tr, in_port_t port)
 	return (NULL);
 }
 
+/*
+** checks for the icmp packet stored in tr->in.buf
+** drops the packet (returns valid = 0) if not a valid header (ip+icmp)
+*/
+static t_headers	check_icmp(t_trace *tr, size_t size)
+{
+	t_headers	header;
+
+	ft_bzero(&header, sizeof(t_headers));
+	if (size < (sizeof(t_ip) * 2) + sizeof(t_udp) + sizeof(t_icmp))
+		return (header);
+	ft_memcpy(&(header.ip), tr->in.buf, sizeof(t_ip));
+	if (ntohs(header.ip.tot_len) > size
+		|| (header.ip.ihl * 4) + sizeof(t_ip)
+		+ sizeof(t_udp) + sizeof(t_icmp) > size
+		|| header.ip.protocol != IPPROTO_ICMP)
+		return (header);
+	ft_memcpy(&(header.icmp), tr->in.buf + header.ip.ihl * 4, sizeof(t_icmp));
+	ft_memcpy(&(header.oip), tr->in.buf + header.ip.ihl * 4 + sizeof(t_icmp),
+		sizeof(t_ip));
+	ft_memcpy(&(header.oudp), tr->in.buf + header.ip.ihl * 4 + sizeof(t_icmp)
+		+ sizeof(t_ip), sizeof(t_udp));
+	header.valid = true;
+	return (header);
+}
+
+/*
+** fills the probe structure with the appropriated received data:
+** maily source address and headers (for icmp code checking when printing)
+*/
+static void	fillprobe(t_probe *probe, t_headers *headers)
+{
+	gettimeofday(&(probe->tr), NULL);
+	probe->elapsed = elapsed_time_ms(probe->ts, probe->tr);
+	probe->received = true;
+	ft_bzero(&probe->saddr, sizeof(probe->saddr));
+	probe->saddr.sin_family = AF_INET;
+	probe->saddr.sin_addr = *(struct in_addr *)&(headers->ip.saddr);
+	probe->headers = *headers;
+}
+
+/*
+** receives the packet, drops if invalid, and check if it's the last hop.
+*/
 void	recvpackets(t_trace *tr)
 {
 	t_probe				*probe;
+	t_headers			headers;
 	int					ret;
 
-	probe = NULL;
 	ft_bzero(&tr->in.saddr, sizeof(tr->in.saddr));
-	ret = recvfrom(tr->in.sock, tr->in.buf, sizeof(tr->in.buf), MSG_DONTWAIT, (struct sockaddr*)&(tr->in.saddr), &tr->in.saddrlen);
+	tr->in.saddrlen = sizeof(tr->in.saddr);
+	ret = recvfrom(tr->in.sock, tr->in.buf,
+			sizeof(tr->in.buf), MSG_DONTWAIT,
+			(struct sockaddr*)&(tr->in.saddr), &tr->in.saddrlen);
 	if (ret > 0)
 	{
-		//the whole work now will be checking if this is a valid ICMP packet.... we'll ignore it validation for now
-		//and assume the packet is valid... 
-		t_ip *ip = (t_ip*)tr->in.buf;
-		t_icmp *icmp = (t_icmp*)(ip + 1);
-		t_ip *oip = (t_ip*)(icmp + 1);
-		t_udp *oudp = (t_udp*)(oip + 1);
-		probe = getprobe(tr, ntohs(oudp->dest));
-		if (probe && !(probe->received))// && probe->id <= tr->curr_prt)
+		headers = check_icmp(tr, (size_t)ret);
+		if (!headers.valid)
+			return ;
+		probe = getprobe(tr, ntohs(headers.oudp.dest));
+		if (probe && !(probe->received))
 		{
-			gettimeofday(&(probe->tr), NULL);
-			probe->elapsed = elapsed_time_ms(probe->ts, probe->tr);
-			probe->received = true;
-			ft_bzero(&probe->saddr, sizeof(probe->saddr));
-			probe->saddr.sin_family = AF_INET;
-			probe->saddr.sin_addr = *(struct in_addr*)&(ip->saddr);
-			if (!ft_memcmp(&probe->daddr.sin_addr, &ip->saddr, sizeof(in_addr_t)))
+			fillprobe(probe, &headers);
+			if (!ft_memcmp(&probe->daddr.sin_addr, &headers.ip.saddr,
+					sizeof(in_addr_t))
+				|| headers.icmp.type != ICMP_TIME_EXCEEDED)
 				tr->hop[probe->hdx].lasthop = true;
 			tr->count.recv++;
 		}

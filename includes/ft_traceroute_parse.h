@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_traceroute_parse.h                                    :+:      :+:    :+:   */
+/*   ft_traceroute_parse.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 12:00:10 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/26 12:37:11 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/09 21:22:33 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,26 @@
 # define FT_TRACEROUTE_PARSE_H
 
 /*
-  
-  -f first_ttl  --first=first_ttl
-                              Start from the first_ttl hop (instead from 1)
-  -m max_ttl  --max-hops=max_ttl
-                              Set the max number of hops (max TTL to be reached). Default is 30
-  -N squeries  --sim-queries=squeries
-                              Set the number of probes to be tried simultaneously (default is 16)
-  -p port  --port=port        Set the destination port to use. It is either
-                              initial udp port value for "default" method
-                              (incremented by each probe, default is 33434), or
-                              initial seq for "icmp" (incremented as well,
-                              default from 1), or some constant destination
-                              port for other methods (with default of 80 for
-                              "tcp", 53 for "udp", etc.)
-  -q nqueries  --queries=nqueries
-                              Set the number of probes per each hop. Default is 3
-
-
-
-
-  -n                          Do not resolve IP addresses to their domain names
-  -V  --version               Print version info and exit
-  --help                      Read this help and exit
+**  
+**  -f first_ttl  --first=first_ttl
+**    Start from the first_ttl hop (instead from 1)
+**  -m max_ttl  --max-hops=max_ttl
+**    Set the max number of hops (max TTL to be reached). Default is 30
+**  -N squeries  --sim-queries=squeries
+**   Set the number of probes to be tried simultaneously (default is 16)
+**  -p port  --port=port  Set the destination port to use. It is either
+**                        initial udp port value for "default" method
+**                        (incremented by each probe, default is 33434), or
+**                        initial seq for "icmp" (incremented as well,
+**                        default from 1), or some constant destination
+**                        port for other methods (with default of 80 for
+**                        "tcp", 53 for "udp", etc.)
+**  -q nqueries  --queries=nqueries
+**    Set the number of probes per each hop. Default is 3
+**  -n                    Do not resolve IP addresses to their domain names
+**  -V  --version         Print version info and exit
+**  --help                Read this help and exit
 */
-
-
 
 /*
 ** list of options allowed by this program.
@@ -61,9 +55,12 @@
 */
 
 # define ODSC_FIRSTTTL	"Start from the first_ttl hop (instead from 1)"
-# define ODSC_MAXTTL	"Set the max number of hops (max TTL to be reached). Default is 30"
-# define ODSC_PORT		"Set the initial value for destination port. (default: 33434)"
-# define ODSC_SQUERIES	"Set the number of probes to be tried simultaneously (default is 16)"
+# define ODSC_MAXTTL	"Set the max number of hops \
+(max TTL to be reached). Default is 30"
+# define ODSC_PORT		"Set the initial value for destination port. \
+(default: 33434)"
+# define ODSC_SQUERIES	"Set the number of probes to be tried simultaneously \
+(default is 16)"
 # define ODSC_NQUERIES	"Set the number of probes per each hop. Default is 3"
 # define ODSC_RESOLVEH	"Do not resolve IP addresses to their domain names"
 # define ODSC_USAGE		"give a short usage message and exit"

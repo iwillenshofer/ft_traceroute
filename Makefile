@@ -6,7 +6,7 @@
 #    By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 15:22:29 by iwillens          #+#    #+#              #
-#    Updated: 2023/08/09 01:06:57 by iwillens         ###   ########.fr        #
+#    Updated: 2023/08/09 16:48:16 by iwillens         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ SRCS = ${SRC_DIR}/main.c \
 		${SRC_DIR}/out/packet.c \
 		${SRC_DIR}/out/send.c \
 		${SRC_DIR}/in/print.c \
+		${SRC_DIR}/in/icmp.c \
 		${SRC_DIR}/in/receive.c \
 		${SRC_DIR}/common/time.c \
 		${SRC_DIR}/common/checksum.c \
@@ -40,7 +41,6 @@ SRCS = ${SRC_DIR}/main.c \
 		${SRC_DIR}/core/setup.c \
 		${SRC_DIR}/core/socket.c \
 		${SRC_DIR}/core/trace.c
-
 
 
 OBJS = $(patsubst ${SRC_DIR}/%.c, ${OBJ_DIR}/%.o, ${SRCS})

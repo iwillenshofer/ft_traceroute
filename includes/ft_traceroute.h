@@ -25,24 +25,21 @@
 # include <limits.h>
 # include <sys/types.h>
 # include <sys/select.h>
-# include "libft.h"
 # include <netinet/udp.h>
-# include <netinet/ip_icmp.h>
-
 # include <netinet/ip.h>
-# include <linux/if_ether.h>
-
+# include <netinet/ip_icmp.h>
+# include "libft.h"
 # include "ft_traceroute_types.h"
 # include "ft_traceroute_errors.h"
 # include "ft_traceroute_parse.h"
 
 void		setup(t_trace *tr, char **argv);
 void		build_packet(t_trace *tr);
-void		traceroute(t_trace *tr);
 void		get_address(t_trace *tr);
 void		opensockets(t_trace *tr);
 char		*fqdn(t_trace *tr, struct sockaddr_in *addr);
 void		set_sockttl(t_trace *tr, size_t ttl);
+void		traceroute(t_trace *tr);
 void		sendpackets(t_trace *tr);
 void		recvpackets(t_trace *tr);
 void		prntpackets(t_trace *tr);
@@ -69,15 +66,14 @@ char		*tname(int type);
 */
 void		print_help(t_trace *tr);
 void		print_usage(t_trace *tr);
-void		print_shortusage(t_trace *tr);																																										
+void		print_shortusage(t_trace *tr);
 void		print_version(t_trace *tr);
-void		print_echo(t_trace *tr);
-
+void		print_icmperror(t_icmp *i);
 /*
 ** debugginG
 */
 void		print_udp(t_udp *udp);
-void		print_icmp (t_icmp *icmp);
+void		print_icmp(t_icmp *icmp);
 void		print_ip(t_ip *ip);
 
 #endif
