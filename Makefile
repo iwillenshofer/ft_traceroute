@@ -6,7 +6,7 @@
 #    By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 15:22:29 by iwillens          #+#    #+#              #
-#    Updated: 2023/08/09 16:48:16 by iwillens         ###   ########.fr        #
+#    Updated: 2023/08/09 21:29:57 by iwillens         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,6 @@ SRCS = ${SRC_DIR}/main.c \
 		${SRC_DIR}/in/icmp.c \
 		${SRC_DIR}/in/receive.c \
 		${SRC_DIR}/common/time.c \
-		${SRC_DIR}/common/checksum.c \
 		${SRC_DIR}/core/address.c \
 		${SRC_DIR}/core/setup.c \
 		${SRC_DIR}/core/socket.c \
