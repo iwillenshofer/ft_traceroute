@@ -82,3 +82,15 @@ $ ./ft_traceroute google.com
 
 #TODO:
 [ ] upon receival of the packet, verify if it is a valid ICMP packet, and if it is the last hop.
+
+[ ] error messages
+
+[ ] maybe check if it is our packet? not sure if necessary.
+
+[ ] norme
+
+[ ] review and improve structures
+
+[ ] resolve hosts options
+
+[ ] test all options

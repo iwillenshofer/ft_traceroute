@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/01 10:54:12 by iwillens          #+#    #+#             */
-/*   Updated: 2023/07/30 01:26:23 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/09 00:16:54 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ void	ft_putbytes(void *bytes, size_t size);
 void	*ft_memset(void *b, int c, size_t len);
 int		ft_strcmp(const char *s1, const char *s2);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
+int		ft_memcmp(const void *s1, const void *s2, size_t n);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
 void	ft_puthex_bytes(void *bytes, size_t size, size_t space, size_t carr);
 

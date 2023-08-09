@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 08:52:05 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/08 21:46:56 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/09 01:04:32 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,6 @@
 #include <limits.h>
 
 /*
-**	struct addrinfo {
-**		int              ai_flags;
-**		int              ai_family;
-**		int              ai_socktype;
-**		int              ai_protocol;
-**		socklen_t        ai_addrlen;
-**		struct sockaddr *ai_addr;
-**		char            *ai_canonname;
-**		struct addrinfo *ai_next;
-**	};
-**
-**	struct sockaddr {
-**		unsigned short    sa_family;    // address family, AF_xxx
-**		char              sa_data[14];  // 14 bytes of protocol address
-**	}; 
-**
 **	sockaddr is a generic structure. Can be converted to sockaddr_in,
 **	sockaddr_in6, sockaddr_un, and so on... Since we are using IPV4,
 **	we will deal with it as sockaddr_in using a cast.
@@ -44,12 +28,11 @@
 **	t_inaddr {
 **		unsigned long s_addr;  // load with inet_aton()
 **	};
-**
-**	int getaddrinfo(const char *node, const char *service,
-**						const struct addrinfo *hints,
-**						struct addrinfo **res);
 */
 
+/*
+** reverse dns resolution for the return packet.
+*/
 char	*fqdn(t_trace *tr, struct sockaddr_in *addr)
 {
 	ft_bzero(tr->in.fqdn, sizeof(tr->in.fqdn));
@@ -61,8 +44,8 @@ char	*fqdn(t_trace *tr, struct sockaddr_in *addr)
 }
 
 /*
-** gets information on address to be ping'ed (host) and stores
-**  into ft_ping->out.daddr, to be used by ping().
+** gets information on address to be traced (host) and stores
+**  into ft_ping->out.daddr
 */
 void	get_address(t_trace *tr)
 {
@@ -82,5 +65,4 @@ void	get_address(t_trace *tr)
 		ft_strcpy(tr->out.host, addr->ai_canonname);
 	tr->out.daddr = *(struct sockaddr_in *)(addr->ai_addr);
 	freeaddrinfo(addr);
-	//get_fqdn(tr);
 }

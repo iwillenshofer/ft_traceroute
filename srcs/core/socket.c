@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 13:02:27 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/08 17:05:26 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/09 00:55:58 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 #define ERR_SOCKET "ERR_SOCKET\n"
 
 /*
-** binds the ICMP socket to any addr.
+** binds the UDP socket to any addr.
 */
 static void	bindsocket(t_trace *tr)
 {
@@ -31,31 +31,23 @@ static void	bindsocket(t_trace *tr)
 
 	ft_bzero(&saddr, sizeof(saddr));
 	saddr.sin_family = AF_INET;
-	saddr.sin_addr.s_addr = INADDR_ANY; (void)tr;
-	saddr.sin_port = htons(DFL_STARTPORT);
-	if (bind(tr->in.sock, (struct sockaddr*)&(saddr), sizeof(saddr)) < 0)
-		prs_fatal(tr, ERR_BIND, NULL, false);
-	if (bind(tr->out.sock, (struct sockaddr*)&(saddr), sizeof(saddr)) < 0)
-		prs_fatal(tr, ERR_BIND, NULL, false);
+	saddr.sin_addr.s_addr = INADDR_ANY;
+	saddr.sin_port = htons(0);
+	bind(tr->out.sock, (struct sockaddr*)&(saddr), sizeof(saddr));
 }
 
 /*
-** sets socket options for the outgoing socket, so we receive ICMP errors
-** from the recipient
+** sets socket options for the outgoing socket
 */
 static void	socketoptions(t_trace *tr)
 {
 	int t;
 
 	t = 1;
-//	if (setsockopt(tr->out.sock, SOL_IP, IP_RECVERR, &t, sizeof(t)) < 0)
-//		prs_fatal(tr, "IP_RECVERR\n", NULL, false);
-//	if (setsockopt(tr->out.sock, SOL_IP, IP_RECVTTL, &t, sizeof(t)) < 0)
-//		prs_fatal(tr, "IP_RECVTTL\n", NULL, false);
 	if (setsockopt(tr->in.sock, SOL_SOCKET, SO_REUSEPORT, &t, sizeof(t)) < 0)
-		prs_fatal(tr, "IP_RECVTTL\n", NULL, false);
+		prs_fatal(tr, "SO_REUSEPORT\n", NULL, false);
 	if (setsockopt(tr->out.sock, SOL_SOCKET, SO_REUSEPORT, &t, sizeof(t)) < 0)
-		prs_fatal(tr, "IP_RECVTTL\n", NULL, false);
+		prs_fatal(tr, "SO_REUSEPORT\n", NULL, false);
 }
 
 /*
@@ -79,7 +71,6 @@ void	opensockets(t_trace *tr)
 	if (fd < 0)
 		prs_fatal(tr, ERR_SOCKET, NULL, false);
 	tr->out.sock = fd;
-//	bindsocket(tr);
-	(void)bindsocket;
+	bindsocket(tr);
 	socketoptions(tr);
 }

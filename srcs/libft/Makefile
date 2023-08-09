@@ -6,12 +6,12 @@
 #    By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/01 10:55:01 by iwillens          #+#    #+#              #
-#    Updated: 2023/07/29 19:02:30 by iwillens         ###   ########.fr        #
+#    Updated: 2023/08/09 00:17:32 by iwillens         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # **************************************************************************** #
-#         a Limited version of libft specific for the ft_ping project          #
+#      a Limited version of libft specific for the ft_traceroute project       #
 # **************************************************************************** #
 
 NAME = libft.a
@@ -41,7 +41,8 @@ SRCS =  ft_putchar.c \
 		ft_strrchr.c \
 		ft_strchr.c \
 		ft_notnumeric.c \
-		ft_nothex.c
+		ft_nothex.c \
+		ft_memcmp.c
 
 OBJS = $(patsubst %.c, %.o, ${SRCS})
 

@@ -5,73 +5,108 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/28 15:18:30 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/01 10:39:37 by iwillens         ###   ########.fr       */
+/*   Created: 2023/08/09 01:01:19 by iwillens          #+#    #+#             */
+/*   Updated: 2023/08/09 01:08:16 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_traceroute.h"
 
 /*
-** prints the IP header for
+** MAX,HERE,NEAR
+** Wait for a probe no more than HERE (default 3)
+** times longer than a response from the same hop,
+** or no more than NEAR (default 10) times than some
+** next hop, or MAX (default 5.0) seconds (float
+** point values allowed too)
 */
-static void	print_ip(t_ip *ip)
+static t_time	timetowait(t_trace *tr, t_hop *hop, t_bool print)
 {
-	dprintf(STDOUT_FILENO,
-		"Vr HL TOS  Len   ID Flg  off TTL Pro  cks      Src\tDst\tData\n");
-	dprintf(STDOUT_FILENO,
-		" %1x  %1x  %02x %04x %04x   %1x %04x  %02x  %02x %04x ",
-		ip->version, ip->ihl, ip->tos, ntohs(ip->tot_len), ntohs(ip->id),
-		(ntohs(ip->frag_off) & 0b1110000000000000) >> 13,
-		ntohs(ip->frag_off) & 0b0000111111111111,
-		ip->ttl, ip->protocol, ntohs(ip->check));
-	dprintf(STDOUT_FILENO, "%s  ",
-		inet_ntoa(*(t_inaddr *)(&(ip->saddr))));
-	dprintf(STDOUT_FILENO, "%s ",
-		inet_ntoa(*(t_inaddr *)(&(ip->daddr))));
-	if (ip->ihl * 4 > sizeof(t_ip))
-		ft_puthex_bytes(((char *)ip) + sizeof(t_ip),
-			(ip->ihl * 4) - sizeof(t_ip), 0, 0);
-	dprintf(STDOUT_FILENO, "\n");
+	double ttw;
+	size_t hidx;
+	size_t pidx;
+
+	hidx = hop->id;
+	ttw = 0.0;
+	while (hidx < tr->opts.maxhop)
+	{
+		pidx = 0;
+		while (pidx < tr->opts.nqueries && tr->hop[hidx].probe[pidx].sent)
+		{
+			if (tr->hop[hidx].probe[pidx].received && tr->hop[hidx].probe[pidx].elapsed)
+			{
+				if (hidx == hop->id && (tr->hop[hidx].probe[pidx].elapsed * 3 < ttw || !(ttw)))
+					ttw = (tr->hop[hidx].probe[pidx].elapsed + 1) * 3;
+				else if (tr->hop[hidx].probe[pidx].elapsed * 10 < ttw || !(ttw))
+					ttw = (tr->hop[hidx].probe[pidx].elapsed + 1) * 10;
+			}
+			pidx++;
+		}
+		hidx++;
+	}
+	if (!ttw)
+		ttw = 5000;
+	(void)print;
+	return (ms_to_time(ttw));
 }
 
 /*
-** prints IP and ICMP header for --verbose (and some errors)
+** gets the last valid address of a hop, up to the current probe
+** if there is none, returnes a zeroed address
 */
-void	print_headers(t_ping *ft_ping, t_headers *hdr)
+static struct sockaddr_in lastaddr(t_trace *tr, t_probe *probe)
 {
-	if (ft_ping->opts.verbose)
+	struct sockaddr_in ret;
+	size_t	idx;
+
+	ft_bzero(&ret, sizeof(ret));
+	if (!probe->idx)
+		return (ret);
+	idx = 0;
+
+	while (idx < probe->idx)
 	{
-		dprintf(STDOUT_FILENO, "IP Hdr Dump:\n ");
-		ft_puthex_bytes(((char *)hdr->ip), (hdr->ip->ihl * 4), 2, 0);
+		if (tr->hop[probe->hdx].probe[idx].received && tr->hop[probe->hdx].probe[idx].elapsed) /* maybe change this to timedout */
+			ret = tr->hop[probe->hdx].probe[idx].saddr;
+		idx++;
 	}
-	if (ft_ping->opts.verbose
-		|| ft_ping->in.recv.hdrs.icmp->type == ICMP_SOURCE_QUENCH
-		|| ft_ping->in.recv.hdrs.icmp->type == ICMP_PARAMETERPROB)
-	{
-		print_ip(hdr->ip);
-		dprintf (STDOUT_FILENO,
-			"ICMP: type %u, code %u, size %lu, id 0x%04x, seq 0x%04x\n",
-			hdr->icmp->type, hdr->icmp->code,
-			hdr->datalen + sizeof(t_icmp),
-			ntohs(hdr->icmp->un.echo.id), ntohs(hdr->icmp->un.echo.sequence));
-	}
+	return (ret);
 }
 
 /*
-** Let's print all the pings!!!!
+** now, we will start printing our packets.
+** also, if we reach timeout or the ICMP code is not TTL, we will make it as
+** received and print an '*'.
+** also, will check if it is done (when the last packet is either received or timedout)
 */
-void	print_echo(t_ping *ft_ping)
+void	prntpackets(t_trace *tr)
 {
-	dprintf(STDOUT_FILENO, "%lu bytes from %s: ",
-		ft_ping->in.recv.hdrs.datalen + sizeof(t_icmp),
-		inet_ntoa(ft_ping->in.recv.peer_addr.sin_addr));
-	dprintf(STDOUT_FILENO, "icmp_seq=%d ttl=%d",
-		ntohs(ft_ping->in.recv.hdrs.icmp->un.echo.sequence),
-		ft_ping->in.recv.hdrs.ip->ttl);
-	if (ft_ping->in.time.current)
-		dprintf(STDOUT_FILENO, " time=%.3f ms", ft_ping->in.time.current);
-	if (ft_ping->in.recv.duplicated)
-		dprintf (STDOUT_FILENO, " (DUP!)");
-	dprintf(STDOUT_FILENO, "\n");
+	t_hop *hop;
+	size_t	probeidx;
+
+	hop = &(tr->hop[tr->curr_prt / tr->opts.nqueries]);
+	probeidx = tr->curr_prt % tr->opts.nqueries;
+	if (hop->probe[probeidx].sent && (hop->probe[probeidx].received || timed_out(hop->probe[probeidx].ts, timetowait(tr, hop, false))))
+	{
+		if (!probeidx)
+			dprintf(STDOUT_FILENO, "%2lu ", hop->ttl);
+		if (hop->probe[probeidx].received)
+		{
+			struct sockaddr_in last = lastaddr(tr, &(hop->probe[probeidx]));
+			if (ft_memcmp(&hop->probe[probeidx].saddr.sin_addr, &last.sin_addr, sizeof(struct in_addr)))
+				dprintf(STDOUT_FILENO, " %s (%s)", fqdn(tr, &hop->probe[probeidx].saddr), inet_ntoa(hop->probe[probeidx].saddr.sin_addr));
+			dprintf(STDOUT_FILENO, "  %.3f ms", hop->probe[probeidx].elapsed);
+		}
+		else
+		{
+			dprintf(STDOUT_FILENO, " *");
+			hop->probe[probeidx].received = true;
+			tr->count.recv++;
+		}
+		if (probeidx == tr->opts.nqueries - 1)
+			dprintf(STDOUT_FILENO, "\n");
+		if ((probeidx == tr->opts.nqueries - 1 && hop->lasthop) || tr->curr_prt == (tr->opts.nqueries * tr->opts.maxhop))
+			tr->done = true;
+		tr->curr_prt++;
+	}
 }

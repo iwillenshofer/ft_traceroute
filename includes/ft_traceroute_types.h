@@ -106,7 +106,7 @@ typedef struct s_outloop
 }	t_outloop;
 
 typedef struct s_counter
-{
+{																																																																						
 	size_t		recv;
 	size_t		sent;
 }	t_counter;

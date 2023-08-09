@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/12 14:25:33 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/01 10:39:37 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/09 01:07:52 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@
 ** best source ever: https://www.ietf.org/rfc/rfc1071.txt
 */
 
-t_u16bits	checksum(void *buffer, size_t size)
+unsigned short	checksum(void *buffer, size_t size)
 {
-	size_t		i;
-	t_u8bits	*data;
-	t_u32bits	sum;
-	t_u16bits	last_elem;
+	size_t			i;
+	unsigned char	*data;
+	unsigned int	sum;
+	unsigned short	last_elem;
 
 	i = 0;
 	sum = 0;
@@ -35,7 +35,7 @@ t_u16bits	checksum(void *buffer, size_t size)
 	}
 	while (i < size)
 	{
-		sum += *(t_u16bits *)(&data[i]);
+		sum += *(unsigned short *)(&data[i]);
 		i += 2;
 	}
 	if (last_elem)

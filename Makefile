@@ -6,7 +6,7 @@
 #    By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 15:22:29 by iwillens          #+#    #+#              #
-#    Updated: 2023/08/04 10:07:14 by iwillens         ###   ########.fr        #
+#    Updated: 2023/08/09 01:06:57 by iwillens         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@
 NAME = ft_traceroute
 
 CC = gcc
-CCFLAGS = -Wall -Werror -Wextra
+CCFLAGS = -Wall -Werror -Wextra -g -fsanitize=address
 
 SRC_DIR = ./srcs
 OBJ_DIR = ./build
@@ -26,22 +26,20 @@ INC_DIR = ./includes
 SRCS = ${SRC_DIR}/main.c \
 		${SRC_DIR}/print/usage.c \
 		${SRC_DIR}/print/help.c \
+		${SRC_DIR}/print/debug.c \
 		${SRC_DIR}/parser/options.c \
 		${SRC_DIR}/parser/parser.c \
 		${SRC_DIR}/parser/handlers.c \
 		${SRC_DIR}/out/packet.c \
+		${SRC_DIR}/out/send.c \
+		${SRC_DIR}/in/print.c \
+		${SRC_DIR}/in/receive.c \
 		${SRC_DIR}/common/time.c \
+		${SRC_DIR}/common/checksum.c \
 		${SRC_DIR}/core/address.c \
 		${SRC_DIR}/core/setup.c \
 		${SRC_DIR}/core/socket.c \
 		${SRC_DIR}/core/trace.c
-#		${SRC_DIR}/core/ping.c \
-#		${SRC_DIR}/in/ping_in.c \
-#		${SRC_DIR}/in/noecho.c \
-#		${SRC_DIR}/in/print.c \
-#		${SRC_DIR}/out/ping_out.c \
-#		${SRC_DIR}/common/checksum.c \
-#		${SRC_DIR}/common/duplicate.c \
 
 
 

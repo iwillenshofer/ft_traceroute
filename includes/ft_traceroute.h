@@ -36,37 +36,23 @@
 # include "ft_traceroute_errors.h"
 # include "ft_traceroute_parse.h"
 
-void		trace(t_trace *tr);
 void		setup(t_trace *tr, char **argv);
 void		build_packet(t_trace *tr);
-
+void		traceroute(t_trace *tr);
 void		get_address(t_trace *tr);
 void		opensockets(t_trace *tr);
 char		*fqdn(t_trace *tr, struct sockaddr_in *addr);
-
 void		set_sockttl(t_trace *tr, size_t ttl);
+void		sendpackets(t_trace *tr);
+void		recvpackets(t_trace *tr);
+void		prntpackets(t_trace *tr);
 
-void		ping(t_trace *tr);
 /*
 ** time
 */
 double		elapsed_time_ms(t_time begin, t_time end);
 t_bool		timed_out(t_time begin, t_time timeout);
 t_time		ms_to_time(double ms);
-
-/*
-** ping in/out
-*/
-t_bool		ping_in(t_trace *tr);
-void		ping_out(t_trace *tr, t_bool preload);
-void		prebuild_packet(t_trace *tr);
-
-/*
-** duplicate checker
-*/
-void		set_duptrack(t_trace *tr, size_t seq);
-t_bool		check_duptrack(t_trace *tr, size_t seq);
-void		clear_duptrack(t_trace *tr, size_t seq);
 
 /*
 ** parser
@@ -76,21 +62,22 @@ t_lstopt	*opt_byfullname(t_trace *tr, char *s);
 t_lstopt	*opt_byshortcut(t_trace *tr, char c);
 void		add_options(t_trace *tr);
 void		add_handlers(t_trace *tr);
+char		*tname(int type);
 
 /*
 ** printing
 */
 void		print_help(t_trace *tr);
 void		print_usage(t_trace *tr);
-void		print_shortusage(t_trace *tr);
+void		print_shortusage(t_trace *tr);																																										
 void		print_version(t_trace *tr);
 void		print_echo(t_trace *tr);
 
 /*
-** no echo
+** debugginG
 */
-void		icmp_noecho(t_trace *tr);
-char		*tname(int type);
+void		print_udp(t_udp *udp);
+void		print_icmp (t_icmp *icmp);
+void		print_ip(t_ip *ip);
 
-void		traceroute(t_trace *tr);
 #endif

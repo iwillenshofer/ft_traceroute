@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:17:18 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/07 15:40:43 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/09 00:51:25 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,20 +60,7 @@ int	main(int argc, char **argv)
 	setup(&tr, argv);
 	opensockets(&tr);
 	print_init(&tr);
-	//while (!(tr.done))
-	//	trace(&tr);
 	traceroute(&tr);
-
-//	opensocket(&ft_ping);
-//	gettimeofday(&(ft_ping.begin), NULL);
-//	while (*(++argv))
-//	{
-//		ft_bzero(&(ft_ping.out), sizeof(ft_ping.out));
-//		ft_strcpy(ft_ping.out.host, *argv);
-//		get_address(&ft_ping);
-//		ping(&ft_ping);
-//	}
-//	close(ft_ping.sock);
 	(void)argc;
 	return (0);
 }
