@@ -6,7 +6,7 @@
 #    By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 15:22:29 by iwillens          #+#    #+#              #
-#    Updated: 2023/08/10 19:53:37 by iwillens         ###   ########.fr        #
+#    Updated: 2023/08/10 23:05:58 by iwillens         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@
 NAME = ft_traceroute
 
 CC = gcc
-CCFLAGS = -Wall -Werror -Wextra -g -fsanitize=address
+CCFLAGS = -Wall -Werror -Wextra
 
 SRC_DIR = ./srcs
 OBJ_DIR = ./build
