@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 00:58:04 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/09 19:07:25 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 07:43:07 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void	recvpackets(t_trace *tr)
 		if (!headers.valid)
 			return ;
 		probe = getprobe(tr, ntohs(headers.oudp.dest));
-		if (probe && !(probe->received))
+		if (probe && !(probe->received) && !(probe->timedout))
 		{
 			fillprobe(probe, &headers);
 			if (!ft_memcmp(&probe->daddr.sin_addr, &headers.ip.saddr,

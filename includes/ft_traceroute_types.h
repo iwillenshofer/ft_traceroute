@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:29:15 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/09 21:25:42 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 14:54:02 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,31 @@
 # define DFL_NQUERIES			3
 # define DFL_SQUERIES			16
 # define DFL_SLEEP				100
+# define DFL_TIMEOUTMS			5000
 # define MAX_PROBESPERHOP		10
 # define MAX_HOPS				255
 # define MAX_PACKET				65000
 # define MAX_SQUERIES			2550
 # define MAX_PORT				65536
+
+/*
+** definitions for colors
+*/
+
+# define BLACK 30
+# define RED 31
+# define GREEN 32
+# define YELLOW 33
+# define BLUE 34
+# define PURPLE 35
+# define CYAN 36
+# define WHITE 37
+# define RESET 0
+
+# define REGULAR 0
+# define BOLD 1
+# define FAINT 2
+
 /*
 ** So, let's start building our traceroute structure, starting from here.
 ** What we need is a main structure, which will have main information about our
@@ -70,14 +90,14 @@ typedef struct s_headers
 
 typedef struct s_options
 {
-	t_bool		resolvehosts;
+	t_bool		nodns;
+	t_bool		color;
 	size_t		firsthop;
 	size_t		maxhop;	
 	size_t		port;
 	size_t		squeries;
 	size_t		nqueries;
 	size_t		packetsize;
-	t_time		timeout;
 	t_lstopt	available[OPT_LSTSIZE];
 }	t_options;
 
@@ -86,11 +106,12 @@ typedef struct s_probe
 	size_t				id;
 	size_t				idx;
 	size_t				hdx;
-	t_bool				sent;
-	t_bool				received;
-	in_port_t			port;
 	t_time				ts;
 	t_time				tr;
+	t_bool				sent;
+	in_port_t			port;
+	t_bool				received;
+	t_bool				timedout;
 	t_headers			headers;
 	double				elapsed;
 	struct sockaddr_in	daddr;
@@ -119,6 +140,7 @@ typedef struct s_outloop
 typedef struct s_counter
 {
 	size_t		recv;
+	size_t		timedout;
 	size_t		sent;
 	size_t		prt;
 }	t_counter;

@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 13:02:27 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/09 21:28:15 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 07:30:47 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,6 @@
 ** https://linux.die.net/man/7/ip
 ** https://linux.die.net/man/2/setsockopt
 */
-
-#define ERR_BIND "ERR_BIND\n"
-#define ERR_SOCKET "ERR_SOCKET\n"
 
 /*
 ** binds the UDP socket to any addr.
@@ -45,9 +42,9 @@ static void	socketoptions(t_trace *tr)
 
 	t = 1;
 	if (setsockopt(tr->in.sock, SOL_SOCKET, SO_REUSEPORT, &t, sizeof(t)) < 0)
-		prs_fatal(tr, "SO_REUSEPORT\n", NULL, false);
+		prs_fatal(tr, ERR_PORT, NULL, false);
 	if (setsockopt(tr->out.sock, SOL_SOCKET, SO_REUSEPORT, &t, sizeof(t)) < 0)
-		prs_fatal(tr, "SO_REUSEPORT\n", NULL, false);
+		prs_fatal(tr, ERR_PORT, NULL, false);
 }
 
 /*
@@ -56,7 +53,7 @@ static void	socketoptions(t_trace *tr)
 void	set_sockttl(t_trace *tr, size_t ttl)
 {
 	if (setsockopt (tr->out.sock, SOL_IP, IP_TTL, &ttl, sizeof(ttl)) < 0)
-		prs_fatal(tr, "IP_TTL\n", NULL, false);
+		prs_fatal(tr, ERR_TTL, NULL, false);
 }
 
 void	opensockets(t_trace *tr)

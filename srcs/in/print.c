@@ -6,59 +6,11 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 01:01:19 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/09 19:02:43 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 15:54:41 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_traceroute.h"
-
-/*
-** receives the current hop id and check for "future" probes
-*/
-static double	checkfutureprobe(t_trace *tr, t_probe *p, size_t hid, double t)
-{
-	size_t	pidx;
-
-	pidx = 0;
-	while (pidx < tr->opts.nqueries && tr->hop[hid].probe[pidx].sent)
-	{
-		if (tr->hop[hid].probe[pidx].received
-			&& tr->hop[hid].probe[pidx].elapsed)
-		{
-			if (hid == p->hdx
-				&& (tr->hop[hid].probe[pidx].elapsed * 3 > t || !(t)))
-				t = (tr->hop[hid].probe[pidx].elapsed + 1) * 3;
-			else if (tr->hop[hid].probe[pidx].elapsed * 10 < t || !(t))
-				t = (tr->hop[hid].probe[pidx].elapsed + 1) * 10;
-		}
-		pidx++;
-	}
-	return (t);
-}
-
-/*
-** MAX,HERE,NEAR
-** Wait for a probe no more than HERE (default 3)
-** times longer than a response from the same hop,
-** or no more than NEAR (default 10) times than some
-** next hop, or MAX (default 5.0) seconds
-*/
-static t_time	timetowait(t_trace *tr, t_probe *probe)
-{
-	double	ttw;
-	size_t	hidx;
-
-	hidx = probe->hdx;
-	ttw = 0.0;
-	while (hidx < tr->opts.maxhop)
-	{
-		ttw = checkfutureprobe(tr, probe, hidx, ttw);
-		hidx++;
-	}
-	if (!ttw)
-		ttw = 5000;
-	return (ms_to_time(ttw));
-}
 
 /*
 ** gets the last valid address of a hop, up to the current probe
@@ -75,38 +27,50 @@ static struct sockaddr_in	lastaddr(t_trace *tr, t_probe *probe)
 	idx = 0;
 	while (idx < probe->idx)
 	{
-		if (tr->hop[probe->hdx].probe[idx].received
-			&& tr->hop[probe->hdx].probe[idx].elapsed)
+		if (tr->hop[probe->hdx].probe[idx].received)
 			ret = tr->hop[probe->hdx].probe[idx].saddr;
 		idx++;
 	}
 	return (ret);
 }
 
+static void prnttimedout(t_trace *tr, t_hop *hop, size_t probeidx)
+{
+	color(tr, PURPLE, BOLD);
+	dprintf(STDOUT_FILENO, " *");
+	color(tr, RESET, REGULAR);
+	hop->probe[probeidx].timedout = true;
+	tr->count.timedout++;
+}
+
 /*
 ** prints a valid timed packet
 */
-static void	prntpacket(t_trace *tr, t_hop *hop, size_t probeidx, t_bool valid)
+static void	prntvalid(t_trace *tr, t_hop *hop, size_t probeidx)
 {
 	struct sockaddr_in	last;
+	struct sockaddr_in	addr;
 
-	if (valid)
+	addr = hop->probe[probeidx].saddr;
+	last = lastaddr(tr, &(hop->probe[probeidx]));
+	if (ft_memcmp(&addr.sin_addr, &last.sin_addr, sizeof(struct in_addr)))
 	{
-		last = lastaddr(tr, &(hop->probe[probeidx]));
-		if (ft_memcmp(&hop->probe[probeidx].saddr.sin_addr,
-				&last.sin_addr, sizeof(struct in_addr)))
-			dprintf(STDOUT_FILENO, " %s (%s)",
-				fqdn(tr, &hop->probe[probeidx].saddr),
-				inet_ntoa(hop->probe[probeidx].saddr.sin_addr));
-		dprintf(STDOUT_FILENO, "  %.3f ms", hop->probe[probeidx].elapsed);
-		print_icmperror(&(hop->probe[probeidx].headers.icmp));
+		color(tr, CYAN, BOLD);
+		if (tr->opts.nodns)
+			dprintf(STDOUT_FILENO, " %s", inet_ntoa(addr.sin_addr));
+		else
+		{
+			dprintf(STDOUT_FILENO, " %s", fqdn(tr, &addr));
+			color(tr, CYAN, FAINT);
+			dprintf(STDOUT_FILENO, " (%s)", inet_ntoa(addr.sin_addr));
+		}
 	}
-	else
-	{
-		dprintf(STDOUT_FILENO, " *");
-		hop->probe[probeidx].received = true;
-		tr->count.recv++;
-	}
+	color(tr, WHITE, BOLD);
+	dprintf(STDOUT_FILENO, "  %.3f", hop->probe[probeidx].elapsed);
+	color(tr, WHITE, FAINT);
+	dprintf(STDOUT_FILENO, " ms");
+	color(tr, RESET, REGULAR);
+	print_icmperror(&(hop->probe[probeidx].headers.icmp));
 }
 
 /*
@@ -128,13 +92,19 @@ void	prntpackets(t_trace *tr)
 				timetowait(tr, &hop->probe[probeidx]))))
 	{
 		if (!probeidx)
+		{
+			color(tr, WHITE, BOLD);
 			dprintf(STDOUT_FILENO, "%2lu ", hop->ttl);
-		prntpacket(tr, hop, probeidx, hop->probe[probeidx].received);
+		}
+		if (hop->probe[probeidx].received)
+			prntvalid(tr, hop, probeidx);
+		else
+			prnttimedout(tr, hop, probeidx);
 		if (probeidx == tr->opts.nqueries - 1)
 			dprintf(STDOUT_FILENO, "\n");
+		tr->count.prt++;
 		if ((probeidx == tr->opts.nqueries - 1 && hop->lasthop)
 			|| tr->count.prt == (tr->opts.nqueries * tr->opts.maxhop))
 			tr->done = true;
-		tr->count.prt++;
 	}
 }

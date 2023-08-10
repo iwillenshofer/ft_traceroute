@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 08:52:05 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/09 01:04:32 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 07:29:11 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	get_address(t_trace *tr)
 	hints.ai_flags = AI_CANONNAME;
 	ret = getaddrinfo(tr->hostname, NULL, &hints, &addr);
 	if (ret)
-		prs_fatal(tr, ERR_UNKNOWN_HOST, NULL, false);
+		prs_fatal(tr, ERR_ADDR, gai_strerror(ret), false);
 	if (addr->ai_canonname)
 		ft_strcpy(tr->out.host, addr->ai_canonname);
 	tr->out.daddr = *(struct sockaddr_in *)(addr->ai_addr);

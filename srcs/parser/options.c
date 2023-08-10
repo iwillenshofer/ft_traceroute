@@ -37,6 +37,7 @@ static void	add_descriptions(t_trace *tr)
 	ft_strcpy(opt[OPT_USAGE].desc, ODSC_USAGE);
 	ft_strcpy(opt[OPT_HELP].desc, ODSC_HELP);
 	ft_strcpy(opt[OPT_VERSION].desc, ODSC_VERSION);
+	ft_strcpy(opt[OPT_COLOR].desc, ODSC_COLOR);
 }
 
 void	add_options(t_trace *tr)
@@ -53,6 +54,7 @@ void	add_options(t_trace *tr)
 	opt[OPT_USAGE] = new_option('u', OPTT_NULL, "usage");
 	opt[OPT_HELP] = new_option('?', OPTT_NULL, "help");
 	opt[OPT_VERSION] = new_option('V', OPTT_NULL, "version");
+	opt[OPT_COLOR] = new_option('c', OPTT_NULL, "color");
 	add_descriptions(tr);
 	add_handlers(tr);
 }

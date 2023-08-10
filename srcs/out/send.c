@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 00:58:16 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/09 20:50:28 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 07:37:15 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	sendpackets(t_trace *tr)
 	t_probe			*probe;	
 	static size_t	sent = 0;
 
-	if ((sent > tr->count.recv + tr->opts.squeries
+	if ((sent > tr->count.recv + tr->count.timedout + tr->opts.squeries
 			&& !(sent % tr->opts.nqueries))
 		|| sent >= tr->opts.nqueries * tr->opts.maxhop)
 		return ;

@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 23:13:29 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/09 12:04:13 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 15:29:41 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,9 @@ static void	hndlr_singleopt(t_trace *tr, t_lstopt *opt, char *value)
 	if (opt->shortcut == 'V')
 		print_version(tr);
 	if (opt->shortcut == 'n')
-		tr->opts.resolvehosts = true;
+		tr->opts.nodns = true;
+	if (opt->shortcut == 'c')
+		tr->opts.color = true;
 }
 
 /*
@@ -87,6 +89,7 @@ void	add_handlers(t_trace *tr)
 	opt[OPT_RESOLVEH].handler = hndlr_singleopt;
 	opt[OPT_HELP].handler = hndlr_singleopt;
 	opt[OPT_USAGE].handler = hndlr_singleopt;
+	opt[OPT_COLOR].handler = hndlr_singleopt;
 	opt[OPT_VERSION].handler = hndlr_singleopt;
 	opt[OPT_FIRSTTTL].handler = hndlr_doubleopt;
 	opt[OPT_MAXTTL].handler = hndlr_doubleopt;

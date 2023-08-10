@@ -50,6 +50,7 @@ void		prntpackets(t_trace *tr);
 double		elapsed_time_ms(t_time begin, t_time end);
 t_bool		timed_out(t_time begin, t_time timeout);
 t_time		ms_to_time(double ms);
+t_time		timetowait(t_trace *tr, t_probe *probe);
 
 /*
 ** parser
@@ -75,5 +76,6 @@ void		print_icmperror(t_icmp *i);
 void		print_udp(t_udp *udp);
 void		print_icmp(t_icmp *icmp);
 void		print_ip(t_ip *ip);
+void		color(t_trace *tr, char new_color, char new_opt);
 
 #endif

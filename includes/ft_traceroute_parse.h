@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 12:00:10 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/09 21:22:33 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 15:28:47 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@
 # define OPT_USAGE			6
 # define OPT_HELP			7
 # define OPT_VERSION		8
-# define OPT_LSTSIZE		9
+# define OPT_COLOR			9
+# define OPT_LSTSIZE		10
 
 /*
 ** Descriptions for the above otions
@@ -66,6 +67,7 @@
 # define ODSC_USAGE		"give a short usage message and exit"
 # define ODSC_HELP		"Read this help and exit"
 # define ODSC_VERSION	"Print version info and exit"
+# define ODSC_COLOR		"Colorize the output"
 
 # define OPTT_NULL		0
 # define OPTT_FTTL		1
@@ -80,7 +82,6 @@
 # define OSTR_SQUERIES	"squeries"
 # define OSTR_NQUERIES	"nqueries"
 # define OSTR_PORT		"port"
-
 # define OSTR_QUERIES	"nqueries"
 
 /*

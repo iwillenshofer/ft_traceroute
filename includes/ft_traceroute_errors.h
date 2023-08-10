@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 13:39:25 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/09 21:22:42 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 07:31:53 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,16 +34,11 @@
 # define ERR_EXTRAARG "%s: extra arg '%s'\n"
 # define ERR_PACKLENV  "%s: cannot handle \"packetlen\" cmdline arg '%s'\n"
 # define ERR_PACKLENS  "%s: too big packetlen %s specified\n"
-
-//# define ERR_PPATTERN "%s: error in pattern near %s\n"
-//# define ERR_PPRELOAD "%s: invalid preload value (%s)\n"
-//# define ERR_PTOOBIG "%s: option value too big: %s\n"
-//# define ERR_UNRECOGNIZED_OPTION "%s: unrecognized option '%s'\n"
-//# define ERR_VALTOOSMALL "%s: option value too small: %s\n"
-//# define ERR_INCOMP_INTFLOOD "%s: -f and -i incompatible options\n"
-//# define ERR_SCKOPTTTL "%s: setsockopt(IP_TTL)\n"
-//# define ERR_SOCKET "%s: Lacking privilege for icmp socket.\n"
-//# define ERR_SEND "%s: sending packet\n"
+# define ERR_BIND "bind\n"
+# define ERR_SOCKET "socket\n"
+# define ERR_REUSEPORT "setsockopt SO_REUSEPORT\n"
+# define ERR_TTL "setsockopt IP_TTL\n"
+# define ERR_ADDR "%s: %s\n"
 
 void	prs_fatal(t_trace *tr,
 			const char *error, const char *s, t_bool shortusage);

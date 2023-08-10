@@ -6,7 +6,7 @@
 #    By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 15:22:29 by iwillens          #+#    #+#              #
-#    Updated: 2023/08/09 21:29:57 by iwillens         ###   ########.fr        #
+#    Updated: 2023/08/10 15:08:40 by iwillens         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,12 +27,14 @@ SRCS = ${SRC_DIR}/main.c \
 		${SRC_DIR}/print/usage.c \
 		${SRC_DIR}/print/help.c \
 		${SRC_DIR}/print/debug.c \
+		${SRC_DIR}/print/color.c \
 		${SRC_DIR}/parser/options.c \
 		${SRC_DIR}/parser/parser.c \
 		${SRC_DIR}/parser/handlers.c \
 		${SRC_DIR}/out/packet.c \
 		${SRC_DIR}/out/send.c \
 		${SRC_DIR}/in/print.c \
+		${SRC_DIR}/in/timeout.c \
 		${SRC_DIR}/in/icmp.c \
 		${SRC_DIR}/in/receive.c \
 		${SRC_DIR}/common/time.c \
