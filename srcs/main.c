@@ -6,28 +6,11 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:17:18 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/10 21:03:17 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 21:18:27 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_traceroute.h"
-
-/*
-** allowed functions:
-** getpid / getuid.
-** getaddrinfo / gettimeofday.
-** inet_ntoa / inet_pton.
-** freeaddrinfo
-** exit.
-** select.
-** setsockopt.
-** recvfrom / sendto.
-** ntohs / htons.
-** bind / socket / close.
-** strerror / gai_strerror.
-** the printf type functions.
-** the functions authorized in your libft (read, write, malloc, free).
-*/
 
 /*
 print header
