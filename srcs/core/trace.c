@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/04 12:42:54 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/09 21:27:34 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 20:45:17 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,5 @@ void	traceroute(t_trace *tr)
 		sendpackets(tr);
 		recvpackets(tr);
 		prntpackets(tr);
-		usleep(DFL_SLEEP);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 14:43:19 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/10 20:59:19 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 19:52:19 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	print_help(t_trace *tr)
 
 void	print_version(t_trace *tr)
 {
-	dprintf(STDOUT_FILENO, VRS, tr->program, 0, UINT_MAX);
+	dprintf(STDOUT_FILENO, VRS, tr->argv.program, 0, UINT_MAX);
 	dprintf(STDOUT_FILENO, VRS1);
 	dprintf(STDOUT_FILENO, VRS2);
 	dprintf(STDOUT_FILENO, VRS3);

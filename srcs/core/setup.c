@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 14:42:53 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/10 17:06:48 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 20:01:58 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ static void	set_defaults(t_trace *tr)
 void	setup(t_trace *tr, char **argv)
 {
 	ft_bzero(tr, sizeof(t_trace));
+	tr->argv.argv = argv;
 	add_options(tr);
 	parse(tr, argv);
 	set_defaults(tr);

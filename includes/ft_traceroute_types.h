@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:29:15 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/10 14:54:02 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 22:42:55 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,17 @@ typedef struct s_inloop
 	char				fqdn[NI_MAXHOST + 1];
 }	t_inloop;
 
+/*
+** saves information about argv for parsing
+*/
+typedef struct s_argv
+{
+	char	**argv;
+	char	*program;
+	char	*hostname;
+	char	**hostpos;
+}	t_argv;
+
 typedef struct s_trace
 {
 	t_bool		done;
@@ -163,8 +174,7 @@ typedef struct s_trace
 	t_counter	count;
 	t_hop		hop[MAX_HOPS];
 	t_options	opts;
-	char		*program;
-	char		*hostname;
+	t_argv		argv;
 }	t_trace;
 
 #endif

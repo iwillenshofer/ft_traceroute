@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 09:08:03 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/10 16:15:17 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 19:52:08 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	print_usage(t_trace *tr, t_bool terminate)
 	int			preceeding;
 	int			used;
 
-	preceeding = dprintf(STDERR_FILENO, "Usage:\n  %s", tr->program);
+	preceeding = dprintf(STDERR_FILENO, "Usage:\n  %s", tr->argv.program);
 	used = preceeding;
 	used = prt_options(tr, OPRT_SHORTCUT, used);
 	used = prt_options(tr, OPRT_DSHORTCUT, used);
@@ -71,5 +71,5 @@ void	print_usage(t_trace *tr, t_bool terminate)
 
 void	print_shortusage(t_trace *tr)
 {
-	dprintf(STDERR_FILENO, ERR_SRTUSAGE, tr->program, tr->program);
+	dprintf(STDERR_FILENO, ERR_SRTUSAGE, tr->argv.program, tr->argv.program);
 }

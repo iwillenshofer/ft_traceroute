@@ -6,7 +6,7 @@
 #    By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/12 15:22:29 by iwillens          #+#    #+#              #
-#    Updated: 2023/08/10 21:21:45 by iwillens         ###   ########.fr        #
+#    Updated: 2023/08/10 19:53:37 by iwillens         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ SRCS = ${SRC_DIR}/main.c \
 		${SRC_DIR}/print/help.c \
 		${SRC_DIR}/print/debug.c \
 		${SRC_DIR}/print/color.c \
+		${SRC_DIR}/parser/error.c \
 		${SRC_DIR}/parser/options.c \
 		${SRC_DIR}/parser/parser.c \
 		${SRC_DIR}/parser/handlers.c \

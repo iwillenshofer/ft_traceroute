@@ -6,20 +6,11 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 12:22:38 by marvin            #+#    #+#             */
-/*   Updated: 2023/08/10 21:00:11 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 20:34:21 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_traceroute.h"
-
-void	prs_fatal(t_trace *tr, const char *error,
-	const char *s, t_bool shortusage)
-{
-	dprintf(STDERR_FILENO, error, tr->program, s);
-	if (shortusage)
-		print_shortusage(tr);
-	exit (1);
-}
 
 static char	**prs_shortname(t_trace *tr, char **argv)
 {
@@ -34,13 +25,13 @@ static char	**prs_shortname(t_trace *tr, char **argv)
 		err[0] = *c;
 		opt = opt_byshortcut(tr, *c);
 		if (!opt)
-			prs_fatal(tr, ERR_INVALIDOPT, err, true);
+			prs_fatal_pos(tr, ERR_INVALIDOPT, argv);
 		if (opt->type == OPTT_NULL)
 			opt->handler(tr, opt, NULL);
 		else if (*(++c))
 			opt->handler(tr, opt, c);
 		else if (!(*(++argv)))
-			prs_fatal(tr, ERR_PREQVAL, err, true);
+			prs_fatal(tr, ERR_PREQVAL, err, false);
 		else
 			opt->handler(tr, opt, *(argv));
 		if (opt->type != OPTT_NULL)
@@ -64,29 +55,29 @@ static char	**prs_fullname(t_trace *tr, char **argv)
 		*equal = 0;
 	opt = opt_byfullname(tr, name);
 	if (!(opt))
-		prs_fatal(tr, ERR_LUNRECG_OPT, name, true);
+		prs_fatal_pos(tr, ERR_INVALIDOPT, argv);
 	if (equal && opt->type == OPTT_NULL)
-		prs_fatal(tr, ERR_ALLOWNOARGS, opt->fullname, true);
+		prs_fatal(tr, ERR_ALLOWNOARGS, opt->fullname, false);
 	else if (!equal && opt->type == OPTT_NULL)
 		opt->handler(tr, opt, NULL);
 	else if (equal)
 		opt->handler(tr, opt, ++equal);
 	else if (!(*(++argv)))
-		prs_fatal(tr, ERR_PREQLVAL, name, true);
+		prs_fatal(tr, ERR_PREQLVAL, name, false);
 	else
 		opt->handler(tr, opt, *(argv));
 	return (argv);
 }
 
-void	set_packetsize(t_trace *tr, char *val)
+static void	set_packetsize(t_trace *tr, char *val, char **pos)
 {
 	size_t	value;
 
 	if (ft_notnumeric(val))
-		prs_fatal(tr, ERR_PACKLENV, val, true);
+		prs_fatal_pos(tr, ERR_PACKLENV, pos);
 	value = ft_atoul(val);
 	if (value > MAX_PACKET)
-		prs_fatal(tr, ERR_PACKLENS, val, true);
+		prs_fatal(tr, ERR_PACKLENS, val, false);
 	else if (value < 28)
 		value = 28;
 	tr->opts.packetsize = value;
@@ -97,7 +88,7 @@ void	set_packetsize(t_trace *tr, char *val)
 */
 void	parse(t_trace *tr, char **argv)
 {
-	tr->program = *argv;
+	tr->argv.program = *argv;
 	argv++;
 	while (argv && *argv)
 	{
@@ -105,15 +96,18 @@ void	parse(t_trace *tr, char **argv)
 			argv = prs_fullname(tr, argv);
 		else if (!(ft_strncmp(*argv, "-", 1)) && ft_strlen(*argv) > 1)
 			argv = prs_shortname(tr, argv);
-		else if (!(tr->hostname))
-			tr->hostname = *argv;
+		else if (!(tr->argv.hostname))
+		{
+			tr->argv.hostpos = argv;
+			tr->argv.hostname = *argv;
+		}
 		else if (!(tr->opts.packetsize))
-			set_packetsize(tr, *argv);
+			set_packetsize(tr, *argv, argv);
 		else
-			prs_fatal(tr, ERR_EXTRAARG, *argv, true);
+			prs_fatal_pos(tr, ERR_EXTRAARG, argv);
 		if (*argv)
 			argv++;
 	}
-	if (!(tr->hostname))
-		prs_fatal(tr, ERR_MISSING_HOST, tr->program, true);
+	if (!(tr->argv.hostname))
+		print_help(tr);
 }

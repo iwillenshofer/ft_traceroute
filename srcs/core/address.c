@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 08:52:05 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/10 07:29:11 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 20:23:10 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,13 @@ void	get_address(t_trace *tr)
 	hints.ai_socktype = SOCK_DGRAM;
 	hints.ai_protocol = IPPROTO_UDP;
 	hints.ai_flags = AI_CANONNAME;
-	ret = getaddrinfo(tr->hostname, NULL, &hints, &addr);
+	ret = getaddrinfo(tr->argv.hostname, NULL, &hints, &addr);
 	if (ret)
-		prs_fatal(tr, ERR_ADDR, gai_strerror(ret), false);
+	{
+		dprintf(STDERR_FILENO, ERR_ADDR, tr->argv.hostname, gai_strerror(ret));
+		prs_fatal_pos(tr, ERR_HOST, tr->argv.hostpos);
+		exit (1);
+	}
 	if (addr->ai_canonname)
 		ft_strcpy(tr->out.host, addr->ai_canonname);
 	tr->out.daddr = *(struct sockaddr_in *)(addr->ai_addr);
