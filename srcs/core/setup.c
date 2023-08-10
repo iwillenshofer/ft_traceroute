@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 14:42:53 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/10 07:46:47 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 17:06:48 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,10 @@ static void	set_defaults(t_trace *tr)
 		tr->opts.nqueries = DFL_NQUERIES;
 	if (!(tr->opts.maxhop))
 		tr->opts.maxhop = DFL_MAXTTL;
+	if (!(tr->opts.firsthop))
+		tr->opts.firsthop = DFL_FIRSTTTL;
+	if (tr->opts.firsthop > tr->opts.maxhop)
+		prs_fatal(tr, ERR_FIRSTHOP, NULL, false);
 }
 
 void	setup(t_trace *tr, char **argv)

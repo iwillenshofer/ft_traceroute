@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 12:22:38 by marvin            #+#    #+#             */
-/*   Updated: 2023/08/02 19:49:46 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 21:00:11 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ static char	**prs_fullname(t_trace *tr, char **argv)
 
 void	set_packetsize(t_trace *tr, char *val)
 {
-	size_t value;
+	size_t	value;
 
 	if (ft_notnumeric(val))
 		prs_fatal(tr, ERR_PACKLENV, val, true);
@@ -110,11 +110,10 @@ void	parse(t_trace *tr, char **argv)
 		else if (!(tr->opts.packetsize))
 			set_packetsize(tr, *argv);
 		else
-			prs_fatal(tr, ERR_EXTRAARG, *argv, true);	
+			prs_fatal(tr, ERR_EXTRAARG, *argv, true);
 		if (*argv)
 			argv++;
 	}
 	if (!(tr->hostname))
 		prs_fatal(tr, ERR_MISSING_HOST, tr->program, true);
-
 }

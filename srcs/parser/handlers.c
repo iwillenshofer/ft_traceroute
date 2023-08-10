@@ -6,39 +6,14 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 23:13:29 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/10 15:29:41 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 19:04:32 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_traceroute.h"
 
-/*
-** here are handled all options that need an argument
-** f --first-hop (1-30)
-** m --max-hop (1-255)
-** p --port (1-65536, but if too high, sendto will throw an error)
-** w --wait (0 - 60)
-** q --tries (1 - 10)
-*/
-static void	hndlr_doubleopt(t_trace *tr, t_lstopt *opt, char *value)
+static void	setdoubleopt(t_trace *tr, t_lstopt *opt, size_t val)
 {
-	size_t	val;
-	char	errbuf[ERR_BUF + 1];
-
-	snprintf(errbuf, ERR_BUF, "`%s' near `%s'", value, ft_notnumeric(value));
-	val = ft_atoul(value);
-	if (opt->shortcut == 'f' && (ft_notnumeric(value) || val < 1 || val > DFL_MAXTTL))
-		prs_fatal(tr, ERR_FIRSTHOP, value, false);
-	else if (opt->shortcut == 'm' && (ft_notnumeric(value) || val < 1 || val > MAX_HOPS))
-		prs_fatal(tr, ERR_MAXHOP, value, false);
-	else if (opt->shortcut == 'N' && (ft_notnumeric(value)))
-		prs_fatal(tr, ERR_INVALID, errbuf, false);
-	else if (opt->shortcut == 'p' && (ft_notnumeric(value) || val < 1 || val > MAX_PORT))
-		prs_fatal(tr, ERR_PORT, value, false);
-	else if (opt->shortcut == 'q' && (ft_notnumeric(value)))
-		prs_fatal(tr, ERR_INVALID, errbuf, false);
-	else if (opt->shortcut == 'q' && (val < 1 || val > 10))
-		prs_fatal(tr, ERR_TRIES, value, false);
 	if (opt->shortcut == 'f')
 		tr->opts.firsthop = val;
 	else if (opt->shortcut == 'm')
@@ -56,6 +31,42 @@ static void	hndlr_doubleopt(t_trace *tr, t_lstopt *opt, char *value)
 }
 
 /*
+** here are handled all options that need an argument
+** f --first-hop (1-30)
+** m --max-hop (1-255)
+** p --port (1-65536, but if too high, sendto will throw an error)
+** w --wait (0 - 60)
+** q --tries (1 - 10)
+*/
+static void	hndlr_doubleopt(t_trace *tr, t_lstopt *opt, char *value)
+{
+	size_t	val;
+	char	errbuf[ERR_BUF + 1];
+
+	snprintf(errbuf, ERR_BUF, "`%s' near `%s'", value, ft_notnumeric(value));
+	val = ft_atoul(value);
+	if (opt->shortcut == 'f'
+		&& (ft_notnumeric(value) || val < 1 || val > DFL_MAXTTL))
+		prs_fatal(tr, ERR_FIRSTHOP, NULL, false);
+	else if (opt->shortcut == 'm'
+		&& (ft_notnumeric(value) || val < 1 || val > MAX_HOPS))
+		prs_fatal(tr, ERR_MAXHOP, value, false);
+	else if (opt->shortcut == 'N'
+		&& (ft_notnumeric(value)))
+		prs_fatal(tr, ERR_INVALID, errbuf, false);
+	else if (opt->shortcut == 'p'
+		&& (ft_notnumeric(value) || val < 1 || val > MAX_PORT))
+		prs_fatal(tr, ERR_PORT, value, false);
+	else if (opt->shortcut == 'q'
+		&& (ft_notnumeric(value)))
+		prs_fatal(tr, ERR_INVALID, errbuf, false);
+	else if (opt->shortcut == 'q'
+		&& (val < 1 || val > 10))
+		prs_fatal(tr, ERR_TRIES, value, false);
+	setdoubleopt(tr, opt, val);
+}
+
+/*
 ** here are handled all options that do not need an argument
 ** ? --help
 ** m --resolve-names
@@ -68,7 +79,7 @@ static void	hndlr_singleopt(t_trace *tr, t_lstopt *opt, char *value)
 	if (opt->shortcut == '?')
 		print_help(tr);
 	if (opt->shortcut == 'u')
-		print_usage(tr);
+		print_usage(tr, true);
 	if (opt->shortcut == 'V')
 		print_version(tr);
 	if (opt->shortcut == 'n')

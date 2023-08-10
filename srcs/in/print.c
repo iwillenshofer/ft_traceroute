@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 01:01:19 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/10 15:54:41 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 21:02:56 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static struct sockaddr_in	lastaddr(t_trace *tr, t_probe *probe)
 	return (ret);
 }
 
-static void prnttimedout(t_trace *tr, t_hop *hop, size_t probeidx)
+static void	prnttimedout(t_trace *tr, t_hop *hop, size_t probeidx)
 {
 	color(tr, PURPLE, BOLD);
 	dprintf(STDOUT_FILENO, " *");
@@ -91,11 +91,9 @@ void	prntpackets(t_trace *tr)
 			|| timed_out(hop->probe[probeidx].ts,
 				timetowait(tr, &hop->probe[probeidx]))))
 	{
+		color(tr, WHITE, BOLD);
 		if (!probeidx)
-		{
-			color(tr, WHITE, BOLD);
 			dprintf(STDOUT_FILENO, "%2lu ", hop->ttl);
-		}
 		if (hop->probe[probeidx].received)
 			prntvalid(tr, hop, probeidx);
 		else
@@ -103,6 +101,8 @@ void	prntpackets(t_trace *tr)
 		if (probeidx == tr->opts.nqueries - 1)
 			dprintf(STDOUT_FILENO, "\n");
 		tr->count.prt++;
+		if (hop->id == tr->opts.maxhop - tr->opts.firsthop)
+			hop->lasthop = true;
 		if ((probeidx == tr->opts.nqueries - 1 && hop->lasthop)
 			|| tr->count.prt == (tr->opts.nqueries * tr->opts.maxhop))
 			tr->done = true;

@@ -66,7 +66,7 @@ char		*tname(int type);
 ** printing
 */
 void		print_help(t_trace *tr);
-void		print_usage(t_trace *tr);
+void		print_usage(t_trace *tr, t_bool terminate);
 void		print_shortusage(t_trace *tr);
 void		print_version(t_trace *tr);
 void		print_icmperror(t_icmp *i);

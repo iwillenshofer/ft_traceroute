@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 12:00:10 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/10 15:28:47 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 16:20:29 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,11 +100,9 @@
 /*
 ** Definitions for Help strings
 */
-# define HPL_USAGE "Usage: %s [OPTION...] host [ packetlen ]\n"
-# define HPL_GOAL "Send ICMP ECHO_REQUEST packets to network hosts.\n\n"
-# define HPL_OPTIONS "Options valid for all request types:\n\n"
-# define HPL_ARGS "Mandatory or optional arguments to long options are also"
-# define HPL_ARGS2 "mandatory or optional for any corresponding short options."
+# define HPL_OPTIONS "Options:\n"
+# define HPL_ARGS "+\thost\t\tThe host to traceroute to"
+# define HPL_ARGS2 "\tpacketlen\tThe full packet length."
 
 /*
 ** Definitions for Version Strings

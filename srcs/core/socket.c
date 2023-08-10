@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/27 13:02:27 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/10 07:30:47 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 16:36:59 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ static void	socketoptions(t_trace *tr)
 
 	t = 1;
 	if (setsockopt(tr->in.sock, SOL_SOCKET, SO_REUSEPORT, &t, sizeof(t)) < 0)
-		prs_fatal(tr, ERR_PORT, NULL, false);
+		prs_fatal(tr, ERR_REUSEPORT, NULL, false);
 	if (setsockopt(tr->out.sock, SOL_SOCKET, SO_REUSEPORT, &t, sizeof(t)) < 0)
-		prs_fatal(tr, ERR_PORT, NULL, false);
+		prs_fatal(tr, ERR_REUSEPORT, NULL, false);
 }
 
 /*

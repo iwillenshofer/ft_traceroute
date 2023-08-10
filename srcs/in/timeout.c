@@ -6,12 +6,11 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 15:07:38 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/10 15:07:57 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 21:01:26 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_traceroute.h"
-
 
 /*
 ** receives the current hop id and check for "future" probes

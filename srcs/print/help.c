@@ -6,36 +6,47 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 14:43:19 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/01 10:39:37 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 20:59:19 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_traceroute.h"
 
+static void	print_helpopts(t_lstopt *opt, size_t idx)
+{
+	char		buf[64];
+
+	ft_strcpy(buf, opt[idx].fullname);
+	if (opt[idx].type != OPTT_NULL)
+	{
+		ft_strcpy(buf + ft_strlen(buf), "=");
+		ft_strcpy(buf + ft_strlen(buf), tname(opt[idx].type));
+	}
+	dprintf(STDOUT_FILENO, "  -%c", opt[idx].shortcut);
+	if (opt[idx].type)
+		dprintf(STDOUT_FILENO, " %s", tname(opt[idx].type));
+	dprintf(STDOUT_FILENO, "  --%-21s", buf);
+	if (!opt[idx].type)
+		dprintf(STDOUT_FILENO, "\t");
+	dprintf(STDOUT_FILENO, "\t");
+	dprintf(STDOUT_FILENO, "%s\n", opt[idx].desc);
+}
+
 void	print_help(t_trace *tr)
 {
 	t_lstopt	*opt;
 	size_t		i;
-	char		buf[64];
 
 	i = 0;
 	opt = tr->opts.available;
-	dprintf(STDOUT_FILENO, HPL_USAGE, tr->program);
-	dprintf(STDOUT_FILENO, HPL_GOAL);
+	print_usage(tr, false);
 	dprintf(STDOUT_FILENO, HPL_OPTIONS);
 	while (i < OPT_LSTSIZE)
 	{
-		ft_strcpy(buf, opt[i].fullname);
-		if (opt[i].type != OPTT_NULL)
-		{
-			ft_strcpy(buf + ft_strlen(buf), "=");
-			ft_strcpy(buf + ft_strlen(buf), tname(opt[i].type));
-		}
-		dprintf(STDOUT_FILENO, "  -%c, --%-21s %s\n",
-			opt[i].shortcut, buf, opt[i].desc);
+		print_helpopts(opt, i);
 		i++;
 	}
-	dprintf(STDOUT_FILENO, "\n%s %s\n", HPL_ARGS, HPL_ARGS2);
+	dprintf(STDOUT_FILENO, "\nArguments:\n%s\n%s\n", HPL_ARGS, HPL_ARGS2);
 	exit(0);
 }
 

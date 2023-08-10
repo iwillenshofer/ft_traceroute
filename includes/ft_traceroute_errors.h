@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 13:39:25 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/10 07:31:53 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 17:00:29 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 # define ERR_BUF 128
 
-# define ERR_FIRSTHOP "%s: first hop out of range `%s'\n"
+# define ERR_FIRSTHOP "%s: first hop out of range\n"
 # define ERR_MAXHOP "%s: invalid hops value `%s'\n"
 # define ERR_PORT "%s: invalid port number `%s'\n"
 # define ERR_WAIT "%s: ridiculous waiting time `%s'\n"
