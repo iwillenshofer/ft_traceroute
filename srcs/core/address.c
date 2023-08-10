@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 08:52:05 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/10 23:09:40 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 23:51:48 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,9 @@ void	get_address(t_trace *tr)
 	if (ret)
 	{
 		dprintf(STDERR_FILENO, ERR_ADDR, tr->argv.hostname, gai_strerror(ret));
-		prs_fatal_pos(tr, ERR_HOST, tr->argv.hostpos);
 		if (addr)
 			freeaddrinfo(addr);
-		exit (1);
+		prs_fatal_pos(tr, ERR_HOST, tr->argv.hostpos);
 	}
 	if (addr->ai_canonname)
 		ft_strcpy(tr->out.host, addr->ai_canonname);
