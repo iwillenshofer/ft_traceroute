@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/28 08:52:05 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/10 20:23:10 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/10 23:09:40 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	get_address(t_trace *tr)
 	struct addrinfo	*addr;
 	int				ret;
 
+	addr = NULL;
 	ft_bzero(&hints, sizeof(struct addrinfo));
 	hints.ai_family = AF_INET;
 	hints.ai_socktype = SOCK_DGRAM;
@@ -63,6 +64,8 @@ void	get_address(t_trace *tr)
 	{
 		dprintf(STDERR_FILENO, ERR_ADDR, tr->argv.hostname, gai_strerror(ret));
 		prs_fatal_pos(tr, ERR_HOST, tr->argv.hostpos);
+		if (addr)
+			freeaddrinfo(addr);
 		exit (1);
 	}
 	if (addr->ai_canonname)
