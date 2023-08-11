@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:17:18 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/10 21:18:27 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/12 01:14:15 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ print header
 void	print_init(t_trace *tr)
 {
 	color(tr, PURPLE, BOLD);
-	dprintf(STDOUT_FILENO, "traceroute to");
+	dprintf(STDOUT_FILENO, "\e[2J\e[Htraceroute to");
 	color(tr, WHITE, BOLD);
 	dprintf(STDOUT_FILENO, " %s ", tr->out.host);
 	color(tr, WHITE, FAINT);

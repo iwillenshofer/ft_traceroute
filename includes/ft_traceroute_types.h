@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 16:29:15 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/10 22:42:55 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/12 00:40:45 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,72 @@ typedef enum e_bool
 	true
 }	t_bool;
 
-typedef struct timeval	t_time;
+# if __APPLE__
+
+# define ICMP_TIME_EXCEEDED 11
+# define ICMP_DEST_UNREACH 3
+# define SOL_IP IPPROTO_IP
+
+typedef struct s_ip
+{
+	unsigned char	ihl:4;
+	unsigned char	version:4;
+	unsigned char	tos;
+	unsigned short	tot_len;
+	unsigned short	id;
+	unsigned short	frag_off;
+	unsigned char	ttl;
+	unsigned char	protocol;
+	unsigned short	check;
+	unsigned int	saddr;
+	unsigned int	daddr;
+}	t_ip;
+
+
+typedef struct s_udp
+{
+	unsigned short	source;
+	unsigned short	dest;
+	unsigned short	len;
+	unsigned short	check;
+}	t_udp;
+
+typedef struct s_echo
+{
+	unsigned short  id;
+	unsigned short  sequence;
+} t_echo;
+
+typedef struct s_frag
+{
+	unsigned short	unused;
+	unsigned short	mtu;
+} t_frag;
+
+typedef	union u_union
+{
+	t_echo			echo;
+	unsigned int	gateway;
+	t_frag			frag;
+} t_union;
+
+typedef struct s_icmp
+{
+	unsigned char	type;
+	unsigned char	code;
+	unsigned short	checksum;
+	t_union			un;
+}	t_icmp;
+
+# else
+
 typedef struct iphdr	t_ip;
 typedef struct udphdr	t_udp;
 typedef struct icmphdr	t_icmp;
+
+# endif
+
+typedef struct timeval	t_time;
 typedef struct in_addr	t_inaddr;
 
 typedef struct s_trace	t_trace;

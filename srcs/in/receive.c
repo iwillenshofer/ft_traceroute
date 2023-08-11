@@ -6,7 +6,7 @@
 /*   By: iwillens <iwillens@student.42heilbronn.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/09 00:58:04 by iwillens          #+#    #+#             */
-/*   Updated: 2023/08/10 07:43:07 by iwillens         ###   ########.fr       */
+/*   Updated: 2023/08/12 00:48:14 by iwillens         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,9 @@ static t_headers	check_icmp(t_trace *tr, size_t size)
 	if (size < (sizeof(t_ip) * 2) + sizeof(t_udp) + sizeof(t_icmp))
 		return (header);
 	ft_memcpy(&(header.ip), tr->in.buf, sizeof(t_ip));
-	if (ntohs(header.ip.tot_len) > size
+	if ((header.ip.tot_len & (0xff00)))
+		header.ip.tot_len = ntohs(header.ip.tot_len);
+	if ((header.ip.tot_len) > size
 		|| (header.ip.ihl * 4) + sizeof(t_ip)
 		+ sizeof(t_udp) + sizeof(t_icmp) > size
 		|| header.ip.protocol != IPPROTO_ICMP)
